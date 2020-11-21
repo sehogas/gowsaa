@@ -1,19 +1,23 @@
 # GOWSAA
-Ejemplo en lenguaje GO de conexión al servicio de autenticación de AFIP (webservice wsaa)
+Ejemplo de conexión al servicio de autenticación de AFIP (webservice wsaa) en lenguaje GO.
 
-#### Requerimientos
-1. Variable de ambiente/entorno (AfipP12) con nombre y ubicación del archivo .p12 (certificado y privateKey RSA). Para entorno Windows utilizar doble barra como separador de directorios, ej. c:\\archivo.p12
-2. Variable de ambiente/entorno (AfipP12Pass) con contraseña del archivo .p12 del punto 1
+#### Requisitos previos
+1. Generar el archivo con extensión .p12 contenedor del certificado y clave privada RSA. [Ver documentación de la AFIP](https://www.afip.gob.ar/ws/documentacion/wsaa.asp).
+2. Variable de ambiente/entorno **AfipP12** con ruta y nombre del archivo .p12. Para entorno Windows utilizar doble barra como separador de directorios, ej. c:\\\archivo.p12
+3. Variable de ambiente/entorno **AfipP12Pass** con contraseña del archivo .p12
 
 #### Ejecución
 1. Descargar los fuentes
-2. Ejecutar alguna de estas opciones: 
-    * go run .\cmd\main.go
-    * go build -o gowsaa.exe .\cmd\main.go
+
+``git clone https://github.com/sehogas/gowsaa.git``
+
+2. Ejecutar alguna de estas opciones:
+
+  ``go run .\cmd\gowsaa.go``
+
+  ``go build .\cmd\gowsaa.go``
 
 
-
+---
 #### Créditos
-Para la conexión soap y para la generación del archivo wsaa.go se utilizó https://github.com/hooklift/gowsdl/
-
-
+Para la conexión soap y la generación del archivo wsaa.go se utilizó https://github.com/hooklift/gowsdl/

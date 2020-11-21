@@ -14,18 +14,17 @@ import (
 func encodeCMS(content []byte, certificate *x509.Certificate, privateKey *rsa.PrivateKey) ([]byte, error) {
 
 	signedData, err := pkcs7.NewSignedData(content)
-
 	if err != nil {
-		return nil, fmt.Errorf("encodeCMS(): No se pudo inicializar SignedData. %s", err)
+		return nil, fmt.Errorf("encodeCMS: No se pudo inicializar SignedData. %s", err)
 	}
 
 	if err := signedData.AddSigner(certificate, privateKey, pkcs7.SignerInfoConfig{}); err != nil {
-		return nil, fmt.Errorf("encodeCMS(): No se pudo agregar firmante: %s", err)
+		return nil, fmt.Errorf("encodeCMS: No se pudo agregar firmante: %s", err)
 	}
 
 	detachedSignature, err := signedData.Finish()
 	if err != nil {
-		return nil, fmt.Errorf("encodeCMS(): No se pudo finalizar de firmar mensaje: %s", err)
+		return nil, fmt.Errorf("encodeCMS: No se pudo finalizar de firmar mensaje: %s", err)
 	}
 
 	/* solo para debugear
@@ -41,17 +40,17 @@ func decodePkcs12(p12 string, password string) (*x509.Certificate, *rsa.PrivateK
 
 	pkcs, err := ioutil.ReadFile(p12)
 	if err != nil {
-		return nil, nil, fmt.Errorf("decodePkcs12(): Error leyendo archivo %s. %s", p12, err.Error())
+		return nil, nil, fmt.Errorf("decodePkcs12: Error leyendo archivo %s. %s", p12, err.Error())
 	}
 
 	privateKey, certificate, err := pkcs12.Decode(pkcs, password)
 	if err != nil {
-		return nil, nil, fmt.Errorf("decodePkcs12(): Error decodificando PKCS#12. %s", err.Error())
+		return nil, nil, fmt.Errorf("decodePkcs12: Error decodificando PKCS#12. %s", err.Error())
 	}
 
 	rsaPrivateKey, isRsaKey := privateKey.(*rsa.PrivateKey)
 	if !isRsaKey {
-		return nil, nil, fmt.Errorf("decodePkcs12(): El certificado PKCS#12 debe contener una clave privada RSA")
+		return nil, nil, fmt.Errorf("decodePkcs12: El certificado PKCS#12 debe contener una clave privada RSA")
 	}
 
 	/* solo para debugear

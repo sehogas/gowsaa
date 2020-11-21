@@ -88,18 +88,18 @@ func Create(ambiente Ambiente) *Afip {
 	return &Afip{ambiente: ambiente, urlWsaa: url, tickets: make(map[string]*LoginTicketResponse)}
 }
 
-// SetFileP12 especifica el archivo .p12 que se utilizará para autenticar contra los servicios de afip
+// SetFileP12 especifica el archivo .p12 que se utilizará para extraer el certificado y clave privada
 func (c *Afip) SetFileP12(p12, password string) error {
 
 	if strings.TrimSpace(p12) == "" {
-		return errors.New("SetFileP12(): Se requiere el parámetro p12")
+		return errors.New("SetFileP12: Se requiere el parámetro p12")
 	}
 
 	if _, err := os.Stat(p12); err != nil {
 		if os.IsNotExist(err) {
-			return fmt.Errorf("SetFileP12(): No existe el archivo %s", p12)
+			return fmt.Errorf("SetFileP12: No existe el archivo %s", p12)
 		} else {
-			return fmt.Errorf("SetFileP12(): Error verificando archivo .12. %s", err.Error())
+			return fmt.Errorf("SetFileP12: Error verificando archivo .12. %s", err.Error())
 		}
 	}
 
@@ -109,18 +109,17 @@ func (c *Afip) SetFileP12(p12, password string) error {
 	return nil
 }
 
-// GetLoginTicket devuelve información del ticket de acceso afip correspondiente al servicio pasado por parámetro.
+// GetLoginTicket devuelve el ticket de acceso afip correspondiente al servicio pasado por parámetro.
 func (c *Afip) GetLoginTicket(serviceName string) (token string, sign string, expiration string, err error) {
 
 	var renovar bool = true
 
 	ticket, _ := c.tickets[serviceName]
-
 	if ticket != nil {
-		expTime, err := time.Parse(time.RFC3339, ticket.Header.ExpirationTime)
 
+		expTime, err := time.Parse(time.RFC3339, ticket.Header.ExpirationTime)
 		if err != nil {
-			return "", "", "", fmt.Errorf("GetLoginTicket(): Error parseando fecha de expiración del ticket anterior. %s", err)
+			return "", "", "", fmt.Errorf("GetLoginTicket: Error parseando fecha de expiración del ticket. %s", err)
 		}
 
 		renovar = time.Now().After(expTime)
@@ -134,9 +133,8 @@ func (c *Afip) GetLoginTicket(serviceName string) (token string, sign string, ex
 
 		// Decodifico archivo con certificado y clave privada
 		certificate, privateKey, err := decodePkcs12(c.p12, c.password)
-
 		if err != nil {
-			return "", "", "", fmt.Errorf("GetLoginTicket(): %s", err)
+			return "", "", "", fmt.Errorf("GetLoginTicket: %s", err)
 		}
 
 		// Armo estructura request
@@ -152,47 +150,47 @@ func (c *Afip) GetLoginTicket(serviceName string) (token string, sign string, ex
 
 		// Armo XML
 		loginTicketRequestXML, err := xml.MarshalIndent(loginTicketRequest, " ", "  ")
-
 		if err != nil {
-			return "", "", "", fmt.Errorf("GetLoginTicket(): Error armando login ticket request XML. %s", err)
+			return "", "", "", fmt.Errorf("GetLoginTicket: Error armando login ticket request XML. %s", err)
 		}
-
 		content := []byte(string(loginTicketRequestXML))
 
 		// Creo CMS (Cryptographic Message Syntax)
 		cms, err := encodeCMS(content, certificate, privateKey)
-
 		if err != nil {
-			return "", "", "", fmt.Errorf("GetLoginTicket(): %s", err)
+			return "", "", "", fmt.Errorf("GetLoginTicket: %s", err)
 		}
 
+		// Convierto CMS a base64
 		cmsBase64 := base64.StdEncoding.EncodeToString(cms)
 
-		//Llamo al servicio de autenticación afip wssa
+		// Armo conexión SOAP y solicitud
 		conexion := soap.NewClient(c.urlWsaa)
 		service := NewLoginCMS(conexion)
 
 		request := LoginCms{In0: cmsBase64}
 
+		// Logeo solicitud
 		if c.ambiente == TESTING {
 			requestXML, _ := xml.MarshalIndent(request, " ", "  ")
 			log.Printf("REQUEST XML:\n%s\n\n", xml.Header+string(requestXML))
 		}
 
+		// Llamo al servicio de autenticación afip wssa
 		responseXML, err := service.LoginCms(&request)
-
 		if err != nil {
-			return "", "", "", fmt.Errorf("GetLoginTicket(): %s", err)
+			return "", "", "", fmt.Errorf("GetLoginTicket: %s", err)
 		}
 
+		// Logeo respuesta
 		if c.ambiente == TESTING {
 			log.Printf("RESPONSE XML:\n%s\n\n", responseXML)
 		}
 
+		// Desarmo respuesta XML
 		response := LoginTicketResponse{}
-
 		if err := xml.Unmarshal([]byte(responseXML.LoginCmsReturn), &response); err != nil {
-			return "", "", "", fmt.Errorf("GetLoginTicket(): Error desarmando respuesta XML. %s", err)
+			return "", "", "", fmt.Errorf("GetLoginTicket: Error desarmando respuesta XML. %s", err)
 		}
 
 		// Almaceno ticket de respuesta (porque no se puede llamar nuevamente al servicio hasta dentro de 10 minutos,
