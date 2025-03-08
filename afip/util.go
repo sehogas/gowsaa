@@ -7,7 +7,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"log"
 	"os"
 
 	"go.mozilla.org/pkcs7"
@@ -29,11 +28,6 @@ func encodeCMS(content []byte, certificate *x509.Certificate, privateKey *rsa.Pr
 	if err != nil {
 		return nil, fmt.Errorf("encodeCMS: No se pudo finalizar de firmar mensaje: %s", err)
 	}
-
-	/* solo para debugear
-	pemCMS := pem.EncodeToMemory(&pem.Block{Type: "PKCS7", Bytes: detachedSignature})
-	log.Printf("\n%s\n", string(pemCMS[:]))
-	*/
 
 	return detachedSignature, nil
 }
@@ -80,7 +74,6 @@ func readCertificate(file string) (*x509.Certificate, error) {
 	for _, block := range blocks {
 		cert, err := x509.ParseCertificate(block)
 		if err != nil {
-			log.Println(err)
 			continue
 		}
 		certificate = cert

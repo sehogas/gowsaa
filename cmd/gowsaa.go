@@ -1,7 +1,7 @@
 package main
 
 import (
-	"log"
+	"fmt"
 	"os"
 
 	"github.com/joho/godotenv"
@@ -11,17 +11,22 @@ import (
 func main() {
 	godotenv.Load()
 
-	client, err := afip.NewClient(afip.TESTING, os.Getenv("PRIVATE_KEY_FILE"), os.Getenv("CERTIFICATE_FILE"))
+	environment := afip.TESTING
+	if os.Getenv("PROD") == "True" {
+		environment = afip.PRODUCTION
+	}
+
+	client, err := afip.NewClient(environment, os.Getenv("PRIVATE_KEY_FILE"), os.Getenv("CERTIFICATE_FILE"))
 	if err != nil {
-		log.Fatalln(err)
+		panic(err)
 	}
 
 	loginTicket, err := client.GetLoginTicket("wsfe")
 	if err != nil {
-		log.Fatalln(err)
+		panic(err)
 	}
 
-	log.Printf("\n\tSERVICE: %s\n\tTOKEN: %s\n\tSIGN: %s\n\tEXPIRATION: %s\n",
+	fmt.Printf("SERVICE=%s\nTOKEN=%s\nSIGN=%s\nEXPIRATION=%s\n",
 		loginTicket.ServiceName,
 		loginTicket.Token,
 		loginTicket.Sign,
