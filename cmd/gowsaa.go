@@ -4,28 +4,27 @@ import (
 	"log"
 	"os"
 
+	"github.com/joho/godotenv"
 	"github.com/sehogas/gowsaa/afip"
 )
 
 func main() {
-	log.Printf("Inicio del proceso...\n\n")
+	godotenv.Load()
 
-	// Creo instancia de afip
-	cliente := afip.Create(afip.TESTING)
-
-	// Requerido para los servicios que necesitan autenticación de AFIP
-	err := cliente.SetFileP12(os.Getenv("AfipP12"), os.Getenv("AfipP12Pass"))
+	client, err := afip.NewClient(afip.TESTING, os.Getenv("PRIVATE_KEY_FILE"), os.Getenv("CERTIFICATE_FILE"))
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalln(err)
 	}
 
-	// Llamo al webservice wsaa para obtener el token, sign y expiration
-	token, sign, expiration, err := cliente.GetLoginTicket("wgesstockdepositosfiscales")
+	loginTicket, err := client.GetLoginTicket("wsfe")
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalln(err)
 	}
 
-	log.Printf("\n\tTOKEN: %s\n\tSIGN:%s\n\tEXPIRATION:%s\n", token, sign, expiration)
+	log.Printf("\n\tSERVICE: %s\n\tTOKEN: %s\n\tSIGN: %s\n\tEXPIRATION: %s\n",
+		loginTicket.ServiceName,
+		loginTicket.Token,
+		loginTicket.Sign,
+		loginTicket.ExpirationTime)
 
-	log.Printf("\nFin del proceso\n")
 }

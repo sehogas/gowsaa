@@ -5,25 +5,21 @@ package afip
 import (
 	"context"
 	"encoding/xml"
+	"github.com/hooklift/gowsdl/soap"
 	"time"
-
-	"github.com/sehogas/gowsaa/soap"
 )
-
-// AnyType es una estructura común a todos los paquetes generados por gowsdl
-type AnyType struct {
-	InnerXML string `xml:",innerxml"`
-}
-
-// AnyURI es una variable común a todos los paquetes generados por gowsdl
-type AnyURI string
-
-// NCName es una variable común a todos los paquetes generados por gowsdl
-type NCName string
 
 // against "unused imports"
 var _ time.Time
 var _ xml.Name
+
+type AnyType struct {
+	InnerXML string `xml:",innerxml"`
+}
+
+type AnyURI string
+
+type NCName string
 
 type LoginCms struct {
 	XMLName xml.Name `xml:"http://wsaa.view.sua.dvadac.desein.afip.gov loginCms"`
@@ -40,7 +36,7 @@ type LoginCmsResponse struct {
 type Fault LoginFault
 
 type LoginFault struct {
-	XMLName xml.Name `xml:"https://wsaahomo.afip.gov.ar/ws/services/LoginCms fault"`
+	XMLName xml.Name `xml:"https://wsaa.afip.gov.ar/ws/services/LoginCms fault"`
 }
 
 type LoginCMS interface {

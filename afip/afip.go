@@ -1,43 +1,35 @@
 package afip
 
 import (
+	"crypto/rsa"
 	"encoding/base64"
 	"encoding/xml"
-	"errors"
 	"fmt"
-	"log"
 	"os"
 	"strings"
 	"time"
 
-	"github.com/sehogas/gowsaa/soap"
+	"github.com/hooklift/gowsdl/soap"
 )
 
-// URLWSAATesting ... wsdl de wsaa en ambiente de homolagación de afip
 const URLWSAATesting string = "https://wsaahomo.afip.gov.ar/ws/services/LoginCms?WSDL"
-
-// URLWSAAProduction ... wsdl de wsaa en ambiente de producción de afip
 const URLWSAAProduction string = "https://wsaa.afip.gov.ar/ws/services/LoginCms?WSDL"
 
-// Ambiente es un tipo de dato
-type Ambiente int
+type Environment int
 
-// Constantes de ambiente
 const (
-	TESTING Ambiente = iota
+	TESTING Environment = iota
 	PRODUCTION
 )
 
-// Afip es la estructura global del paquete
 type Afip struct {
-	ambiente Ambiente
-	urlWsaa  string
-	p12      string
-	password string
-	tickets  map[string]*LoginTicketResponse
+	environment     Environment
+	urlWsaa         string
+	tickets         map[string]*LoginTicketResponse
+	privateKeyFile  string
+	certificateFile string
 }
 
-// LoginTicket es una estructura que representa un ticket de un servicio de afip
 type LoginTicket struct {
 	ServiceName    string
 	Token          string
@@ -75,66 +67,55 @@ type LoginTicketResponse struct {
 	Credentials *Credentials       `xml:"credentials,omitempty"`
 }
 
-// Create crea un objeto cliente para acceder a los servicios web de afip
-func Create(ambiente Ambiente) *Afip {
-
+func NewClient(environment Environment, privateKeyFile string, certificateFile string) (*Afip, error) {
 	var url string
-	if ambiente == PRODUCTION {
+	if environment == PRODUCTION {
 		url = URLWSAAProduction
 	} else {
 		url = URLWSAATesting
 	}
 
-	return &Afip{ambiente: ambiente, urlWsaa: url, tickets: make(map[string]*LoginTicketResponse)}
-}
-
-// SetFileP12 especifica el archivo .p12 que se utilizará para extraer el certificado y clave privada
-func (c *Afip) SetFileP12(p12, password string) error {
-
-	if strings.TrimSpace(p12) == "" {
-		return errors.New("SetFileP12: Se requiere el parámetro p12")
+	if _, err := os.Stat(privateKeyFile); err != nil {
+		return nil, fmt.Errorf("privateKeyFile: %s", err)
 	}
-
-	if _, err := os.Stat(p12); err != nil {
-		if os.IsNotExist(err) {
-			return fmt.Errorf("SetFileP12: No existe el archivo %s", p12)
-		} else {
-			return fmt.Errorf("SetFileP12: Error verificando archivo .12. %s", err.Error())
-		}
+	if _, err := os.Stat(certificateFile); err != nil {
+		return nil, fmt.Errorf("certificateFile: %s", err)
 	}
-
-	c.p12 = strings.TrimSpace(p12)
-	c.password = strings.TrimSpace(password)
-
-	return nil
+	return &Afip{
+		environment:     environment,
+		urlWsaa:         url,
+		tickets:         make(map[string]*LoginTicketResponse),
+		privateKeyFile:  privateKeyFile,
+		certificateFile: certificateFile,
+	}, nil
 }
 
 // GetLoginTicket devuelve el ticket de acceso afip correspondiente al servicio pasado por parámetro.
-func (c *Afip) GetLoginTicket(serviceName string) (token string, sign string, expiration string, err error) {
-
+func (c *Afip) GetLoginTicket(serviceName string) (*LoginTicket, error) {
 	var renovar bool = true
 
-	ticket, _ := c.tickets[serviceName]
+	ticket := c.tickets[serviceName]
 	if ticket != nil {
-
 		expTime, err := time.Parse(time.RFC3339, ticket.Header.ExpirationTime)
 		if err != nil {
-			return "", "", "", fmt.Errorf("GetLoginTicket: Error parseando fecha de expiración del ticket. %s", err)
+			return nil, fmt.Errorf("GetLoginTicket: Error leyendo fecha de expiración del ticket. %s", err)
 		}
-
 		renovar = time.Now().After(expTime)
 	}
 
 	if renovar {
-
 		expiration := time.Now().Add(10 * time.Minute)
-		generationTime := fmt.Sprintf("%s", time.Now().Add(-10*time.Minute).Format(time.RFC3339))
-		expirationTime := fmt.Sprintf("%s", expiration.Format(time.RFC3339))
+		generationTime := time.Now().Add(-10 * time.Minute).Format(time.RFC3339)
+		expirationTime := expiration.Format(time.RFC3339)
 
-		// Decodifico archivo con certificado y clave privada
-		certificate, privateKey, err := decodePkcs12(c.p12, c.password)
+		privateKey, err := readPrivateKey(c.privateKeyFile)
 		if err != nil {
-			return "", "", "", fmt.Errorf("GetLoginTicket: %s", err)
+			return nil, fmt.Errorf("GetLoginTicket: Error leyendo clave privada: %s", err)
+		}
+
+		certificate, err := readCertificate(c.certificateFile)
+		if err != nil {
+			return nil, fmt.Errorf("GetLoginTicket: Error leyendo certificado: %s", err)
 		}
 
 		// Armo estructura request
@@ -148,17 +129,16 @@ func (c *Afip) GetLoginTicket(serviceName string) (token string, sign string, ex
 			Service: serviceName,
 		}
 
-		// Armo XML
 		loginTicketRequestXML, err := xml.MarshalIndent(loginTicketRequest, " ", "  ")
 		if err != nil {
-			return "", "", "", fmt.Errorf("GetLoginTicket: Error armando login ticket request XML. %s", err)
+			return nil, fmt.Errorf("GetLoginTicket: Error armando request XML. %s", err)
 		}
 		content := []byte(string(loginTicketRequestXML))
 
 		// Creo CMS (Cryptographic Message Syntax)
-		cms, err := encodeCMS(content, certificate, privateKey)
+		cms, err := encodeCMS(content, certificate, privateKey.(*rsa.PrivateKey))
 		if err != nil {
-			return "", "", "", fmt.Errorf("GetLoginTicket: %s", err)
+			return nil, fmt.Errorf("GetLoginTicket: Error creando CMS: %s", err)
 		}
 
 		// Convierto CMS a base64
@@ -170,34 +150,41 @@ func (c *Afip) GetLoginTicket(serviceName string) (token string, sign string, ex
 
 		request := LoginCms{In0: cmsBase64}
 
-		// Logeo solicitud
-		if c.ambiente == TESTING {
-			requestXML, _ := xml.MarshalIndent(request, " ", "  ")
-			log.Printf("REQUEST XML:\n%s\n\n", xml.Header+string(requestXML))
-		}
-
 		// Llamo al servicio de autenticación afip wssa
 		responseXML, err := service.LoginCms(&request)
 		if err != nil {
-			return "", "", "", fmt.Errorf("GetLoginTicket: %s", err)
-		}
-
-		// Logeo respuesta
-		if c.ambiente == TESTING {
-			log.Printf("RESPONSE XML:\n%s\n\n", responseXML)
+			response := soap.SOAPEnvelopeResponse{
+				Body: soap.SOAPBodyResponse{
+					Content: &soap.SOAPFault{},
+					Fault:   &soap.SOAPFault{},
+				},
+			}
+			if err := xml.Unmarshal([]byte(err.Error()[strings.Index(err.Error(), "<soapenv:Envelope"):]), &response); err != nil {
+				return nil, fmt.Errorf("GetLoginTicket: Error desarmando respuesta XML. %s", err)
+			}
+			return nil, fmt.Errorf("GetLoginTicket: Error del servicio: %s", response.Body.Fault.String)
 		}
 
 		// Desarmo respuesta XML
 		response := LoginTicketResponse{}
 		if err := xml.Unmarshal([]byte(responseXML.LoginCmsReturn), &response); err != nil {
-			return "", "", "", fmt.Errorf("GetLoginTicket: Error desarmando respuesta XML. %s", err)
+			return nil, fmt.Errorf("GetLoginTicket: Error desarmando respuesta XML. %s", err)
 		}
 
 		// Almaceno ticket de respuesta (porque no se puede llamar nuevamente al servicio hasta dentro de 10 minutos,
 		// hay que seguir usando el ticket actual. El vencimiento de los ticket de afip suele ser de 12 horas)
 		c.tickets[serviceName] = &response
-
 	}
 
-	return c.tickets[serviceName].Credentials.Token, c.tickets[serviceName].Credentials.Sign, c.tickets[serviceName].Header.ExpirationTime, nil
+	expirationTime, err := time.Parse(time.RFC3339, c.tickets[serviceName].Header.ExpirationTime)
+	if err != nil {
+		return nil, fmt.Errorf("GetLoginTicket: Error leyendo fecha de expiración del ticket. %s", err)
+	}
+
+	return &LoginTicket{
+		ServiceName:    serviceName,
+		Token:          c.tickets[serviceName].Credentials.Token,
+		Sign:           c.tickets[serviceName].Credentials.Sign,
+		ExpirationTime: expirationTime,
+	}, nil
 }

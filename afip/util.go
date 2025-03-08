@@ -3,11 +3,14 @@ package afip
 import (
 	"crypto/rsa"
 	"crypto/x509"
+	"encoding/pem"
+	"errors"
 	"fmt"
-	"io/ioutil"
+	"io"
+	"log"
+	"os"
 
 	"go.mozilla.org/pkcs7"
-	"golang.org/x/crypto/pkcs12"
 )
 
 // encodeCMS devuelve el content firmado PKCS#7
@@ -35,31 +38,52 @@ func encodeCMS(content []byte, certificate *x509.Certificate, privateKey *rsa.Pr
 	return detachedSignature, nil
 }
 
-// decodePkcs12 extrae del archivo .p12 el certificado y la clave privada RSA
-func decodePkcs12(p12 string, password string) (*x509.Certificate, *rsa.PrivateKey, error) {
-
-	pkcs, err := ioutil.ReadFile(p12)
+func readPrivateKey(file string) (any, error) {
+	f, err := os.Open(file)
 	if err != nil {
-		return nil, nil, fmt.Errorf("decodePkcs12: Error leyendo archivo %s. %s", p12, err.Error())
+		return nil, err
 	}
+	defer f.Close()
 
-	privateKey, certificate, err := pkcs12.Decode(pkcs, password)
+	buf, err := io.ReadAll(f)
 	if err != nil {
-		return nil, nil, fmt.Errorf("decodePkcs12: Error decodificando PKCS#12. %s", err.Error())
+		return nil, err
+	}
+	p, _ := pem.Decode(buf)
+	if p == nil {
+		return nil, errors.New("no pem block found")
+	}
+	return x509.ParsePKCS8PrivateKey(p.Bytes)
+}
+
+func readCertificate(file string) (*x509.Certificate, error) {
+	var certificate *x509.Certificate
+
+	certPEMBlock, err := os.ReadFile(file)
+	if err != nil {
+		return nil, err
 	}
 
-	rsaPrivateKey, isRsaKey := privateKey.(*rsa.PrivateKey)
-	if !isRsaKey {
-		return nil, nil, fmt.Errorf("decodePkcs12: El certificado PKCS#12 debe contener una clave privada RSA")
+	var blocks [][]byte
+	for {
+		var certDERBlock *pem.Block
+		certDERBlock, certPEMBlock = pem.Decode(certPEMBlock)
+		if certDERBlock == nil {
+			break
+		}
+
+		if certDERBlock.Type == "CERTIFICATE" {
+			blocks = append(blocks, certDERBlock.Bytes)
+		}
 	}
 
-	/* solo para debugear
-	keyBytes := x509.MarshalPKCS1PrivateKey(rsaPrivateKey)
-	pemPrivateKey := pem.EncodeToMemory(&pem.Block{Type: "RSA PRIVATE KEY", Bytes: keyBytes})
-	pemCertificate := pem.EncodeToMemory(&pem.Block{Type: "CERTIFICATE", Bytes: certificate.Raw})
-	log.Printf("\n%s\n", string(pemCertificate[:]))
-	log.Printf("\n%s\n", string(pemPrivateKey[:]))
-	*/
-
-	return certificate, rsaPrivateKey, nil
+	for _, block := range blocks {
+		cert, err := x509.ParseCertificate(block)
+		if err != nil {
+			log.Println(err)
+			continue
+		}
+		certificate = cert
+	}
+	return certificate, nil
 }
