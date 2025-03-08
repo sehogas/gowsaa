@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/hooklift/gowsdl/soap"
+	"github.com/sehogas/gowsaa/afip/wsaa"
 )
 
 const URLWSAATesting string = "https://wsaahomo.afip.gov.ar/ws/services/LoginCms?WSDL"
@@ -146,9 +147,9 @@ func (c *Afip) GetLoginTicket(serviceName string) (*LoginTicket, error) {
 
 		// Armo conexión SOAP y solicitud
 		conexion := soap.NewClient(c.urlWsaa)
-		service := NewLoginCMS(conexion)
+		service := wsaa.NewLoginCMS(conexion)
 
-		request := LoginCms{In0: cmsBase64}
+		request := wsaa.LoginCms{In0: cmsBase64}
 
 		// Llamo al servicio de autenticación afip wssa
 		responseXML, err := service.LoginCms(&request)
