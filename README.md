@@ -3,7 +3,7 @@ Ejemplo de conexión al servicio de autenticación de AFIP (webservice wsaa) en 
 
 #### Requisitos previos
 1. Generar clave privada RSA, crear solicitud de certificado y obtener en AFIP el certificado. 
-2. Configurar variables de ambiente con los datos del paso 1.
+2. Configurar variables de entorno con los datos del paso 1. Ejemplo: .env.example
 
 #### Ejecución
 1. Descargar los fuentes
@@ -25,7 +25,7 @@ Ejemplo de conexión al servicio de autenticación de AFIP (webservice wsaa) en 
 
   Crear el archivo "certificado.pem" y copiar el certificado x509v2 en formato PEM generado por la página de AFIP 
 
-#### Configurar variables de ambiente 
+#### Configurar variables de entorno 
   PRIVATE_KEY_FILE=MiClavePrivada
   CERTIFICATE_FILE=certificado.pem
 
