@@ -10,25 +10,16 @@ import (
 	"time"
 
 	"github.com/hooklift/gowsdl/soap"
-	"github.com/sehogas/gowsaa/afip/wsaa"
+	"github.com/sehogas/gowsaa/ws/wsaa"
 )
 
-const URLWSAATesting string = "https://wsaahomo.afip.gov.ar/ws/services/LoginCms?WSDL"
-const URLWSAAProduction string = "https://wsaa.afip.gov.ar/ws/services/LoginCms?WSDL"
-
-type Environment int
-
-const (
-	TESTING Environment = iota
-	PRODUCTION
-)
-
-type Afip struct {
+type Wsaa struct {
 	environment     Environment
 	urlWsaa         string
 	tickets         map[string]*LoginTicketResponse
 	privateKeyFile  string
 	certificateFile string
+	cuit            int64
 }
 
 type LoginTicket struct {
@@ -36,6 +27,7 @@ type LoginTicket struct {
 	Token          string
 	Sign           string
 	ExpirationTime time.Time
+	Cuit           int64
 }
 
 // HeaderLoginTicket es la cabecera de la estructura de request y response
@@ -68,7 +60,7 @@ type LoginTicketResponse struct {
 	Credentials *Credentials       `xml:"credentials,omitempty"`
 }
 
-func NewClient(environment Environment, privateKeyFile string, certificateFile string) (*Afip, error) {
+func NewWsaa(environment Environment, privateKeyFile string, certificateFile string, cuit int64) (*Wsaa, error) {
 	var url string
 	if environment == PRODUCTION {
 		url = URLWSAAProduction
@@ -82,17 +74,18 @@ func NewClient(environment Environment, privateKeyFile string, certificateFile s
 	if _, err := os.Stat(certificateFile); err != nil {
 		return nil, fmt.Errorf("certificateFile: %s", err)
 	}
-	return &Afip{
+	return &Wsaa{
 		environment:     environment,
 		urlWsaa:         url,
 		tickets:         make(map[string]*LoginTicketResponse),
 		privateKeyFile:  privateKeyFile,
 		certificateFile: certificateFile,
+		cuit:            cuit,
 	}, nil
 }
 
 // GetLoginTicket devuelve el ticket de acceso afip correspondiente al servicio pasado por parámetro.
-func (c *Afip) GetLoginTicket(serviceName string) (*LoginTicket, error) {
+func (c *Wsaa) GetLoginTicket(serviceName string) (*LoginTicket, error) {
 	var renovar bool = true
 
 	ticket := c.tickets[serviceName]
@@ -182,10 +175,36 @@ func (c *Afip) GetLoginTicket(serviceName string) (*LoginTicket, error) {
 		return nil, fmt.Errorf("GetLoginTicket: Error leyendo fecha de expiración del ticket. %s", err)
 	}
 
-	return &LoginTicket{
+	loginTicket := &LoginTicket{
 		ServiceName:    serviceName,
 		Token:          c.tickets[serviceName].Credentials.Token,
 		Sign:           c.tickets[serviceName].Credentials.Sign,
 		ExpirationTime: expirationTime,
-	}, nil
+		Cuit:           c.cuit,
+	}
+
+	if c.environment == TESTING {
+		// grabo en local el archivo temporal con el ticket de acceso
+
+		data := fmt.Sprintf("CUIT=%s\nTOKEN=%s\nSIGN=%s\nEXPIRATION=%s\n",
+			loginTicket.Cuit,
+			loginTicket.Token,
+			loginTicket.Sign,
+			loginTicket.ExpirationTime.Format(time.RFC3339))
+
+		fileName := fmt.Sprintf("%s.TA", serviceName)
+		f, err := os.Create(fileName)
+		if err != nil {
+			return nil, fmt.Errorf("GetLoginTicket: No se pudo crear el archivo %s: %s", fileName, err)
+		}
+		defer f.Close()
+
+		_, err = f.WriteString(data)
+		if err != nil {
+			return nil, fmt.Errorf("GetLoginTicket: No se pudo escribir en el archivo %s: %s", fileName, err)
+		}
+
+	}
+
+	return loginTicket, nil
 }

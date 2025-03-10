@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"strconv"
 
 	"github.com/joho/godotenv"
 	"github.com/sehogas/gowsaa/afip"
@@ -24,37 +25,26 @@ func main() {
 		// leo si hay un ticket de prueba
 		if _, err := os.Stat(fmt.Sprintf("%s.TA", *service)); err == nil {
 			fmt.Println("Ya existe un ticket de prueba para el servicio", *service)
-			os.Exit(0)
+			os.Exit(-1)
 		}
 	}
 
-	client, err := afip.NewClient(environment, os.Getenv("PRIVATE_KEY_FILE"), os.Getenv("CERTIFICATE_FILE"))
+	cuit, err := strconv.ParseInt(os.Getenv("CUIT"), 10, 64)
+	if err != nil {
+		fmt.Println("Falta o es errónea la variable de entorno CUIT")
+		os.Exit(-1)
+	}
+
+	wsaa, err := afip.NewWsaa(environment,
+		os.Getenv("PRIVATE_KEY_FILE"),
+		os.Getenv("CERTIFICATE_FILE"),
+		cuit)
 	if err != nil {
 		panic(err)
 	}
 
-	loginTicket, err := client.GetLoginTicket(*service)
+	_, err = wsaa.GetLoginTicket(*service)
 	if err != nil {
 		panic(err)
 	}
-
-	data := fmt.Sprintf("SERVICE=%s\nTOKEN=%s\nSIGN=%s\nEXPIRATION=%s\n",
-		loginTicket.ServiceName,
-		loginTicket.Token,
-		loginTicket.Sign,
-		loginTicket.ExpirationTime)
-
-	f, err := os.Create(fmt.Sprintf("%s.TA", *service))
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	defer f.Close()
-
-	l, err := f.WriteString(data)
-	if err != nil {
-		panic(err)
-	}
-
-	fmt.Println(l, "bytes written successfully")
 }
