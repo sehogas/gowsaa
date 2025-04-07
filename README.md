@@ -29,6 +29,13 @@ Ejemplo de conexión al servicio de autenticación de AFIP (webservice wsaa) en 
   PRIVATE_KEY_FILE=MiClavePrivada
   CERTIFICATE_FILE=certificado.pem
 
+
+### Ejemplo de creación del llamado a un servicio
+
+```
+$ gowsdl -o wgescomunicacionembarque.go -d ws/ -p wscoem  wsdl/wgescomunicacionembarque.xml
+```
+
 ---
 #### Créditos
   Para la conexión soap y la generación del archivo wsaa.go se utilizó https://github.com/hooklift/gowsdl/

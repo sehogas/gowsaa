@@ -1,0 +1,997 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="Ar.Gob.Afip.Dga.wgescomunicacionembarque" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" targetNamespace="Ar.Gob.Afip.Dga.wgescomunicacionembarque">
+<wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Gestion de comunicaciones de embarque</wsdl:documentation>
+<wsdl:types>
+<s:schema elementFormDefault="qualified" targetNamespace="Ar.Gob.Afip.Dga.wgescomunicacionembarque">
+<s:element name="RegistrarCaratula">
+<s:complexType>
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="argWSAutenticacionEmpresa" type="tns:WSAutenticacionEmpresa"/>
+<s:element minOccurs="0" maxOccurs="1" name="argRegistrarCaratula" type="tns:RegistrarCaratulaRequest"/>
+</s:sequence>
+</s:complexType>
+</s:element>
+<s:complexType name="WSAutenticacionEmpresa">
+<s:complexContent mixed="false">
+<s:extension base="tns:WSAutenticacion">
+<s:sequence>
+<s:element minOccurs="1" maxOccurs="1" name="CuitEmpresaConectada" type="s:long"/>
+<s:element minOccurs="0" maxOccurs="1" name="TipoAgente" type="s:string"/>
+<s:element minOccurs="0" maxOccurs="1" name="Rol" type="s:string"/>
+</s:sequence>
+</s:extension>
+</s:complexContent>
+</s:complexType>
+<s:complexType name="WSAutenticacion">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="Token" type="s:string"/>
+<s:element minOccurs="0" maxOccurs="1" name="Sign" type="s:string"/>
+</s:sequence>
+</s:complexType>
+<s:complexType name="RegistrarCaratulaRequest">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="Caratula" type="tns:Caratula"/>
+</s:sequence>
+</s:complexType>
+<s:complexType name="Caratula">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="IdentificadorBuque" type="s:string"/>
+<s:element minOccurs="0" maxOccurs="1" name="CodigoAduana" type="s:string"/>
+<s:element minOccurs="0" maxOccurs="1" name="CodigoLugarOperativo" type="s:string"/>
+<s:element minOccurs="1" maxOccurs="1" name="FechaArribo" type="s:dateTime"/>
+<s:element minOccurs="1" maxOccurs="1" name="FechaZarpada" type="s:dateTime"/>
+<s:element minOccurs="0" maxOccurs="1" name="Via" type="s:string"/>
+<s:element minOccurs="0" maxOccurs="1" name="NombreMedioTransporte" type="s:string"/>
+<s:element minOccurs="0" maxOccurs="1" name="PuertoDestino" type="s:string"/>
+<s:element minOccurs="0" maxOccurs="1" name="NumeroViaje" type="s:string"/>
+<s:element minOccurs="0" maxOccurs="1" name="Itinerario" type="tns:ArrayOfPuerto"/>
+</s:sequence>
+</s:complexType>
+<s:complexType name="ArrayOfPuerto">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="unbounded" name="Puerto" nillable="true" type="tns:Puerto"/>
+</s:sequence>
+</s:complexType>
+<s:complexType name="Puerto">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="CodigoPuerto" type="s:string"/>
+</s:sequence>
+</s:complexType>
+<s:element name="RegistrarCaratulaResponse">
+<s:complexType>
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="RegistrarCaratulaResult" type="tns:RegistrarEmbarqueRta"/>
+</s:sequence>
+</s:complexType>
+</s:element>
+<s:complexType name="RegistrarEmbarqueRta">
+<s:complexContent mixed="false">
+<s:extension base="tns:ResponseAbstract"/>
+</s:complexContent>
+</s:complexType>
+<s:complexType name="ResponseAbstract" abstract="true">
+<s:complexContent mixed="false">
+<s:extension base="tns:ResultadoEjecucionSerializable"/>
+</s:complexContent>
+</s:complexType>
+<s:complexType name="ResultadoEjecucionSerializable">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="ListaErrores" type="tns:ArrayOfDgaMensajeSistemaReducido"/>
+<s:element minOccurs="0" maxOccurs="1" name="Server" type="s:string"/>
+<s:element minOccurs="1" maxOccurs="1" name="TimeStamp" type="s:dateTime"/>
+</s:sequence>
+</s:complexType>
+<s:complexType name="ArrayOfDgaMensajeSistemaReducido">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="unbounded" name="DetalleError" nillable="true" type="tns:DgaMensajeSistemaReducido"/>
+</s:sequence>
+</s:complexType>
+<s:complexType name="DgaMensajeSistemaReducido">
+<s:sequence>
+<s:element minOccurs="1" maxOccurs="1" name="Codigo" nillable="true" type="s:int"/>
+<s:element minOccurs="0" maxOccurs="1" name="Descripcion" type="s:string"/>
+<s:element minOccurs="0" maxOccurs="1" name="DescripcionAdicional" type="s:string"/>
+</s:sequence>
+</s:complexType>
+<s:element name="RectificarCaratula">
+<s:complexType>
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="argWSAutenticacionEmpresa" type="tns:WSAutenticacionEmpresa"/>
+<s:element minOccurs="0" maxOccurs="1" name="argRectificarCaratula" type="tns:RectificarCaratulaRequest"/>
+</s:sequence>
+</s:complexType>
+</s:element>
+<s:complexType name="RectificarCaratulaRequest">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="Caratula" type="tns:Caratula"/>
+<s:element minOccurs="0" maxOccurs="1" name="IdentificadorCaratula" type="s:string"/>
+</s:sequence>
+</s:complexType>
+<s:element name="RectificarCaratulaResponse">
+<s:complexType>
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="RectificarCaratulaResult" type="tns:RectificarEmbarqueRta"/>
+</s:sequence>
+</s:complexType>
+</s:element>
+<s:complexType name="RectificarEmbarqueRta">
+<s:complexContent mixed="false">
+<s:extension base="tns:ResponseAbstract"/>
+</s:complexContent>
+</s:complexType>
+<s:element name="AnularCaratula">
+<s:complexType>
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="argWSAutenticacionEmpresa" type="tns:WSAutenticacionEmpresa"/>
+<s:element minOccurs="0" maxOccurs="1" name="argAnularCaratula" type="tns:AnularCaratulaRequest"/>
+</s:sequence>
+</s:complexType>
+</s:element>
+<s:complexType name="AnularCaratulaRequest">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="IdentificadorCaratula" type="s:string"/>
+</s:sequence>
+</s:complexType>
+<s:element name="AnularCaratulaResponse">
+<s:complexType>
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="AnularCaratulaResult" type="tns:AnularEmbarqueRta"/>
+</s:sequence>
+</s:complexType>
+</s:element>
+<s:complexType name="AnularEmbarqueRta">
+<s:complexContent mixed="false">
+<s:extension base="tns:ResponseAbstract"/>
+</s:complexContent>
+</s:complexType>
+<s:element name="RegistrarCOEM">
+<s:complexType>
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="argWSAutenticacionEmpresa" type="tns:WSAutenticacionEmpresa"/>
+<s:element minOccurs="0" maxOccurs="1" name="argRegistrarCOEM" type="tns:RegistrarCOEMRequest"/>
+</s:sequence>
+</s:complexType>
+</s:element>
+<s:complexType name="RegistrarCOEMRequest">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="IdentificadorCaratula" type="s:string"/>
+<s:element minOccurs="0" maxOccurs="1" name="Coem" type="tns:Coem"/>
+</s:sequence>
+</s:complexType>
+<s:complexType name="Coem">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="ContenedoresConCarga" type="tns:ArrayOfContenedorCarga"/>
+<s:element minOccurs="0" maxOccurs="1" name="ContenedoresVacios" type="tns:ArrayOfContenedorVacio"/>
+<s:element minOccurs="0" maxOccurs="1" name="MercaderiasSueltas" type="tns:ArrayOfMercaderiaSuelta"/>
+</s:sequence>
+</s:complexType>
+<s:complexType name="ArrayOfContenedorCarga">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="unbounded" name="ContenedorCarga" nillable="true" type="tns:ContenedorCarga"/>
+</s:sequence>
+</s:complexType>
+<s:complexType name="ContenedorCarga">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="IdentificadorContenedor" type="s:string"/>
+<s:element minOccurs="0" maxOccurs="1" name="CuitATA" type="s:string"/>
+<s:element minOccurs="0" maxOccurs="1" name="Tipo" type="s:string"/>
+<s:element minOccurs="1" maxOccurs="1" name="Peso" type="s:decimal"/>
+<s:element minOccurs="0" maxOccurs="1" name="Precintos" type="tns:ArrayOfPrecinto"/>
+<s:element minOccurs="0" maxOccurs="1" name="Declaraciones" type="tns:ArrayOfDeclaracion"/>
+</s:sequence>
+</s:complexType>
+<s:complexType name="ArrayOfPrecinto">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="unbounded" name="Precinto" nillable="true" type="tns:Precinto"/>
+</s:sequence>
+</s:complexType>
+<s:complexType name="Precinto">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="IdentificadorPrecinto" type="s:string"/>
+</s:sequence>
+</s:complexType>
+<s:complexType name="ArrayOfDeclaracion">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="unbounded" name="Declaracion" nillable="true" type="tns:Declaracion"/>
+</s:sequence>
+</s:complexType>
+<s:complexType name="Declaracion">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="IdentificadorDeclaracion" type="s:string"/>
+</s:sequence>
+</s:complexType>
+<s:complexType name="ArrayOfContenedorVacio">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="unbounded" name="ContenedorVacio" nillable="true" type="tns:ContenedorVacio"/>
+</s:sequence>
+</s:complexType>
+<s:complexType name="ContenedorVacio">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="IdentificadorContenedor" type="s:string"/>
+<s:element minOccurs="0" maxOccurs="1" name="Tipo" type="s:string"/>
+<s:element minOccurs="0" maxOccurs="1" name="CuitATA" type="s:string"/>
+<s:element minOccurs="0" maxOccurs="1" name="CodigoPais" type="s:string"/>
+</s:sequence>
+</s:complexType>
+<s:complexType name="ArrayOfMercaderiaSuelta">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="unbounded" name="MercaderiaSuelta" nillable="true" type="tns:MercaderiaSuelta"/>
+</s:sequence>
+</s:complexType>
+<s:complexType name="MercaderiaSuelta">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="IdentificadorDeclaracion" type="s:string"/>
+<s:element minOccurs="0" maxOccurs="1" name="CuitATA" type="s:string"/>
+<s:element minOccurs="0" maxOccurs="1" name="Embalajes" type="tns:ArrayOfEmbalaje"/>
+</s:sequence>
+</s:complexType>
+<s:complexType name="ArrayOfEmbalaje">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="unbounded" name="Embalaje" nillable="true" type="tns:Embalaje"/>
+</s:sequence>
+</s:complexType>
+<s:complexType name="Embalaje">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="CodigoEmbalaje" type="s:string"/>
+<s:element minOccurs="1" maxOccurs="1" name="Peso" type="s:decimal"/>
+<s:element minOccurs="1" maxOccurs="1" name="CantidadBultos" type="s:int"/>
+</s:sequence>
+</s:complexType>
+<s:element name="RegistrarCOEMResponse">
+<s:complexType>
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="RegistrarCOEMResult" type="tns:RegistrarEmbarqueRta"/>
+</s:sequence>
+</s:complexType>
+</s:element>
+<s:element name="RectificarCOEM">
+<s:complexType>
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="argWSAutenticacionEmpresa" type="tns:WSAutenticacionEmpresa"/>
+<s:element minOccurs="0" maxOccurs="1" name="argRectificarCOEM" type="tns:RectificarCOEMRequest"/>
+</s:sequence>
+</s:complexType>
+</s:element>
+<s:complexType name="RectificarCOEMRequest">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="IdentificadorCaratula" type="s:string"/>
+<s:element minOccurs="0" maxOccurs="1" name="IdentificadorCOEM" type="s:string"/>
+<s:element minOccurs="0" maxOccurs="1" name="Coem" type="tns:Coem"/>
+</s:sequence>
+</s:complexType>
+<s:element name="RectificarCOEMResponse">
+<s:complexType>
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="RectificarCOEMResult" type="tns:RectificarEmbarqueRta"/>
+</s:sequence>
+</s:complexType>
+</s:element>
+<s:element name="AnularCOEM">
+<s:complexType>
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="argWSAutenticacionEmpresa" type="tns:WSAutenticacionEmpresa"/>
+<s:element minOccurs="0" maxOccurs="1" name="argAnularCOEM" type="tns:AnularCOEMRequest"/>
+</s:sequence>
+</s:complexType>
+</s:element>
+<s:complexType name="AnularCOEMRequest">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="IdentificadorCaratula" type="s:string"/>
+<s:element minOccurs="0" maxOccurs="1" name="IdentificadorCOEM" type="s:string"/>
+</s:sequence>
+</s:complexType>
+<s:element name="AnularCOEMResponse">
+<s:complexType>
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="AnularCOEMResult" type="tns:AnularEmbarqueRta"/>
+</s:sequence>
+</s:complexType>
+</s:element>
+<s:element name="CerrarCOEM">
+<s:complexType>
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="argWSAutenticacionEmpresa" type="tns:WSAutenticacionEmpresa"/>
+<s:element minOccurs="0" maxOccurs="1" name="argCerrarCOEM" type="tns:CerrarCOEMRequest"/>
+</s:sequence>
+</s:complexType>
+</s:element>
+<s:complexType name="CerrarCOEMRequest">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="IdentificadorCaratula" type="s:string"/>
+<s:element minOccurs="0" maxOccurs="1" name="IdentificadorCOEM" type="s:string"/>
+</s:sequence>
+</s:complexType>
+<s:element name="CerrarCOEMResponse">
+<s:complexType>
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="CerrarCOEMResult" type="tns:RegistrarEmbarqueRta"/>
+</s:sequence>
+</s:complexType>
+</s:element>
+<s:element name="SolicitarCambioBuque">
+<s:complexType>
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="argWSAutenticacionEmpresa" type="tns:WSAutenticacionEmpresa"/>
+<s:element minOccurs="0" maxOccurs="1" name="argSolicitarCambioBuque" type="tns:SolicitarCambioBuqueRequest"/>
+</s:sequence>
+</s:complexType>
+</s:element>
+<s:complexType name="SolicitarCambioBuqueRequest">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="IdentificadorCaratula" type="s:string"/>
+<s:element minOccurs="0" maxOccurs="1" name="IdentificadorBuque" type="s:string"/>
+<s:element minOccurs="0" maxOccurs="1" name="NombreMedioTransporte" type="s:string"/>
+</s:sequence>
+</s:complexType>
+<s:element name="SolicitarCambioBuqueResponse">
+<s:complexType>
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="SolicitarCambioBuqueResult" type="tns:RegistrarEmbarqueRta"/>
+</s:sequence>
+</s:complexType>
+</s:element>
+<s:element name="SolicitarCambioFechas">
+<s:complexType>
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="argWSAutenticacionEmpresa" type="tns:WSAutenticacionEmpresa"/>
+<s:element minOccurs="0" maxOccurs="1" name="argSolicitarCambioFechas" type="tns:SolicitarCambioFechasRequest"/>
+</s:sequence>
+</s:complexType>
+</s:element>
+<s:complexType name="SolicitarCambioFechasRequest">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="IdentificadorCaratula" type="s:string"/>
+<s:element minOccurs="1" maxOccurs="1" name="FechaArribo" type="s:dateTime"/>
+<s:element minOccurs="1" maxOccurs="1" name="FechaZarpada" type="s:dateTime"/>
+<s:element minOccurs="0" maxOccurs="1" name="CodigoMotivo" type="s:string"/>
+<s:element minOccurs="0" maxOccurs="1" name="DescripcionMotivo" type="s:string"/>
+</s:sequence>
+</s:complexType>
+<s:element name="SolicitarCambioFechasResponse">
+<s:complexType>
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="SolicitarCambioFechasResult" type="tns:RegistrarEmbarqueRta"/>
+</s:sequence>
+</s:complexType>
+</s:element>
+<s:element name="SolicitarCambioLOT">
+<s:complexType>
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="argWSAutenticacionEmpresa" type="tns:WSAutenticacionEmpresa"/>
+<s:element minOccurs="0" maxOccurs="1" name="argSolicitarCambioLOT" type="tns:SolicitarCambioLOTRequest"/>
+</s:sequence>
+</s:complexType>
+</s:element>
+<s:complexType name="SolicitarCambioLOTRequest">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="IdentificadorCaratula" type="s:string"/>
+<s:element minOccurs="0" maxOccurs="1" name="CodigoLugarOperativo" type="s:string"/>
+</s:sequence>
+</s:complexType>
+<s:element name="SolicitarCambioLOTResponse">
+<s:complexType>
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="SolicitarCambioLOTResult" type="tns:RegistrarEmbarqueRta"/>
+</s:sequence>
+</s:complexType>
+</s:element>
+<s:element name="SolicitarNoABordo">
+<s:complexType>
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="argWSAutenticacionEmpresa" type="tns:WSAutenticacionEmpresa"/>
+<s:element minOccurs="0" maxOccurs="1" name="argSolicitarNoABordo" type="tns:SolicitarNoABordoRequest"/>
+</s:sequence>
+</s:complexType>
+</s:element>
+<s:complexType name="SolicitarNoABordoRequest">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="IdentificadorCaratula" type="s:string"/>
+<s:element minOccurs="0" maxOccurs="1" name="IdentificadorCOEM" type="s:string"/>
+<s:element minOccurs="0" maxOccurs="1" name="CodigoMotivo" type="s:string"/>
+<s:element minOccurs="0" maxOccurs="1" name="DescripcionMotivo" type="s:string"/>
+<s:element minOccurs="0" maxOccurs="1" name="IdentificadoresContenedoresVacios" type="tns:ArrayOfContenedor"/>
+<s:element minOccurs="0" maxOccurs="1" name="IdentificadoresContenedorCarga" type="tns:ArrayOfContenedor"/>
+<s:element minOccurs="0" maxOccurs="1" name="IdentificadoresDeclaracionesMercaderiaSuelta" type="tns:ArrayOfDeclaracion"/>
+</s:sequence>
+</s:complexType>
+<s:complexType name="ArrayOfContenedor">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="unbounded" name="Contenedor" nillable="true" type="tns:Contenedor"/>
+</s:sequence>
+</s:complexType>
+<s:complexType name="Contenedor">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="IdentificadorContenedor" type="s:string"/>
+</s:sequence>
+</s:complexType>
+<s:element name="SolicitarNoABordoResponse">
+<s:complexType>
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="SolicitarNoABordoResult" type="tns:RegistrarEmbarqueRta"/>
+</s:sequence>
+</s:complexType>
+</s:element>
+<s:element name="SolicitarCierreCargaContoBulto">
+<s:complexType>
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="argWSAutenticacionEmpresa" type="tns:WSAutenticacionEmpresa"/>
+<s:element minOccurs="0" maxOccurs="1" name="argSolicitarCierreCargaContoBulto" type="tns:SolicitarCierreCargaContoBultoRequest"/>
+</s:sequence>
+</s:complexType>
+</s:element>
+<s:complexType name="SolicitarCierreCargaContoBultoRequest">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="IdentificadorCaratula" type="s:string"/>
+<s:element minOccurs="1" maxOccurs="1" name="FechaZarpada" type="s:dateTime"/>
+<s:element minOccurs="0" maxOccurs="1" name="numeroViaje" type="s:string"/>
+<s:element minOccurs="0" maxOccurs="1" name="Declaraciones" type="tns:ArrayOfDeclaracionCont"/>
+</s:sequence>
+</s:complexType>
+<s:complexType name="ArrayOfDeclaracionCont">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="unbounded" name="DeclaracionCont" nillable="true" type="tns:DeclaracionCont"/>
+</s:sequence>
+</s:complexType>
+<s:complexType name="DeclaracionCont">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="IdentificadorDeclaracion" type="s:string"/>
+<s:element minOccurs="1" maxOccurs="1" name="FechaEmbarque" type="s:dateTime"/>
+</s:sequence>
+</s:complexType>
+<s:element name="SolicitarCierreCargaContoBultoResponse">
+<s:complexType>
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="SolicitarCierreCargaContoBultoResult" type="tns:RegistrarEmbarqueRta"/>
+</s:sequence>
+</s:complexType>
+</s:element>
+<s:element name="SolicitarCierreCargaGranel">
+<s:complexType>
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="argWSAutenticacionEmpresa" type="tns:WSAutenticacionEmpresa"/>
+<s:element minOccurs="0" maxOccurs="1" name="argSolicitarCierreCargaGranel" type="tns:SolicitarCierreCargaGranelRequest"/>
+</s:sequence>
+</s:complexType>
+</s:element>
+<s:complexType name="SolicitarCierreCargaGranelRequest">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="IdentificadorCaratula" type="s:string"/>
+<s:element minOccurs="1" maxOccurs="1" name="FechaZarpada" type="s:dateTime"/>
+<s:element minOccurs="0" maxOccurs="1" name="numeroViaje" type="s:string"/>
+<s:element minOccurs="0" maxOccurs="1" name="Coems" type="tns:ArrayOfCoemGranel"/>
+</s:sequence>
+</s:complexType>
+<s:complexType name="ArrayOfCoemGranel">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="unbounded" name="CoemGranel" nillable="true" type="tns:CoemGranel"/>
+</s:sequence>
+</s:complexType>
+<s:complexType name="CoemGranel">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="IdentificadorCoem" type="s:string"/>
+<s:element minOccurs="0" maxOccurs="1" name="Declaraciones" type="tns:ArrayOfDeclaracionGranel"/>
+</s:sequence>
+</s:complexType>
+<s:complexType name="ArrayOfDeclaracionGranel">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="unbounded" name="DeclaracionGranel" nillable="true" type="tns:DeclaracionGranel"/>
+</s:sequence>
+</s:complexType>
+<s:complexType name="DeclaracionGranel">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="IdentificadorDeclaracion" type="s:string"/>
+<s:element minOccurs="1" maxOccurs="1" name="FechaEmbarque" type="s:dateTime"/>
+<s:element minOccurs="0" maxOccurs="1" name="IdentificadorCierreCumplido" type="s:string"/>
+<s:element minOccurs="0" maxOccurs="1" name="Items" type="tns:ArrayOfItem"/>
+</s:sequence>
+</s:complexType>
+<s:complexType name="ArrayOfItem">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="unbounded" name="Item" nillable="true" type="tns:Item"/>
+</s:sequence>
+</s:complexType>
+<s:complexType name="Item">
+<s:sequence>
+<s:element minOccurs="1" maxOccurs="1" name="numeroItem" type="s:int"/>
+<s:element minOccurs="1" maxOccurs="1" name="cantidadReal" type="s:decimal"/>
+</s:sequence>
+</s:complexType>
+<s:element name="SolicitarCierreCargaGranelResponse">
+<s:complexType>
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="SolicitarCierreCargaGranelResult" type="tns:RegistrarEmbarqueRta"/>
+</s:sequence>
+</s:complexType>
+</s:element>
+<s:element name="SolicitarAnulacionCOEM">
+<s:complexType>
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="argWSAutenticacionEmpresa" type="tns:WSAutenticacionEmpresa"/>
+<s:element minOccurs="0" maxOccurs="1" name="argSolicitarAnulacionCOEM" type="tns:SolicitarAnulacionCOEMRequest"/>
+</s:sequence>
+</s:complexType>
+</s:element>
+<s:complexType name="SolicitarAnulacionCOEMRequest">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="IdentificadorCaratula" type="s:string"/>
+<s:element minOccurs="0" maxOccurs="1" name="IdentificadorCOEM" type="s:string"/>
+</s:sequence>
+</s:complexType>
+<s:element name="SolicitarAnulacionCOEMResponse">
+<s:complexType>
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="SolicitarAnulacionCOEMResult" type="tns:RegistrarEmbarqueRta"/>
+</s:sequence>
+</s:complexType>
+</s:element>
+<s:element name="Dummy">
+<s:complexType/>
+</s:element>
+<s:element name="DummyResponse">
+<s:complexType>
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="DummyResult" type="tns:ResultadoEjecucionDummy"/>
+</s:sequence>
+</s:complexType>
+</s:element>
+<s:complexType name="ResultadoEjecucionDummy">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="AppServer" type="s:string"/>
+<s:element minOccurs="0" maxOccurs="1" name="DbServer" type="s:string"/>
+<s:element minOccurs="0" maxOccurs="1" name="AuthServer" type="s:string"/>
+</s:sequence>
+</s:complexType>
+</s:schema>
+</wsdl:types>
+<wsdl:message name="RegistrarCaratulaSoapIn">
+<wsdl:part name="parameters" element="tns:RegistrarCaratula"/>
+</wsdl:message>
+<wsdl:message name="RegistrarCaratulaSoapOut">
+<wsdl:part name="parameters" element="tns:RegistrarCaratulaResponse"/>
+</wsdl:message>
+<wsdl:message name="RectificarCaratulaSoapIn">
+<wsdl:part name="parameters" element="tns:RectificarCaratula"/>
+</wsdl:message>
+<wsdl:message name="RectificarCaratulaSoapOut">
+<wsdl:part name="parameters" element="tns:RectificarCaratulaResponse"/>
+</wsdl:message>
+<wsdl:message name="AnularCaratulaSoapIn">
+<wsdl:part name="parameters" element="tns:AnularCaratula"/>
+</wsdl:message>
+<wsdl:message name="AnularCaratulaSoapOut">
+<wsdl:part name="parameters" element="tns:AnularCaratulaResponse"/>
+</wsdl:message>
+<wsdl:message name="RegistrarCOEMSoapIn">
+<wsdl:part name="parameters" element="tns:RegistrarCOEM"/>
+</wsdl:message>
+<wsdl:message name="RegistrarCOEMSoapOut">
+<wsdl:part name="parameters" element="tns:RegistrarCOEMResponse"/>
+</wsdl:message>
+<wsdl:message name="RectificarCOEMSoapIn">
+<wsdl:part name="parameters" element="tns:RectificarCOEM"/>
+</wsdl:message>
+<wsdl:message name="RectificarCOEMSoapOut">
+<wsdl:part name="parameters" element="tns:RectificarCOEMResponse"/>
+</wsdl:message>
+<wsdl:message name="AnularCOEMSoapIn">
+<wsdl:part name="parameters" element="tns:AnularCOEM"/>
+</wsdl:message>
+<wsdl:message name="AnularCOEMSoapOut">
+<wsdl:part name="parameters" element="tns:AnularCOEMResponse"/>
+</wsdl:message>
+<wsdl:message name="CerrarCOEMSoapIn">
+<wsdl:part name="parameters" element="tns:CerrarCOEM"/>
+</wsdl:message>
+<wsdl:message name="CerrarCOEMSoapOut">
+<wsdl:part name="parameters" element="tns:CerrarCOEMResponse"/>
+</wsdl:message>
+<wsdl:message name="SolicitarCambioBuqueSoapIn">
+<wsdl:part name="parameters" element="tns:SolicitarCambioBuque"/>
+</wsdl:message>
+<wsdl:message name="SolicitarCambioBuqueSoapOut">
+<wsdl:part name="parameters" element="tns:SolicitarCambioBuqueResponse"/>
+</wsdl:message>
+<wsdl:message name="SolicitarCambioFechasSoapIn">
+<wsdl:part name="parameters" element="tns:SolicitarCambioFechas"/>
+</wsdl:message>
+<wsdl:message name="SolicitarCambioFechasSoapOut">
+<wsdl:part name="parameters" element="tns:SolicitarCambioFechasResponse"/>
+</wsdl:message>
+<wsdl:message name="SolicitarCambioLOTSoapIn">
+<wsdl:part name="parameters" element="tns:SolicitarCambioLOT"/>
+</wsdl:message>
+<wsdl:message name="SolicitarCambioLOTSoapOut">
+<wsdl:part name="parameters" element="tns:SolicitarCambioLOTResponse"/>
+</wsdl:message>
+<wsdl:message name="SolicitarNoABordoSoapIn">
+<wsdl:part name="parameters" element="tns:SolicitarNoABordo"/>
+</wsdl:message>
+<wsdl:message name="SolicitarNoABordoSoapOut">
+<wsdl:part name="parameters" element="tns:SolicitarNoABordoResponse"/>
+</wsdl:message>
+<wsdl:message name="SolicitarCierreCargaContoBultoSoapIn">
+<wsdl:part name="parameters" element="tns:SolicitarCierreCargaContoBulto"/>
+</wsdl:message>
+<wsdl:message name="SolicitarCierreCargaContoBultoSoapOut">
+<wsdl:part name="parameters" element="tns:SolicitarCierreCargaContoBultoResponse"/>
+</wsdl:message>
+<wsdl:message name="SolicitarCierreCargaGranelSoapIn">
+<wsdl:part name="parameters" element="tns:SolicitarCierreCargaGranel"/>
+</wsdl:message>
+<wsdl:message name="SolicitarCierreCargaGranelSoapOut">
+<wsdl:part name="parameters" element="tns:SolicitarCierreCargaGranelResponse"/>
+</wsdl:message>
+<wsdl:message name="SolicitarAnulacionCOEMSoapIn">
+<wsdl:part name="parameters" element="tns:SolicitarAnulacionCOEM"/>
+</wsdl:message>
+<wsdl:message name="SolicitarAnulacionCOEMSoapOut">
+<wsdl:part name="parameters" element="tns:SolicitarAnulacionCOEMResponse"/>
+</wsdl:message>
+<wsdl:message name="DummySoapIn">
+<wsdl:part name="parameters" element="tns:Dummy"/>
+</wsdl:message>
+<wsdl:message name="DummySoapOut">
+<wsdl:part name="parameters" element="tns:DummyResponse"/>
+</wsdl:message>
+<wsdl:portType name="wgescomunicacionembarqueSoap">
+<wsdl:operation name="RegistrarCaratula">
+<wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Registrar Carátula</wsdl:documentation>
+<wsdl:input message="tns:RegistrarCaratulaSoapIn"/>
+<wsdl:output message="tns:RegistrarCaratulaSoapOut"/>
+</wsdl:operation>
+<wsdl:operation name="RectificarCaratula">
+<wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Rectificar Carátula</wsdl:documentation>
+<wsdl:input message="tns:RectificarCaratulaSoapIn"/>
+<wsdl:output message="tns:RectificarCaratulaSoapOut"/>
+</wsdl:operation>
+<wsdl:operation name="AnularCaratula">
+<wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Anular Carátula</wsdl:documentation>
+<wsdl:input message="tns:AnularCaratulaSoapIn"/>
+<wsdl:output message="tns:AnularCaratulaSoapOut"/>
+</wsdl:operation>
+<wsdl:operation name="RegistrarCOEM">
+<wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Registrar Comunicación de Embarque</wsdl:documentation>
+<wsdl:input message="tns:RegistrarCOEMSoapIn"/>
+<wsdl:output message="tns:RegistrarCOEMSoapOut"/>
+</wsdl:operation>
+<wsdl:operation name="RectificarCOEM">
+<wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Rectificar Comunicación de Embarque</wsdl:documentation>
+<wsdl:input message="tns:RectificarCOEMSoapIn"/>
+<wsdl:output message="tns:RectificarCOEMSoapOut"/>
+</wsdl:operation>
+<wsdl:operation name="AnularCOEM">
+<wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Anular una Comunicación de Embarque</wsdl:documentation>
+<wsdl:input message="tns:AnularCOEMSoapIn"/>
+<wsdl:output message="tns:AnularCOEMSoapOut"/>
+</wsdl:operation>
+<wsdl:operation name="CerrarCOEM">
+<wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Cerrar Comunicación de Embarque</wsdl:documentation>
+<wsdl:input message="tns:CerrarCOEMSoapIn"/>
+<wsdl:output message="tns:CerrarCOEMSoapOut"/>
+</wsdl:operation>
+<wsdl:operation name="SolicitarCambioBuque">
+<wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Solicitar Cambio de Buque</wsdl:documentation>
+<wsdl:input message="tns:SolicitarCambioBuqueSoapIn"/>
+<wsdl:output message="tns:SolicitarCambioBuqueSoapOut"/>
+</wsdl:operation>
+<wsdl:operation name="SolicitarCambioFechas">
+<wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Solicitar Cambio de Fecha/s</wsdl:documentation>
+<wsdl:input message="tns:SolicitarCambioFechasSoapIn"/>
+<wsdl:output message="tns:SolicitarCambioFechasSoapOut"/>
+</wsdl:operation>
+<wsdl:operation name="SolicitarCambioLOT">
+<wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Solicitar Cambio de Lugar Operativo</wsdl:documentation>
+<wsdl:input message="tns:SolicitarCambioLOTSoapIn"/>
+<wsdl:output message="tns:SolicitarCambioLOTSoapOut"/>
+</wsdl:operation>
+<wsdl:operation name="SolicitarNoABordo">
+<wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Solicitud de No Abordar</wsdl:documentation>
+<wsdl:input message="tns:SolicitarNoABordoSoapIn"/>
+<wsdl:output message="tns:SolicitarNoABordoSoapOut"/>
+</wsdl:operation>
+<wsdl:operation name="SolicitarCierreCargaContoBulto">
+<wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Solicitud de Cierre de Carga Contenedores o Bultos Sueltos</wsdl:documentation>
+<wsdl:input message="tns:SolicitarCierreCargaContoBultoSoapIn"/>
+<wsdl:output message="tns:SolicitarCierreCargaContoBultoSoapOut"/>
+</wsdl:operation>
+<wsdl:operation name="SolicitarCierreCargaGranel">
+<wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Solicitud de Cierre de Carga Granel</wsdl:documentation>
+<wsdl:input message="tns:SolicitarCierreCargaGranelSoapIn"/>
+<wsdl:output message="tns:SolicitarCierreCargaGranelSoapOut"/>
+</wsdl:operation>
+<wsdl:operation name="SolicitarAnulacionCOEM">
+<wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Solicitar Anulación de Comunicación de Embarque</wsdl:documentation>
+<wsdl:input message="tns:SolicitarAnulacionCOEMSoapIn"/>
+<wsdl:output message="tns:SolicitarAnulacionCOEMSoapOut"/>
+</wsdl:operation>
+<wsdl:operation name="Dummy">
+<wsdl:input message="tns:DummySoapIn"/>
+<wsdl:output message="tns:DummySoapOut"/>
+</wsdl:operation>
+</wsdl:portType>
+<wsdl:binding name="wgescomunicacionembarqueSoap" type="tns:wgescomunicacionembarqueSoap">
+<soap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+<wsdl:operation name="RegistrarCaratula">
+<soap:operation soapAction="Ar.Gob.Afip.Dga.wgescomunicacionembarque/RegistrarCaratula" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="RectificarCaratula">
+<soap:operation soapAction="Ar.Gob.Afip.Dga.wgescomunicacionembarque/RectificarCaratula" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="AnularCaratula">
+<soap:operation soapAction="Ar.Gob.Afip.Dga.wgescomunicacionembarque/AnularCaratula" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="RegistrarCOEM">
+<soap:operation soapAction="Ar.Gob.Afip.Dga.wgescomunicacionembarque/RegistrarCOEM" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="RectificarCOEM">
+<soap:operation soapAction="Ar.Gob.Afip.Dga.wgescomunicacionembarque/RectificarCOEM" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="AnularCOEM">
+<soap:operation soapAction="Ar.Gob.Afip.Dga.wgescomunicacionembarque/AnularCOEM" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="CerrarCOEM">
+<soap:operation soapAction="Ar.Gob.Afip.Dga.wgescomunicacionembarque/CerrarCOEM" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="SolicitarCambioBuque">
+<soap:operation soapAction="Ar.Gob.Afip.Dga.wgescomunicacionembarque/SolicitarCambioBuque" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="SolicitarCambioFechas">
+<soap:operation soapAction="Ar.Gob.Afip.Dga.wgescomunicacionembarque/SolicitarCambioFechas" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="SolicitarCambioLOT">
+<soap:operation soapAction="Ar.Gob.Afip.Dga.wgescomunicacionembarque/SolicitarCambioLOT" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="SolicitarNoABordo">
+<soap:operation soapAction="Ar.Gob.Afip.Dga.wgescomunicacionembarque/SolicitarNoABordo" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="SolicitarCierreCargaContoBulto">
+<soap:operation soapAction="Ar.Gob.Afip.Dga.wgescomunicacionembarque/SolicitarCierreCargaContoBulto" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="SolicitarCierreCargaGranel">
+<soap:operation soapAction="Ar.Gob.Afip.Dga.wgescomunicacionembarque/SolicitarCierreCargaGranel" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="SolicitarAnulacionCOEM">
+<soap:operation soapAction="Ar.Gob.Afip.Dga.wgescomunicacionembarque/SolicitarAnulacionCOEM" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="Dummy">
+<soap:operation soapAction="Ar.Gob.Afip.Dga.wgescomunicacionembarque/Dummy" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+</wsdl:binding>
+<wsdl:binding name="wgescomunicacionembarqueSoap12" type="tns:wgescomunicacionembarqueSoap">
+<soap12:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+<wsdl:operation name="RegistrarCaratula">
+<soap12:operation soapAction="Ar.Gob.Afip.Dga.wgescomunicacionembarque/RegistrarCaratula" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="RectificarCaratula">
+<soap12:operation soapAction="Ar.Gob.Afip.Dga.wgescomunicacionembarque/RectificarCaratula" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="AnularCaratula">
+<soap12:operation soapAction="Ar.Gob.Afip.Dga.wgescomunicacionembarque/AnularCaratula" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="RegistrarCOEM">
+<soap12:operation soapAction="Ar.Gob.Afip.Dga.wgescomunicacionembarque/RegistrarCOEM" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="RectificarCOEM">
+<soap12:operation soapAction="Ar.Gob.Afip.Dga.wgescomunicacionembarque/RectificarCOEM" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="AnularCOEM">
+<soap12:operation soapAction="Ar.Gob.Afip.Dga.wgescomunicacionembarque/AnularCOEM" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="CerrarCOEM">
+<soap12:operation soapAction="Ar.Gob.Afip.Dga.wgescomunicacionembarque/CerrarCOEM" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="SolicitarCambioBuque">
+<soap12:operation soapAction="Ar.Gob.Afip.Dga.wgescomunicacionembarque/SolicitarCambioBuque" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="SolicitarCambioFechas">
+<soap12:operation soapAction="Ar.Gob.Afip.Dga.wgescomunicacionembarque/SolicitarCambioFechas" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="SolicitarCambioLOT">
+<soap12:operation soapAction="Ar.Gob.Afip.Dga.wgescomunicacionembarque/SolicitarCambioLOT" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="SolicitarNoABordo">
+<soap12:operation soapAction="Ar.Gob.Afip.Dga.wgescomunicacionembarque/SolicitarNoABordo" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="SolicitarCierreCargaContoBulto">
+<soap12:operation soapAction="Ar.Gob.Afip.Dga.wgescomunicacionembarque/SolicitarCierreCargaContoBulto" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="SolicitarCierreCargaGranel">
+<soap12:operation soapAction="Ar.Gob.Afip.Dga.wgescomunicacionembarque/SolicitarCierreCargaGranel" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="SolicitarAnulacionCOEM">
+<soap12:operation soapAction="Ar.Gob.Afip.Dga.wgescomunicacionembarque/SolicitarAnulacionCOEM" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="Dummy">
+<soap12:operation soapAction="Ar.Gob.Afip.Dga.wgescomunicacionembarque/Dummy" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+</wsdl:binding>
+<wsdl:service name="wgescomunicacionembarque">
+<wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Gestion de comunicaciones de embarque</wsdl:documentation>
+<wsdl:port name="wgescomunicacionembarqueSoap" binding="tns:wgescomunicacionembarqueSoap">
+<soap:address location="https://wsaduhomoext.afip.gob.ar/DIAV2/wgescomunicacionembarque/wgescomunicacionembarque.asmx"/>
+</wsdl:port>
+<wsdl:port name="wgescomunicacionembarqueSoap12" binding="tns:wgescomunicacionembarqueSoap12">
+<soap12:address location="https://wsaduhomoext.afip.gob.ar/DIAV2/wgescomunicacionembarque/wgescomunicacionembarque.asmx"/>
+</wsdl:port>
+</wsdl:service>
+</wsdl:definitions>
