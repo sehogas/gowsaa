@@ -3,7 +3,9 @@ package afip
 import (
 	"crypto/rsa"
 	"crypto/x509"
+	"encoding/json"
 	"encoding/pem"
+	"encoding/xml"
 	"errors"
 	"fmt"
 	"io"
@@ -79,4 +81,18 @@ func readCertificate(file string) (*x509.Certificate, error) {
 		certificate = cert
 	}
 	return certificate, nil
+}
+
+func PrintlnAsJSON(obj interface{}) {
+	data, err := json.MarshalIndent(obj, "", "    ")
+	if err == nil {
+		fmt.Println(string(data))
+	}
+}
+
+func PrintlnAsXML(obj interface{}) {
+	data, err := xml.MarshalIndent(obj, " ", "  ")
+	if err == nil {
+		fmt.Println(string(data))
+	}
 }

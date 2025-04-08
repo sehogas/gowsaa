@@ -1,0 +1,22 @@
+{
+    "contenedores_carga": [
+        {	
+            "identificador_contenedor": "MSCU5777685",
+            "tipo": "20G0",
+            "peso": 166,
+            "precintos": [
+                "G4164249"
+            ],
+            "declaraciones": [
+                "25067EC01000842N"
+            ]
+        }
+    ],
+    "contenedores_vacios": [
+        {
+            "identificador_contenedor": "SDMU6138978",
+            "tipo": "20G1",
+            "codigo_pais": "200"
+        }
+    ]
+}

@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"strconv"
 	"strings"
@@ -76,25 +77,141 @@ func main() {
 
 	err = wscoem.Dummy()
 	if err != nil {
-		panic(err)
+		log.Println(err)
+		os.Exit(1)
 	}
 
-	err = wscoem.RegistrarCaratula(&afip.RegistrarCaratulaParams{
-		IdentificadorBuque:    "IMO9262871",
-		NombreMedioTransporte: "ARGENTINO II",
-		CodigoAduana:          "067",
-		CodigoLugarOperativo:  "60DPP",
-		FechaEstimadaArribo:   time.Now().AddDate(0, 0, 1).Local(),
-		FechaEstimadaZarpada:  time.Now().AddDate(0, 0, 3).Local(),
-		Via:                   "8", //ACUATICA --SIEMPRE 8
-		NumeroViaje:           "11233",
-		PuertoDestino:         "BUE",
-		Itinerario:            nil,
-	})
-	if err != nil {
-		panic(err)
-	}
+	/*
+		identificadorAnulado, err := wscoem.AnularCaratula("25067EMBA000279P")
+		if identificadorAnulado != "" {
+			log.Printf("Carátula anulada: %s\n", identificadorAnulado)
+			if err != nil {
+				log.Println(err) //Imprimo los warnings
+			}
+		} else {
+			log.Println(err) //Imprimo los errores
+			os.Exit(1)
+		}
+	*/
 
+	/*
+		identificador, err := wscoem.RegistrarCaratula(&afip.CaratulaParams{
+			IdentificadorBuque:    "IMO9262871",
+			NombreMedioTransporte: "ARGENTINO II",
+			CodigoAduana:          "067",
+			CodigoLugarOperativo:  "10056",
+			FechaEstimadaArribo:   time.Now().AddDate(0, 0, 1).Local(),
+			FechaEstimadaZarpada:  time.Now().AddDate(0, 0, 3).Local(),
+			Via:                   "8", //ACUATICA --SIEMPRE 8
+			NumeroViaje:           "",
+			PuertoDestino:         "ARBUE",
+			Itinerario:            nil,
+		})
+		if identificador != "" {
+			log.Printf("Carátula registrada: %s\n", identificador)
+			if err != nil {
+				log.Println(err) //Imprimo Warnings
+			}
+		} else {
+			log.Println(err) //Imprimo errores
+			os.Exit(1)
+		}
+	*/
+
+	/*
+		identificador, err := wscoem.RectificarCaratula("25067EMBA000281X", &afip.CaratulaParams{
+			IdentificadorBuque:    "IMO9262871",
+			NombreMedioTransporte: "ARGENTINO II",
+			CodigoAduana:          "067",
+			CodigoLugarOperativo:  "10056",
+			FechaEstimadaArribo:   time.Now().AddDate(0, 0, 1).Local(),
+			FechaEstimadaZarpada:  time.Now().AddDate(0, 0, 3).Local(),
+			Via:                   "8", //ACUATICA --SIEMPRE 8
+			NumeroViaje:           "",
+			PuertoDestino:         "ARBUE",
+			Itinerario:            nil,
+		})
+		if identificador != "" {
+			log.Printf("Carátula rectificada: %s\n", identificador)
+			if err != nil {
+				log.Println(err) //Imprimo Warnings
+			}
+		} else {
+			log.Println(err) //Imprimo errores
+			os.Exit(1)
+		}
+	*/
+
+	/*
+		identificador, err := wscoem.SolicitarCambioBuque("25067EMBA000281X", &afip.CambioBuqueParams{
+			IdentificadorBuque:    "IMO9262871",
+			NombreMedioTransporte: "ARGENTINO II",
+		})
+		if identificador != "" {
+			log.Printf("Cambio de buque OK para carátula: %s\n", identificador)
+			if err != nil {
+				log.Println(err) //Imprimo Warnings
+			}
+		} else {
+			log.Println(err) //Imprimo errores
+			os.Exit(1)
+		}
+	*/
+	/*
+		identificador, err := wscoem.SolicitarCambioFechas("25067EMBA000281X", &afip.CambioFechasParams{
+			FechaEstimadaArribo:  time.Now().AddDate(0, 0, 1).Local(),
+			FechaEstimadaZarpada: time.Now().AddDate(0, 0, 3).Local(),
+			CodigoMotivo:         "1",
+			DescripcionMotivo:    "Se averio",
+		})
+		if identificador != "" {
+			log.Printf("Cambio de fechas OK para carátula: %s\n", identificador)
+			if err != nil {
+				log.Println(err) //Imprimo Warnings
+			}
+		} else {
+			log.Println(err) //Imprimo errores
+			os.Exit(1)
+		}
+	*/
+	/*
+		identificador, err := wscoem.SolicitarCambioLOT("25067EMBA000281X", &afip.CambioLOTParams{
+			CodigoLugarOperativo: "10057",
+		})
+		if identificador != "" {
+			log.Printf("Cambio de LOT OK para carátula: %s\n", identificador)
+			if err != nil {
+				log.Println(err) //Imprimo Warnings
+			}
+		} else {
+			log.Println(err) //Imprimo errores
+			os.Exit(1)
+		}*/
+
+	/*
+		plan, err := os.ReadFile("./cmd/gocoem/data_test/coem.json") // filename is the JSON file to read
+		if err != nil {
+			log.Println("Error abriendo archivo", err)
+		}
+		var datos afip.COEMParams
+		err = json.Unmarshal(plan, &datos)
+		if err != nil {
+			log.Println("Cannot unmarshal the json ", err)
+		}
+		afip.PrintlnAsJSON(datos)
+
+		identificadorCOEM, err := wscoem.RegistrarCOEM("25067EMBA000281X", &datos)
+		if identificadorCOEM != "" {
+			log.Printf("COEM registrado: %s\n", identificadorCOEM)
+			if err != nil {
+				log.Println(err) //Imprimo Warnings
+			}
+		}
+		if err != nil {
+			log.Println(err) //Imprimo errores
+			os.Exit(1)
+		}
+	*/
 }
 
 func GenTA(environment afip.Environment, serviceName string) error {
