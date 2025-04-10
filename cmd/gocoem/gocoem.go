@@ -1,14 +1,28 @@
 package main
 
 import (
+	"fmt"
 	"log"
+	"net/http"
 	"os"
 	"strconv"
 	"strings"
 	"time"
 
+	"github.com/go-playground/validator/v10"
 	"github.com/joho/godotenv"
+	"github.com/rs/cors"
 	"github.com/sehogas/gowsaa/afip"
+	"github.com/sehogas/gowsaa/internal/middleware"
+	"github.com/sehogas/gowsaa/internal/util"
+)
+
+var (
+	Version string = "development"
+
+	Wscoem *afip.Wscoem
+
+	validate *validator.Validate
 )
 
 func main() {
@@ -21,70 +35,119 @@ func main() {
 
 	cuit, err := strconv.ParseInt(os.Getenv("CUIT"), 10, 64)
 	if err != nil {
-		log.Fatalln("Falta o es errónea la variable de entorno CUIT")
+		log.Fatalln("variable de entorno CUIT faltante o no numérica")
 	}
 
 	if os.Getenv("PRIVATE_KEY_FILE") == "" {
-		log.Fatalln("Falta variable de entorno PRIVATE_KEY_FILE")
+		log.Fatalln("variable de entorno PRIVATE_KEY_FILE faltante")
 	}
 
 	if os.Getenv("CERTIFICATE_FILE") == "" {
-		log.Fatalln("Falta variable de entorno CERTIFICATE_FILE")
+		log.Fatalln("variable de entorno CERTIFICATE_FILE faltante")
 	}
 
 	if len(os.Getenv("WSCOEM_TIPO_AGENTE")) != 4 {
-		log.Fatalln("Falta o es errónea la variable de entorno WSCOEM_TIPO_AGENTE")
+		log.Fatalln("variable de entorno WSCOEM_TIPO_AGENTE faltante o inválida")
 	}
 
 	if len(os.Getenv("WSCOEM_ROL")) != 4 {
-		log.Fatalln("Falta o es errónea la variable de entorno WSCOEM_ROL")
+		log.Fatalln("variable de entorno WSCOEM_ROL faltante o inválida")
 	}
 
-	wscoem, err := afip.NewWscoem(environment, cuit, os.Getenv("WSCOEM_TIPO_AGENTE"), os.Getenv("WSCOEM_ROL"))
+	port := 3000
+
+	if os.Getenv("PORT") != "" {
+		port, err = strconv.Atoi(os.Getenv("PORT"))
+		if err != nil {
+			log.Fatalln("variable de entorno PORT no numérica. ", err)
+		}
+	}
+
+	Wscoem, err = afip.NewWscoem(environment, cuit, os.Getenv("WSCOEM_TIPO_AGENTE"), os.Getenv("WSCOEM_ROL"))
 	if err != nil {
 		log.Fatalln(err)
 	}
 
-	err = wscoem.Dummy()
-	if err != nil {
-		log.Fatalln(err)
+	/* API Rest */
+	validate = validator.New(validator.WithRequiredStructEnabled())
+
+	router := http.NewServeMux()
+	router.HandleFunc("/dummy", DummyHandler)
+	router.HandleFunc("POST /registrar-caratula", RegistrarCaratulaHandler)
+	router.HandleFunc("PUT /rectificar-caratula", RectificarCaratulaHandler)
+	router.HandleFunc("DELETE /anular-caratula", AnularCaratulaHandler)
+
+	middlewareCors := cors.New(cors.Options{
+		AllowedOrigins:   []string{"*"},
+		AllowCredentials: true,
+		AllowedHeaders:   []string{"*"},
+		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE"},
+		Debug:            false,
+	})
+
+	stack := middleware.CreateStack(
+		middlewareCors.Handler,
+		middleware.Logging,
+	)
+
+	// Declare Server config
+	server := &http.Server{
+		Addr:         fmt.Sprintf(":%d", port),
+		Handler:      stack(router),
+		IdleTimeout:  time.Minute,
+		ReadTimeout:  10 * time.Second,
+		WriteTimeout: 30 * time.Second,
+	}
+
+	go util.GracefulShutdown(server)
+
+	log.Printf("Starting server on port %v", server.Addr)
+	err = server.ListenAndServe()
+	if err != nil && err != http.ErrServerClosed {
+		panic(fmt.Sprintf("http server error: %s", err))
 	}
 
 	/*
+		err = wscoem.Dummy()
+		if err != nil {
+			log.Fatalln(err)
+		}
+
 		identificadorAnulado, err := wscoem.AnularCaratula("25067EMBA000279P")
-		if identificadorAnulado != "" {
-			log.Printf("Carátula anulada: %s\n", identificadorAnulado)
+			if identificadorAnulado != "" {
+				log.Printf("Carátula anulada: %s\n", identificadorAnulado)
+				if err != nil {
+					log.Println(err) //Imprimo los warnings
+				}
+			} else {
+				log.Println(err) //Imprimo los errores
+				os.Exit(1)
+			}
+	*/
+
+	/*
+		identificador, err := wscoem.RegistrarCaratula(&afip.CaratulaParams{
+			IdentificadorBuque:    "IMO9262871",
+			NombreMedioTransporte: "ARGENTINO II",
+			CodigoAduana:          "067",
+			CodigoLugarOperativo:  "10056",
+			FechaEstimadaArribo:   time.Now().AddDate(0, 0, 1).Local(),
+			FechaEstimadaZarpada:  time.Now().AddDate(0, 0, 3).Local(),
+			Via:                   "8", //ACUATICA --SIEMPRE 8
+			NumeroViaje:           "",
+			PuertoDestino:         "ARBUE",
+			Itinerario:            nil,
+		})
+		if identificador != "" {
+			log.Printf("Carátula registrada: %s\n", identificador)
 			if err != nil {
-				log.Println(err) //Imprimo los warnings
+				log.Println(err) //Imprimo Warnings
 			}
 		} else {
-			log.Println(err) //Imprimo los errores
+			log.Println(err) //Imprimo errores
 			os.Exit(1)
 		}
 	*/
-
-	identificador, err := wscoem.RegistrarCaratula(&afip.CaratulaParams{
-		IdentificadorBuque:    "IMO9262871",
-		NombreMedioTransporte: "ARGENTINO II",
-		CodigoAduana:          "067",
-		CodigoLugarOperativo:  "10056",
-		FechaEstimadaArribo:   time.Now().AddDate(0, 0, 1).Local(),
-		FechaEstimadaZarpada:  time.Now().AddDate(0, 0, 3).Local(),
-		Via:                   "8", //ACUATICA --SIEMPRE 8
-		NumeroViaje:           "",
-		PuertoDestino:         "ARBUE",
-		Itinerario:            nil,
-	})
-	if identificador != "" {
-		log.Printf("Carátula registrada: %s\n", identificador)
-		if err != nil {
-			log.Println(err) //Imprimo Warnings
-		}
-	} else {
-		log.Println(err) //Imprimo errores
-		os.Exit(1)
-	}
-
 	/*
 		identificador, err := wscoem.RectificarCaratula("25067EMBA000281X", &afip.CaratulaParams{
 			IdentificadorBuque:    "IMO9262871",

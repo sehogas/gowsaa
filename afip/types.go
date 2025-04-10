@@ -3,16 +3,21 @@ package afip
 import "time"
 
 type CaratulaParams struct {
-	IdentificadorBuque    string    `json:"identificador_buque,omitempty"`
-	NombreMedioTransporte string    `json:"nombre_medio_transporte"`
-	CodigoAduana          string    `json:"codigo_aduana"`
-	CodigoLugarOperativo  string    `json:"codigo_lugar_operativo"`
-	FechaEstimadaArribo   time.Time `json:"fecha_estimada_arribo"`
-	FechaEstimadaZarpada  time.Time `json:"fecha_estimada_zarpada"`
-	Via                   string    `json:"via,omitempty"`
-	NumeroViaje           string    `json:"numero_viaje,omitempty"`
-	PuertoDestino         string    `json:"puerto_destino,omitempty"`
+	IdentificadorBuque    string    `json:"IdentificadorBuque,omitempty"`
+	NombreMedioTransporte string    `json:"NombreMedioTransporte" validate:"required"`
+	CodigoAduana          string    `json:"CodigoAduana" validate:"required"`
+	CodigoLugarOperativo  string    `json:"CodigoLugarOperativo" validate:"required"`
+	FechaArribo           time.Time `json:"FechaArribo" validate:"required"`
+	FechaZarpada          time.Time `json:"FechaZarpada" validate:"required"`
+	Via                   string    `json:"Via,omitempty" validate:"required"`
+	NumeroViaje           string    `json:"NumeroViaje,omitempty"`
+	PuertoDestino         string    `json:"PuertoDestino,omitempty"`
 	Itinerario            []string  `json:"itinerario,omitempty"`
+}
+
+type RectificarCaratulaParams struct {
+	IdentificadorCaratula string `json:"IdentificadorCaratula,omitempty" validate:"required"`
+	*CaratulaParams
 }
 
 type CambioBuqueParams struct {

@@ -46,7 +46,7 @@ func (ws *Wscoemcons) PrintlnAsXML(obj interface{}) {
 	}
 }
 
-func (ws *Wscoemcons) Dummy() error {
+func (ws *Wscoemcons) Dummy() (appServer, authServer, DbServer string, err error) {
 	request := &wscoemcons.Dummy{}
 	PrintlnAsXML(request)
 
@@ -55,11 +55,16 @@ func (ws *Wscoemcons) Dummy() error {
 
 	response, err := service.Dummy(request)
 	if err != nil {
-		return err
+		return "", "", "", err
 	}
+
 	PrintlnAsXML(response)
 
-	return nil
+	if response.DummyResult != nil {
+		return response.DummyResult.Resultado.AppServer, response.DummyResult.Resultado.AuthServer, response.DummyResult.Resultado.DbServer, nil
+	}
+
+	return "", "", "", nil
 }
 
 func (ws *Wscoemcons) ObtenerConsultaEstadosCOEM(identificadorCaratula string) ([]*ConsultaEstadoCOEM, error) {
@@ -93,20 +98,24 @@ func (ws *Wscoemcons) ObtenerConsultaEstadosCOEM(identificadorCaratula string) (
 	PrintlnAsXML(response)
 
 	var errs []error
-	for _, e := range response.ObtenerConsultaEstadosCOEMResult.Errores.ErrorEjecucion {
-		errs = append(errs, fmt.Errorf("%s - %s", e.Codigo, e.Descripcion))
+	if response.ObtenerConsultaEstadosCOEMResult.Errores != nil {
+		for _, e := range response.ObtenerConsultaEstadosCOEMResult.Errores.ErrorEjecucion {
+			errs = append(errs, fmt.Errorf("%s - %s", e.Codigo, e.Descripcion))
+		}
 	}
 
-	var listado []*ConsultaEstadoCOEM
-	for _, r := range response.ObtenerConsultaEstadosCOEMResult.Resultado.Listado.ConsultaEstadoCOEM {
-		listado = append(listado, &ConsultaEstadoCOEM{
-			IdentificadorCOEM: r.IdentificadorCOEM,
-			CuitAlta:          r.CuitAlta,
-			Motivo:            r.Motivo,
-			FechaEstado:       r.FechaEstado.ToGoTime(),
-			Estado:            r.Estado,
-			CODE:              r.CODE,
-		})
+	var listado []*ConsultaEstadoCOEM = make([]*ConsultaEstadoCOEM, 0)
+	if response.ObtenerConsultaEstadosCOEMResult.Resultado != nil {
+		for _, r := range response.ObtenerConsultaEstadosCOEMResult.Resultado.Listado.ConsultaEstadoCOEM {
+			listado = append(listado, &ConsultaEstadoCOEM{
+				IdentificadorCOEM: r.IdentificadorCOEM,
+				CuitAlta:          r.CuitAlta,
+				Motivo:            r.Motivo,
+				FechaEstado:       r.FechaEstado.ToGoTime(),
+				Estado:            r.Estado,
+				CODE:              r.CODE,
+			})
+		}
 	}
 
 	return listado, errors.Join(errs...)
@@ -147,7 +156,7 @@ func (ws *Wscoemcons) ObtenerConsultaNoAbordo(identificadorCaratula string) ([]*
 		errs = append(errs, fmt.Errorf("%s - %s", e.Codigo, e.Descripcion))
 	}
 
-	var listado []*ConsultaNoAbordo
+	var listado []*ConsultaNoAbordo = make([]*ConsultaNoAbordo, 0)
 	for _, r := range response.ObtenerConsultaNoAbordoResult.Resultado.Listado.ConsultaNoAbordo {
 		listado = append(listado, &ConsultaNoAbordo{
 			IdentificadorCACE:   r.IdentificadorCACE,
@@ -201,7 +210,7 @@ func (ws *Wscoemcons) ObtenerConsultaSolicitudes(identificadorCaratula string) (
 		errs = append(errs, fmt.Errorf("%s - %s", e.Codigo, e.Descripcion))
 	}
 
-	var listado []*ConsultaSolicitud
+	var listado []*ConsultaSolicitud = make([]*ConsultaSolicitud, 0)
 	for _, r := range response.ObtenerConsultaSolicitudesResult.Resultado.Listado.ConsultaSolicitudes {
 		listado = append(listado, &ConsultaSolicitud{
 			IdentificadorCACE: r.IdentificadorCACE,

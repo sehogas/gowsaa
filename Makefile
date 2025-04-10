@@ -1,8 +1,8 @@
 coem:
-	go run ./cmd/gocoem/gocoem.go
+	go run ./cmd/gocoem/.
 
 coemcons:
-	go run ./cmd/gocoemcons/gocoemcons.go
+	go run ./cmd/gocoemcons/.
 
 wsfe:
-	go run ./cmd/gowsfe/gowsfe.go
+	go run ./cmd/gowsfe/.

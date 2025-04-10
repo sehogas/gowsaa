@@ -48,7 +48,7 @@ func (ws *Wscoem) PrintlnAsXML(obj interface{}) {
 	}
 }
 
-func (ws *Wscoem) Dummy() error {
+func (ws *Wscoem) Dummy() (appServer, authServer, DbServer string, err error) {
 	request := &wscoem.Dummy{}
 	PrintlnAsXML(request)
 
@@ -57,11 +57,16 @@ func (ws *Wscoem) Dummy() error {
 
 	response, err := service.Dummy(request)
 	if err != nil {
-		return err
+		return "", "", "", err
 	}
+
 	PrintlnAsXML(response)
 
-	return nil
+	if response.DummyResult != nil {
+		return response.DummyResult.AppServer, response.DummyResult.AuthServer, response.DummyResult.DbServer, nil
+	}
+
+	return "", "", "", nil
 }
 
 func (ws *Wscoem) RegistrarCaratula(params *CaratulaParams) (string, error) {
@@ -85,8 +90,8 @@ func (ws *Wscoem) RegistrarCaratula(params *CaratulaParams) (string, error) {
 				NombreMedioTransporte: params.NombreMedioTransporte,
 				CodigoAduana:          params.CodigoAduana,
 				CodigoLugarOperativo:  params.CodigoLugarOperativo,
-				FechaArribo:           soap.CreateXsdDateTime(params.FechaEstimadaArribo, true),
-				FechaZarpada:          soap.CreateXsdDateTime(params.FechaEstimadaZarpada, true),
+				FechaArribo:           soap.CreateXsdDateTime(params.FechaArribo, true),
+				FechaZarpada:          soap.CreateXsdDateTime(params.FechaZarpada, true),
 				Via:                   params.Via,
 				NumeroViaje:           params.NumeroViaje,
 				PuertoDestino:         params.PuertoDestino,
@@ -162,7 +167,7 @@ func (ws *Wscoem) AnularCaratula(identificadorCaratula string) (string, error) {
 	return result, errors.Join(errs...)
 }
 
-func (ws *Wscoem) RectificarCaratula(identificadorCaratula string, params *CaratulaParams) (string, error) {
+func (ws *Wscoem) RectificarCaratula(params *RectificarCaratulaParams) (string, error) {
 	ticket, err := GetTA(ws.environment, ws.serviceName, ws.cuit)
 	if err != nil {
 		return "", err
@@ -179,14 +184,14 @@ func (ws *Wscoem) RectificarCaratula(identificadorCaratula string, params *Carat
 			Rol:                  ws.rol,
 		},
 		ArgRectificarCaratula: &wscoem.RectificarCaratulaRequest{
-			IdentificadorCaratula: identificadorCaratula,
+			IdentificadorCaratula: params.IdentificadorCaratula,
 			Caratula: &wscoem.Caratula{
 				IdentificadorBuque:    params.IdentificadorBuque,
 				NombreMedioTransporte: params.NombreMedioTransporte,
 				CodigoAduana:          params.CodigoAduana,
 				CodigoLugarOperativo:  params.CodigoLugarOperativo,
-				FechaArribo:           soap.CreateXsdDateTime(params.FechaEstimadaArribo, true),
-				FechaZarpada:          soap.CreateXsdDateTime(params.FechaEstimadaZarpada, true),
+				FechaArribo:           soap.CreateXsdDateTime(params.FechaArribo, true),
+				FechaZarpada:          soap.CreateXsdDateTime(params.FechaZarpada, true),
 				Via:                   params.Via,
 				NumeroViaje:           params.NumeroViaje,
 				PuertoDestino:         params.PuertoDestino,
