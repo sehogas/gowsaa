@@ -64,3 +64,78 @@ type COEMParams struct {
 	ContenedoresVacios *[]ContenedorVacio  `json:"contenedores_vacios,omitempty"`
 	MercaderiasSueltas *[]MercaderiaSuelta `json:"mercaderias_sueltas,omitempty"`
 }
+
+type ContenedorNoABordo struct {
+	IdentificadorContenedor string `json:"identificador_contenedor"`
+}
+
+type DeclaracionNoABordo struct {
+	IdentificadorDeclaracion string `json:"identificador_declaracion"`
+}
+
+type NoABordoParams struct {
+	ContenedoresCarga  *[]ContenedorNoABordo  `json:"contenedores_carga,omitempty"`
+	ContenedoresVacios *[]ContenedorNoABordo  `json:"contenedores_vacios,omitempty"`
+	MercaderiasSueltas *[]DeclaracionNoABordo `json:"declaraciones,omitempty"`
+}
+
+type DeclaracionCont struct {
+	IdentificadorDeclaracion string    `json:"identificador_declaracion"`
+	FechaEmbarque            time.Time `json:"fecha_embarque"`
+}
+
+type CierreCargaContoBultoParams struct {
+	Declaraciones *[]DeclaracionCont `json:"declaraciones"`
+}
+
+type ItemGranel struct {
+	NumeroItem   int32   `json:"numero_item"`
+	CantidadReal float64 `json:"cantidad_real"`
+}
+
+type DeclaracionGranel struct {
+	IdentificadorDeclaracion    string        `json:"identificador_declaracion"`
+	FechaEmbarque               time.Time     `json:"fecha_embarque"`
+	IdentificadorCierreCumplido string        `json:"identificador_cierre_cumplido"`
+	Items                       *[]ItemGranel `json:"items"`
+}
+
+type DeclaracionCOEMGranel struct {
+	IdentificadorCOEM   string               `json:"identificador_coem"`
+	DeclaracionesGranel *[]DeclaracionGranel `json:"declaraciones_granel"`
+}
+
+type CierreCargaGranelParams struct {
+	DeclaracionesCOEMGranel *[]DeclaracionCOEMGranel `json:"declaraciones_coem_granel"`
+}
+
+type ConsultaEstadoCOEM struct {
+	IdentificadorCOEM string    `json:"identificador_coem"`
+	CuitAlta          string    `json:"cuit_alta"`
+	Motivo            string    `json:"motivo"`
+	FechaEstado       time.Time `json:"fecha_estado"`
+	Estado            string    `json:"estado"`
+	CODE              string    `json:"code"`
+}
+
+type ConsultaNoAbordo struct {
+	IdentificadorCACE   string    `json:"identificador_cace"`
+	IdentificadorCOEM   string    `json:"identificador_coem"`
+	Tipo                string    `json:"tipo"`
+	Contenedor          string    `json:"contenedor"`
+	Destinacion         string    `json:"destinacion"`
+	Cuit                string    `json:"cuit"`
+	MotivoNoAbordo      string    `json:"motivo_no_abordo"`
+	FechaNoAbordo       time.Time `json:"fecha_no_abordo"`
+	TipoNoAbordo        string    `json:"tipo_no_abordo"`
+	DescripcionNoAbordo string    `json:"descripcion_no_abordo"`
+}
+
+type ConsultaSolicitud struct {
+	IdentificadorCACE string    `json:"Identificador_cace"`
+	NumeroSolicitud   string    `json:"numero_solicitud"`
+	IdentificadorCOEM string    `json:"identificador_coem"`
+	Estado            string    `json:"estado"`
+	FechaEstado       time.Time `json:"fecha_estado"`
+	TipoSolicitud     string    `json:"tipo_solicitud"`
+}

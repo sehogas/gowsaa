@@ -1,0 +1,491 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="Ar.Gob.Afip.Dga.wconscomunicacionembarque" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" targetNamespace="Ar.Gob.Afip.Dga.wconscomunicacionembarque">
+<wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Consultas sobre Comunicación de Embarque</wsdl:documentation>
+<wsdl:types>
+<s:schema elementFormDefault="qualified" targetNamespace="Ar.Gob.Afip.Dga.wconscomunicacionembarque">
+<s:element name="ObtenerConsultaEstadosCOEM">
+<s:complexType>
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="argWSAutenticacionEmpresa" type="tns:WSAutenticacionEmpresa"/>
+<s:element minOccurs="0" maxOccurs="1" name="identificadorCabecera" type="s:string"/>
+</s:sequence>
+</s:complexType>
+</s:element>
+<s:complexType name="WSAutenticacionEmpresa">
+<s:complexContent mixed="false">
+<s:extension base="tns:WSAutenticacion">
+<s:sequence>
+<s:element minOccurs="1" maxOccurs="1" name="CuitEmpresaConectada" type="s:long"/>
+<s:element minOccurs="0" maxOccurs="1" name="TipoAgente" type="s:string"/>
+<s:element minOccurs="0" maxOccurs="1" name="Rol" type="s:string"/>
+</s:sequence>
+</s:extension>
+</s:complexContent>
+</s:complexType>
+<s:complexType name="WSAutenticacion">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="Token" type="s:string"/>
+<s:element minOccurs="0" maxOccurs="1" name="Sign" type="s:string"/>
+</s:sequence>
+</s:complexType>
+<s:element name="ObtenerConsultaEstadosCOEMResponse">
+<s:complexType>
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="ObtenerConsultaEstadosCOEMResult" type="tns:ResultadoEjecucionOfResultadoEstadoProceso"/>
+</s:sequence>
+</s:complexType>
+</s:element>
+<s:complexType name="ResultadoEjecucionOfResultadoEstadoProceso">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="Server" type="s:string"/>
+<s:element minOccurs="1" maxOccurs="1" name="TimeStamp" type="s:dateTime"/>
+<s:element minOccurs="0" maxOccurs="1" name="Resultado" type="tns:ResultadoEstadoProceso"/>
+<s:element minOccurs="0" maxOccurs="1" name="Errores" type="tns:ArrayOfErrorEjecucion"/>
+</s:sequence>
+</s:complexType>
+<s:complexType name="ResultadoEstadoProceso">
+<s:complexContent mixed="false">
+<s:extension base="tns:AbstractEntidadOfString">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="Listado" type="tns:ArrayOfConsultaEstadoCOEM"/>
+<s:element minOccurs="0" maxOccurs="1" name="InformacionAdicional" type="s:string"/>
+</s:sequence>
+</s:extension>
+</s:complexContent>
+</s:complexType>
+<s:complexType name="AbstractEntidadOfString" abstract="true">
+<s:complexContent mixed="false">
+<s:extension base="tns:AbstractEntidadGenerica"/>
+</s:complexContent>
+</s:complexType>
+<s:complexType name="AbstractEntidadGenerica" abstract="true"/>
+<s:complexType name="ConsultaEstadoCOEM">
+<s:complexContent mixed="false">
+<s:extension base="tns:AbstractEntidadOfString">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="IdentificadorCOEM" type="s:string"/>
+<s:element minOccurs="0" maxOccurs="1" name="CuitAlta" type="s:string"/>
+<s:element minOccurs="0" maxOccurs="1" name="Motivo" type="s:string"/>
+<s:element minOccurs="1" maxOccurs="1" name="FechaEstado" nillable="true" type="s:dateTime"/>
+<s:element minOccurs="0" maxOccurs="1" name="Estado" type="s:string"/>
+<s:element minOccurs="0" maxOccurs="1" name="CODE" type="s:string"/>
+</s:sequence>
+</s:extension>
+</s:complexContent>
+</s:complexType>
+<s:complexType name="ArrayOfConsultaEstadoCOEM">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="unbounded" name="ConsultaEstadoCOEM" nillable="true" type="tns:ConsultaEstadoCOEM"/>
+</s:sequence>
+</s:complexType>
+<s:complexType name="ArrayOfErrorEjecucion">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="unbounded" name="ErrorEjecucion" nillable="true" type="tns:ErrorEjecucion"/>
+</s:sequence>
+</s:complexType>
+<s:complexType name="ErrorEjecucion">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="Codigo" type="s:string"/>
+<s:element minOccurs="0" maxOccurs="1" name="Descripcion" type="s:string"/>
+</s:sequence>
+</s:complexType>
+<s:element name="ObtenerConsultaNoAbordo">
+<s:complexType>
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="argWSAutenticacionEmpresa" type="tns:WSAutenticacionEmpresa"/>
+<s:element minOccurs="0" maxOccurs="1" name="identificadorCabecera" type="s:string"/>
+</s:sequence>
+</s:complexType>
+</s:element>
+<s:element name="ObtenerConsultaNoAbordoResponse">
+<s:complexType>
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="ObtenerConsultaNoAbordoResult" type="tns:ResultadoEjecucionOfResultadoNoAbordoProceso"/>
+</s:sequence>
+</s:complexType>
+</s:element>
+<s:complexType name="ResultadoEjecucionOfResultadoNoAbordoProceso">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="Server" type="s:string"/>
+<s:element minOccurs="1" maxOccurs="1" name="TimeStamp" type="s:dateTime"/>
+<s:element minOccurs="0" maxOccurs="1" name="Resultado" type="tns:ResultadoNoAbordoProceso"/>
+<s:element minOccurs="0" maxOccurs="1" name="Errores" type="tns:ArrayOfErrorEjecucion"/>
+</s:sequence>
+</s:complexType>
+<s:complexType name="ResultadoNoAbordoProceso">
+<s:complexContent mixed="false">
+<s:extension base="tns:AbstractEntidadOfString">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="Listado" type="tns:ArrayOfConsultaNoAbordo"/>
+<s:element minOccurs="0" maxOccurs="1" name="InformacionAdicional" type="s:string"/>
+</s:sequence>
+</s:extension>
+</s:complexContent>
+</s:complexType>
+<s:complexType name="ArrayOfConsultaNoAbordo">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="unbounded" name="ConsultaNoAbordo" nillable="true" type="tns:ConsultaNoAbordo"/>
+</s:sequence>
+</s:complexType>
+<s:complexType name="ConsultaNoAbordo">
+<s:complexContent mixed="false">
+<s:extension base="tns:AbstractEntidadOfString">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="IdentificadorCACE" type="s:string"/>
+<s:element minOccurs="0" maxOccurs="1" name="IdentificadorCOEM" type="s:string"/>
+<s:element minOccurs="0" maxOccurs="1" name="Tipo" type="s:string"/>
+<s:element minOccurs="0" maxOccurs="1" name="Contenedor" type="s:string"/>
+<s:element minOccurs="0" maxOccurs="1" name="Destinacion" type="s:string"/>
+<s:element minOccurs="0" maxOccurs="1" name="Cuit" type="s:string"/>
+<s:element minOccurs="1" maxOccurs="1" name="FechaNoAbordo" nillable="true" type="s:dateTime"/>
+<s:element minOccurs="0" maxOccurs="1" name="TipoNoAbordo" type="s:string"/>
+<s:element minOccurs="0" maxOccurs="1" name="MotivoNoAbordo" type="s:string"/>
+<s:element minOccurs="0" maxOccurs="1" name="DescripcionMotivo" type="s:string"/>
+</s:sequence>
+</s:extension>
+</s:complexContent>
+</s:complexType>
+<s:element name="ObtenerConsultaSolicitudes">
+<s:complexType>
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="argWSAutenticacionEmpresa" type="tns:WSAutenticacionEmpresa"/>
+<s:element minOccurs="0" maxOccurs="1" name="identificadorCabecera" type="s:string"/>
+</s:sequence>
+</s:complexType>
+</s:element>
+<s:element name="ObtenerConsultaSolicitudesResponse">
+<s:complexType>
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="ObtenerConsultaSolicitudesResult" type="tns:ResultadoEjecucionOfResultadoSolicitudProceso"/>
+</s:sequence>
+</s:complexType>
+</s:element>
+<s:complexType name="ResultadoEjecucionOfResultadoSolicitudProceso">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="Server" type="s:string"/>
+<s:element minOccurs="1" maxOccurs="1" name="TimeStamp" type="s:dateTime"/>
+<s:element minOccurs="0" maxOccurs="1" name="Resultado" type="tns:ResultadoSolicitudProceso"/>
+<s:element minOccurs="0" maxOccurs="1" name="Errores" type="tns:ArrayOfErrorEjecucion"/>
+</s:sequence>
+</s:complexType>
+<s:complexType name="ResultadoSolicitudProceso">
+<s:complexContent mixed="false">
+<s:extension base="tns:AbstractEntidadOfString">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="Listado" type="tns:ArrayOfConsultaSolicitudes"/>
+<s:element minOccurs="0" maxOccurs="1" name="InformacionAdicional" type="s:string"/>
+</s:sequence>
+</s:extension>
+</s:complexContent>
+</s:complexType>
+<s:complexType name="ArrayOfConsultaSolicitudes">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="unbounded" name="ConsultaSolicitudes" nillable="true" type="tns:ConsultaSolicitudes"/>
+</s:sequence>
+</s:complexType>
+<s:complexType name="ConsultaSolicitudes">
+<s:complexContent mixed="false">
+<s:extension base="tns:AbstractEntidadOfString">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="IdentificadorCACE" type="s:string"/>
+<s:element minOccurs="0" maxOccurs="1" name="NumeroSolicitud" type="s:string"/>
+<s:element minOccurs="0" maxOccurs="1" name="IdentificadorCOEM" type="s:string"/>
+<s:element minOccurs="0" maxOccurs="1" name="Estado" type="s:string"/>
+<s:element minOccurs="1" maxOccurs="1" name="FechaEstado" nillable="true" type="s:dateTime"/>
+<s:element minOccurs="0" maxOccurs="1" name="TipoSolicitud" type="s:string"/>
+</s:sequence>
+</s:extension>
+</s:complexContent>
+</s:complexType>
+<s:element name="DummyTestConnection">
+<s:complexType>
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="wsAutenticacion" type="tns:WSAutenticacionEmpresa"/>
+<s:element minOccurs="0" maxOccurs="1" name="dummyTestConnectionInput" type="tns:DummyTestConnectionInput"/>
+</s:sequence>
+</s:complexType>
+</s:element>
+<s:complexType name="DummyTestConnectionInput">
+<s:sequence>
+<s:element minOccurs="1" maxOccurs="1" name="SimularRespuestaConErrores" type="s:boolean"/>
+</s:sequence>
+</s:complexType>
+<s:element name="DummyTestConnectionResponse">
+<s:complexType>
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="DummyTestConnectionResult" type="tns:ResultadoEjecucionOfDummyTestConnectionOutput"/>
+</s:sequence>
+</s:complexType>
+</s:element>
+<s:complexType name="ResultadoEjecucionOfDummyTestConnectionOutput">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="Server" type="s:string"/>
+<s:element minOccurs="1" maxOccurs="1" name="TimeStamp" type="s:dateTime"/>
+<s:element minOccurs="0" maxOccurs="1" name="Resultado" type="tns:DummyTestConnectionOutput"/>
+<s:element minOccurs="0" maxOccurs="1" name="Errores" type="tns:ArrayOfErrorEjecucion"/>
+</s:sequence>
+</s:complexType>
+<s:complexType name="DummyTestConnectionOutput">
+<s:complexContent mixed="false">
+<s:extension base="tns:AbstractEntidadOfInt32">
+<s:sequence>
+<s:element minOccurs="1" maxOccurs="1" name="NumericoEntero" type="s:int"/>
+<s:element minOccurs="1" maxOccurs="1" name="NumericoDecimal" type="s:decimal"/>
+<s:element minOccurs="0" maxOccurs="1" name="Caracteres" type="s:string"/>
+<s:element minOccurs="1" maxOccurs="1" name="Fecha" type="s:dateTime"/>
+</s:sequence>
+</s:extension>
+</s:complexContent>
+</s:complexType>
+<s:complexType name="AbstractEntidadOfInt32" abstract="true">
+<s:complexContent mixed="false">
+<s:extension base="tns:AbstractEntidadGenerica"/>
+</s:complexContent>
+</s:complexType>
+<s:element name="DummyTestConnectionOrg">
+<s:complexType>
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="wsAutenticacion" type="tns:WSAutenticacionOrganismo"/>
+<s:element minOccurs="0" maxOccurs="1" name="dummyTestConnectionInput" type="tns:DummyTestConnectionInput"/>
+</s:sequence>
+</s:complexType>
+</s:element>
+<s:complexType name="WSAutenticacionOrganismo">
+<s:complexContent mixed="false">
+<s:extension base="tns:WSAutenticacion">
+<s:sequence>
+<s:element minOccurs="1" maxOccurs="1" name="CuitOrganismo" type="s:long"/>
+<s:element minOccurs="1" maxOccurs="1" name="CuitUsuarioConectado" type="s:long"/>
+<s:element minOccurs="1" maxOccurs="1" name="CuitEmpresaConectada" type="s:long"/>
+<s:element minOccurs="0" maxOccurs="1" name="TipoAgente" type="s:string"/>
+<s:element minOccurs="0" maxOccurs="1" name="Rol" type="s:string"/>
+</s:sequence>
+</s:extension>
+</s:complexContent>
+</s:complexType>
+<s:element name="DummyTestConnectionOrgResponse">
+<s:complexType>
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="DummyTestConnectionOrgResult" type="tns:ResultadoEjecucionOfDummyTestConnectionOutput"/>
+</s:sequence>
+</s:complexType>
+</s:element>
+<s:element name="Dummy">
+<s:complexType/>
+</s:element>
+<s:element name="DummyResponse">
+<s:complexType>
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="DummyResult" type="tns:ResultadoEjecucionOfDummyOutput"/>
+</s:sequence>
+</s:complexType>
+</s:element>
+<s:complexType name="ResultadoEjecucionOfDummyOutput">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="Server" type="s:string"/>
+<s:element minOccurs="1" maxOccurs="1" name="TimeStamp" type="s:dateTime"/>
+<s:element minOccurs="0" maxOccurs="1" name="Resultado" type="tns:DummyOutput"/>
+<s:element minOccurs="0" maxOccurs="1" name="Errores" type="tns:ArrayOfErrorEjecucion"/>
+</s:sequence>
+</s:complexType>
+<s:complexType name="DummyOutput">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="AppServer" type="s:string"/>
+<s:element minOccurs="0" maxOccurs="1" name="DbServer" type="s:string"/>
+<s:element minOccurs="0" maxOccurs="1" name="AuthServer" type="s:string"/>
+</s:sequence>
+</s:complexType>
+</s:schema>
+</wsdl:types>
+<wsdl:message name="ObtenerConsultaEstadosCOEMSoapIn">
+<wsdl:part name="parameters" element="tns:ObtenerConsultaEstadosCOEM"/>
+</wsdl:message>
+<wsdl:message name="ObtenerConsultaEstadosCOEMSoapOut">
+<wsdl:part name="parameters" element="tns:ObtenerConsultaEstadosCOEMResponse"/>
+</wsdl:message>
+<wsdl:message name="ObtenerConsultaNoAbordoSoapIn">
+<wsdl:part name="parameters" element="tns:ObtenerConsultaNoAbordo"/>
+</wsdl:message>
+<wsdl:message name="ObtenerConsultaNoAbordoSoapOut">
+<wsdl:part name="parameters" element="tns:ObtenerConsultaNoAbordoResponse"/>
+</wsdl:message>
+<wsdl:message name="ObtenerConsultaSolicitudesSoapIn">
+<wsdl:part name="parameters" element="tns:ObtenerConsultaSolicitudes"/>
+</wsdl:message>
+<wsdl:message name="ObtenerConsultaSolicitudesSoapOut">
+<wsdl:part name="parameters" element="tns:ObtenerConsultaSolicitudesResponse"/>
+</wsdl:message>
+<wsdl:message name="DummyTestConnectionSoapIn">
+<wsdl:part name="parameters" element="tns:DummyTestConnection"/>
+</wsdl:message>
+<wsdl:message name="DummyTestConnectionSoapOut">
+<wsdl:part name="parameters" element="tns:DummyTestConnectionResponse"/>
+</wsdl:message>
+<wsdl:message name="DummyTestConnectionOrgSoapIn">
+<wsdl:part name="parameters" element="tns:DummyTestConnectionOrg"/>
+</wsdl:message>
+<wsdl:message name="DummyTestConnectionOrgSoapOut">
+<wsdl:part name="parameters" element="tns:DummyTestConnectionOrgResponse"/>
+</wsdl:message>
+<wsdl:message name="DummySoapIn">
+<wsdl:part name="parameters" element="tns:Dummy"/>
+</wsdl:message>
+<wsdl:message name="DummySoapOut">
+<wsdl:part name="parameters" element="tns:DummyResponse"/>
+</wsdl:message>
+<wsdl:portType name="wconscomunicacionembarqueSoap">
+<wsdl:operation name="ObtenerConsultaEstadosCOEM">
+<wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Obtiene el listado de coems con sus estados</wsdl:documentation>
+<wsdl:input message="tns:ObtenerConsultaEstadosCOEMSoapIn"/>
+<wsdl:output message="tns:ObtenerConsultaEstadosCOEMSoapOut"/>
+</wsdl:operation>
+<wsdl:operation name="ObtenerConsultaNoAbordo">
+<wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Obtiene el listado de COEMS No Abordo</wsdl:documentation>
+<wsdl:input message="tns:ObtenerConsultaNoAbordoSoapIn"/>
+<wsdl:output message="tns:ObtenerConsultaNoAbordoSoapOut"/>
+</wsdl:operation>
+<wsdl:operation name="ObtenerConsultaSolicitudes">
+<wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Obtiene el listado de coems con sus estados</wsdl:documentation>
+<wsdl:input message="tns:ObtenerConsultaSolicitudesSoapIn"/>
+<wsdl:output message="tns:ObtenerConsultaSolicitudesSoapOut"/>
+</wsdl:operation>
+<wsdl:operation name="DummyTestConnection">
+<wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Web Method de testeo de los parametros de conexion para Empresas con salida ok o con errores segun bool en parametro de entrada.</wsdl:documentation>
+<wsdl:input message="tns:DummyTestConnectionSoapIn"/>
+<wsdl:output message="tns:DummyTestConnectionSoapOut"/>
+</wsdl:operation>
+<wsdl:operation name="DummyTestConnectionOrg">
+<wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Web Method de testeo de los parametros de conexion para Organismos con salida ok o con errores segun bool en parametro de entrada.</wsdl:documentation>
+<wsdl:input message="tns:DummyTestConnectionOrgSoapIn"/>
+<wsdl:output message="tns:DummyTestConnectionOrgSoapOut"/>
+</wsdl:operation>
+<wsdl:operation name="Dummy">
+<wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Web Method para testeo del correcto funcionamiento del Web Service.</wsdl:documentation>
+<wsdl:input message="tns:DummySoapIn"/>
+<wsdl:output message="tns:DummySoapOut"/>
+</wsdl:operation>
+</wsdl:portType>
+<wsdl:binding name="wconscomunicacionembarqueSoap" type="tns:wconscomunicacionembarqueSoap">
+<soap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+<wsdl:operation name="ObtenerConsultaEstadosCOEM">
+<soap:operation soapAction="Ar.Gob.Afip.Dga.wconscomunicacionembarque/ObtenerConsultaEstadosCOEM" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="ObtenerConsultaNoAbordo">
+<soap:operation soapAction="Ar.Gob.Afip.Dga.wconscomunicacionembarque/ObtenerConsultaNoAbordo" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="ObtenerConsultaSolicitudes">
+<soap:operation soapAction="Ar.Gob.Afip.Dga.wconscomunicacionembarque/ObtenerConsultaSolicitudes" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="DummyTestConnection">
+<soap:operation soapAction="Ar.Gob.Afip.Dga.wconscomunicacionembarque/DummyTestConnection" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="DummyTestConnectionOrg">
+<soap:operation soapAction="Ar.Gob.Afip.Dga.wconscomunicacionembarque/DummyTestConnectionOrg" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="Dummy">
+<soap:operation soapAction="Ar.Gob.Afip.Dga.wconscomunicacionembarque/Dummy" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+</wsdl:binding>
+<wsdl:binding name="wconscomunicacionembarqueSoap12" type="tns:wconscomunicacionembarqueSoap">
+<soap12:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+<wsdl:operation name="ObtenerConsultaEstadosCOEM">
+<soap12:operation soapAction="Ar.Gob.Afip.Dga.wconscomunicacionembarque/ObtenerConsultaEstadosCOEM" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="ObtenerConsultaNoAbordo">
+<soap12:operation soapAction="Ar.Gob.Afip.Dga.wconscomunicacionembarque/ObtenerConsultaNoAbordo" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="ObtenerConsultaSolicitudes">
+<soap12:operation soapAction="Ar.Gob.Afip.Dga.wconscomunicacionembarque/ObtenerConsultaSolicitudes" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="DummyTestConnection">
+<soap12:operation soapAction="Ar.Gob.Afip.Dga.wconscomunicacionembarque/DummyTestConnection" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="DummyTestConnectionOrg">
+<soap12:operation soapAction="Ar.Gob.Afip.Dga.wconscomunicacionembarque/DummyTestConnectionOrg" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="Dummy">
+<soap12:operation soapAction="Ar.Gob.Afip.Dga.wconscomunicacionembarque/Dummy" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+</wsdl:binding>
+<wsdl:service name="wconscomunicacionembarque">
+<wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Consultas sobre Comunicación de Embarque</wsdl:documentation>
+<wsdl:port name="wconscomunicacionembarqueSoap" binding="tns:wconscomunicacionembarqueSoap">
+<soap:address location="https://wsaduhomoext.afip.gob.ar/DIAV2/wconscomunicacionembarque/wconscomunicacionembarque.asmx"/>
+</wsdl:port>
+<wsdl:port name="wconscomunicacionembarqueSoap12" binding="tns:wconscomunicacionembarqueSoap12">
+<soap12:address location="https://wsaduhomoext.afip.gob.ar/DIAV2/wconscomunicacionembarque/wconscomunicacionembarque.asmx"/>
+</wsdl:port>
+</wsdl:service>
+</wsdl:definitions>

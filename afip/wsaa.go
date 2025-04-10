@@ -156,7 +156,7 @@ func (c *Wsaa) GetLoginTicket(serviceName string) (*LoginTicket, error) {
 			if err := xml.Unmarshal([]byte(err.Error()[strings.Index(err.Error(), "<soapenv:Envelope"):]), &response); err != nil {
 				return nil, fmt.Errorf("GetLoginTicket: Error desarmando respuesta XML. %s", err)
 			}
-			return nil, fmt.Errorf("GetLoginTicket: Error del servicio: %s", response.Body.Fault.String)
+			return nil, fmt.Errorf("GetLoginTicket: %s", response.Body.Fault.String)
 		}
 
 		// Desarmo respuesta XML
@@ -181,29 +181,6 @@ func (c *Wsaa) GetLoginTicket(serviceName string) (*LoginTicket, error) {
 		Sign:           c.tickets[serviceName].Credentials.Sign,
 		ExpirationTime: expirationTime,
 		Cuit:           c.cuit,
-	}
-
-	if c.environment == TESTING {
-		// grabo en local el archivo temporal con el ticket de acceso
-
-		data := fmt.Sprintf("CUIT=%s\nTOKEN=%s\nSIGN=%s\nEXPIRATION=%s\n",
-			loginTicket.Cuit,
-			loginTicket.Token,
-			loginTicket.Sign,
-			loginTicket.ExpirationTime.Format(time.RFC3339))
-
-		fileName := fmt.Sprintf("%s.TA", serviceName)
-		f, err := os.Create(fileName)
-		if err != nil {
-			return nil, fmt.Errorf("GetLoginTicket: No se pudo crear el archivo %s: %s", fileName, err)
-		}
-		defer f.Close()
-
-		_, err = f.WriteString(data)
-		if err != nil {
-			return nil, fmt.Errorf("GetLoginTicket: No se pudo escribir en el archivo %s: %s", fileName, err)
-		}
-
 	}
 
 	return loginTicket, nil

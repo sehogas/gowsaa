@@ -1,0 +1,14 @@
+{
+    "contenedores_carga": [
+        {	
+            "identificador_contenedor": "MSCU5777685"
+        }
+    ],
+    "contenedores_vacios": [
+        {
+            "identificador_contenedor": "SDMU6138978"
+        }
+    ],
+    "declaraciones": [
+    ]
+}

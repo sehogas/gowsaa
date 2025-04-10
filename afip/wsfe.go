@@ -2,86 +2,78 @@ package afip
 
 import (
 	"crypto/tls"
-	"encoding/xml"
+	"errors"
 	"fmt"
-	"strings"
 
 	"github.com/hooklift/gowsdl/soap"
 	"github.com/sehogas/gowsaa/ws/wsfe"
 )
 
 type Wsfe struct {
+	serviceName string
 	environment Environment
 	url         string
-	loginTicket *LoginTicket
-	auth        *wsfe.FEAuthRequest
+	cuit        int64
 }
 
-func NewWsfe(environment Environment, loginTicket *LoginTicket) (*Wsfe, error) {
+func NewWsfe(environment Environment, cuit int64) (*Wsfe, error) {
 	var url string
 	if environment == PRODUCTION {
-		url = URLWSAAProduction
+		url = URLWSFEProduction
 	} else {
-		url = URLWSAATesting
+		url = URLWSFETesting
 	}
 
 	return &Wsfe{
+		serviceName: "wsfe",
 		environment: environment,
 		url:         url,
-		loginTicket: loginTicket,
-		auth: &wsfe.FEAuthRequest{
-			Token: loginTicket.Token,
-			Sign:  loginTicket.Sign,
-			Cuit:  loginTicket.Cuit,
-		},
+		cuit:        cuit,
 	}, nil
 }
 
-func (ws *Wsfe) FEUltimoComprobanteEmitido(ptoVta int32, cbteTipo int32) error {
+func (ws *Wsfe) FEUltimoComprobanteEmitido(ptoVta int32, cbteTipo int32) (int32, error) {
+	ticket, err := GetTA(ws.environment, ws.serviceName, ws.cuit)
+	if err != nil {
+		return 0, err
+	}
+
 	request := &wsfe.FECompUltimoAutorizado{
 		Auth: &wsfe.FEAuthRequest{
-			Token: ws.loginTicket.Token,
-			Sign:  ws.loginTicket.Sign,
-			Cuit:  ws.loginTicket.Cuit},
+			Token: ticket.Token,
+			Sign:  ticket.Sign,
+			Cuit:  ticket.Cuit},
 		PtoVta:   ptoVta,
 		CbteTipo: cbteTipo,
 	}
 
-	requestXml, err := xml.MarshalIndent(request, " ", "  ")
-	if err != nil {
-		return err
-	}
-	fmt.Println(string(requestXml))
+	PrintlnAsXML(request)
 
 	conexion := soap.NewClient(ws.url, soap.WithTLS(&tls.Config{InsecureSkipVerify: true}))
 	service := wsfe.NewServiceSoap(conexion)
 
-	responseXml, err := service.FECompUltimoAutorizado(request)
+	response, err := service.FECompUltimoAutorizado(request)
 	if err != nil {
-		response := soap.SOAPEnvelopeResponse{
-			Body: soap.SOAPBodyResponse{
-				Content: &soap.SOAPFault{},
-				Fault:   &soap.SOAPFault{},
-			},
-		}
-		if err := xml.Unmarshal([]byte(err.Error()[strings.Index(err.Error(), "<soapenv:Envelope"):]), &response); err != nil {
-			return err
-		}
-		return fmt.Errorf("%s", response.Body.Fault.String)
+		return 0, err
+	}
+	PrintlnAsXML(response)
 
+	var errs []error
+	if response.FECompUltimoAutorizadoResult.Events != nil {
+		for _, e := range response.FECompUltimoAutorizadoResult.Events.Evt {
+			errs = append(errs, fmt.Errorf("event %d - %s", e.Code, e.Msg))
+		}
+	}
+	if response.FECompUltimoAutorizadoResult.Errors != nil {
+		for _, e := range response.FECompUltimoAutorizadoResult.Errors.Err {
+			errs = append(errs, fmt.Errorf("error %d - %s", e.Code, e.Msg))
+		}
+	} else {
+		cbteNro := response.FECompUltimoAutorizadoResult.CbteNro
+		return cbteNro, errors.Join(errs...)
 	}
 
-	fmt.Println(responseXml.FECompUltimoAutorizadoResult.CbteNro)
-
-	/* 	response := wsfe.FERecuperaLastCbteResponse{}
-	   	tmp := responseXml.FECompUltimoAutorizadoResult
-	   	if err := xml.Unmarshal(tmp, &response); err != nil {
-	   		return err
-	   	}  */
-
-	fmt.Println("respuesta:", responseXml)
-
-	return nil
+	return 0, errors.Join(errs...)
 }
 
 func ObtenerCAE() error {

@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"strconv"
@@ -12,11 +11,7 @@ import (
 	"github.com/sehogas/gowsaa/afip"
 )
 
-var cuit int64
-
 func main() {
-	serviceName := "wgescomunicacionembarque"
-
 	godotenv.Load()
 
 	environment := afip.TESTING
@@ -26,59 +21,33 @@ func main() {
 
 	cuit, err := strconv.ParseInt(os.Getenv("CUIT"), 10, 64)
 	if err != nil {
-		fmt.Println("Falta o es errónea la variable de entorno CUIT")
-		os.Exit(-1)
+		log.Fatalln("Falta o es errónea la variable de entorno CUIT")
 	}
 
-	err = godotenv.Load(fmt.Sprintf("%s.TA", serviceName))
+	if os.Getenv("PRIVATE_KEY_FILE") == "" {
+		log.Fatalln("Falta variable de entorno PRIVATE_KEY_FILE")
+	}
+
+	if os.Getenv("CERTIFICATE_FILE") == "" {
+		log.Fatalln("Falta variable de entorno CERTIFICATE_FILE")
+	}
+
+	if len(os.Getenv("WSCOEM_TIPO_AGENTE")) != 4 {
+		log.Fatalln("Falta o es errónea la variable de entorno WSCOEM_TIPO_AGENTE")
+	}
+
+	if len(os.Getenv("WSCOEM_ROL")) != 4 {
+		log.Fatalln("Falta o es errónea la variable de entorno WSCOEM_ROL")
+	}
+
+	wscoem, err := afip.NewWscoem(environment, cuit, os.Getenv("WSCOEM_TIPO_AGENTE"), os.Getenv("WSCOEM_ROL"))
 	if err != nil {
-		err = GenTA(environment, serviceName)
-		if err != nil {
-			panic(err)
-		}
-	}
-
-	expirationTime, err := time.Parse(time.RFC3339, os.Getenv("EXPIRATION"))
-	if err != nil {
-		panic(err)
-	}
-
-	if expirationTime.Before(time.Now()) {
-		fmt.Println("TA expirado. Renovando ticket de acceso...")
-		err = GenTA(environment, serviceName)
-		if err != nil {
-			panic(err)
-		}
-	}
-
-	data := fmt.Sprintf("CUIT=%s\nTOKEN=%s\nSIGN=%s\nEXPIRATION=%s\n",
-		os.Getenv("CUIT"),
-		os.Getenv("TOKEN"),
-		os.Getenv("SIGN"),
-		os.Getenv("EXPIRATION"))
-
-	fmt.Println(data)
-
-	expirationTime, err = time.Parse(time.RFC3339, os.Getenv("EXPIRATION"))
-	if err != nil {
-		panic(err)
-	}
-
-	wscoem, err := afip.NewWscoem(environment, &afip.LoginTicket{
-		ServiceName:    serviceName,
-		Token:          os.Getenv("TOKEN"),
-		Sign:           os.Getenv("SIGN"),
-		ExpirationTime: expirationTime,
-		Cuit:           cuit,
-	}, os.Getenv("WSCOEM_TIPO_AGENTE"), os.Getenv("WSCOEM_ROL"))
-	if err != nil {
-		panic(err)
+		log.Fatalln(err)
 	}
 
 	err = wscoem.Dummy()
 	if err != nil {
-		log.Println(err)
-		os.Exit(1)
+		log.Fatalln(err)
 	}
 
 	/*
@@ -94,29 +63,27 @@ func main() {
 		}
 	*/
 
-	/*
-		identificador, err := wscoem.RegistrarCaratula(&afip.CaratulaParams{
-			IdentificadorBuque:    "IMO9262871",
-			NombreMedioTransporte: "ARGENTINO II",
-			CodigoAduana:          "067",
-			CodigoLugarOperativo:  "10056",
-			FechaEstimadaArribo:   time.Now().AddDate(0, 0, 1).Local(),
-			FechaEstimadaZarpada:  time.Now().AddDate(0, 0, 3).Local(),
-			Via:                   "8", //ACUATICA --SIEMPRE 8
-			NumeroViaje:           "",
-			PuertoDestino:         "ARBUE",
-			Itinerario:            nil,
-		})
-		if identificador != "" {
-			log.Printf("Carátula registrada: %s\n", identificador)
-			if err != nil {
-				log.Println(err) //Imprimo Warnings
-			}
-		} else {
-			log.Println(err) //Imprimo errores
-			os.Exit(1)
+	identificador, err := wscoem.RegistrarCaratula(&afip.CaratulaParams{
+		IdentificadorBuque:    "IMO9262871",
+		NombreMedioTransporte: "ARGENTINO II",
+		CodigoAduana:          "067",
+		CodigoLugarOperativo:  "10056",
+		FechaEstimadaArribo:   time.Now().AddDate(0, 0, 1).Local(),
+		FechaEstimadaZarpada:  time.Now().AddDate(0, 0, 3).Local(),
+		Via:                   "8", //ACUATICA --SIEMPRE 8
+		NumeroViaje:           "",
+		PuertoDestino:         "ARBUE",
+		Itinerario:            nil,
+	})
+	if identificador != "" {
+		log.Printf("Carátula registrada: %s\n", identificador)
+		if err != nil {
+			log.Println(err) //Imprimo Warnings
 		}
-	*/
+	} else {
+		log.Println(err) //Imprimo errores
+		os.Exit(1)
+	}
 
 	/*
 		identificador, err := wscoem.RectificarCaratula("25067EMBA000281X", &afip.CaratulaParams{
@@ -212,26 +179,4 @@ func main() {
 			os.Exit(1)
 		}
 	*/
-}
-
-func GenTA(environment afip.Environment, serviceName string) error {
-	wsaa, err := afip.NewWsaa(environment,
-		os.Getenv("PRIVATE_KEY_FILE"),
-		os.Getenv("CERTIFICATE_FILE"),
-		cuit)
-	if err != nil {
-		return err
-	}
-
-	loginTicket, err := wsaa.GetLoginTicket(serviceName)
-	if err != nil {
-		return err
-	}
-
-	os.Setenv("CUIT", strconv.FormatInt(loginTicket.Cuit, 10))
-	os.Setenv("TOKEN", loginTicket.Token)
-	os.Setenv("SIGN", loginTicket.Sign)
-	os.Setenv("EXPIRATION", loginTicket.ExpirationTime.Format(time.RFC3339))
-
-	return nil
 }
