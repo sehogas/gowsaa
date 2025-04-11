@@ -122,7 +122,7 @@ func (ws *Wscoem) RegistrarCaratula(params *CaratulaParams) (string, error) {
 	identificador := ""
 	for _, e := range response.RegistrarCaratulaResult.ListaErrores.DetalleError {
 		if *e.Codigo != 0 {
-			errs = append(errs, fmt.Errorf("%d - %s - %s", *e.Codigo, e.Descripcion, e.DescripcionAdicional))
+			errs = append(errs, fmt.Errorf("%d - %s", *e.Codigo, e.Descripcion))
 		} else {
 			identificador = strings.TrimSpace(strings.Replace(e.DescripcionAdicional, "Identificador:", "", -1))
 		}
@@ -171,7 +171,7 @@ func (ws *Wscoem) AnularCaratula(params *IdentificadorCaraturaParams) (string, e
 	result := ""
 	for _, e := range response.AnularCaratulaResult.ListaErrores.DetalleError {
 		if *e.Codigo != 0 {
-			errs = append(errs, fmt.Errorf("%d - %s - %s", *e.Codigo, e.Descripcion, e.DescripcionAdicional))
+			errs = append(errs, fmt.Errorf("%d - %s", *e.Codigo, e.Descripcion))
 		} else {
 			result = strings.TrimSpace(strings.Replace(e.DescripcionAdicional, "Identificador:", "", -1))
 		}
@@ -230,7 +230,7 @@ func (ws *Wscoem) RectificarCaratula(params *RectificarCaratulaParams) (string, 
 	result := ""
 	for _, e := range response.RectificarCaratulaResult.ListaErrores.DetalleError {
 		if *e.Codigo != 0 {
-			errs = append(errs, fmt.Errorf("%d - %s - %s", *e.Codigo, e.Descripcion, e.DescripcionAdicional))
+			errs = append(errs, fmt.Errorf("%d - %s", *e.Codigo, e.Descripcion))
 		} else {
 			result = strings.TrimSpace(strings.Replace(e.DescripcionAdicional, "Identificador:", "", -1))
 		}
@@ -280,7 +280,7 @@ func (ws *Wscoem) SolicitarCambioBuque(params *CambioBuqueParams) (string, error
 	result := ""
 	for _, e := range response.SolicitarCambioBuqueResult.ListaErrores.DetalleError {
 		if *e.Codigo != 0 {
-			errs = append(errs, fmt.Errorf("%d - %s - %s", *e.Codigo, e.Descripcion, e.DescripcionAdicional))
+			errs = append(errs, fmt.Errorf("%d - %s", *e.Codigo, e.Descripcion))
 		} else {
 			result = strings.TrimSpace(strings.Replace(e.DescripcionAdicional, "Identificador:", "", -1))
 		}
@@ -340,7 +340,7 @@ func (ws *Wscoem) SolicitarCambioFechas(params *CambioFechasParams) (string, err
 	result := ""
 	for _, e := range response.SolicitarCambioFechasResult.ListaErrores.DetalleError {
 		if *e.Codigo != 0 {
-			errs = append(errs, fmt.Errorf("%d - %s - %s", *e.Codigo, e.Descripcion, e.DescripcionAdicional))
+			errs = append(errs, fmt.Errorf("%d - %s", *e.Codigo, e.Descripcion))
 		} else {
 			result = strings.TrimSpace(strings.Replace(e.DescripcionAdicional, "Identificador:", "", -1))
 		}
@@ -389,7 +389,7 @@ func (ws *Wscoem) SolicitarCambioLOT(params *CambioLOTParams) (string, error) {
 	result := ""
 	for _, e := range response.SolicitarCambioLOTResult.ListaErrores.DetalleError {
 		if *e.Codigo != 0 {
-			errs = append(errs, fmt.Errorf("%d - %s - %s", *e.Codigo, e.Descripcion, e.DescripcionAdicional))
+			errs = append(errs, fmt.Errorf("%d - %s", *e.Codigo, e.Descripcion))
 		} else {
 			result = strings.TrimSpace(strings.Replace(e.DescripcionAdicional, "Identificador:", "", -1))
 		}
@@ -512,7 +512,7 @@ func (ws *Wscoem) RegistrarCOEM(params *RegistrarCOEMParams) (string, error) {
 	result := ""
 	for _, e := range response.RegistrarCOEMResult.ListaErrores.DetalleError {
 		if *e.Codigo != 0 {
-			errs = append(errs, fmt.Errorf("%d - %s - %s", *e.Codigo, e.Descripcion, e.DescripcionAdicional))
+			errs = append(errs, fmt.Errorf("%d - %s", *e.Codigo, e.Descripcion))
 		} else {
 			result = strings.TrimSpace(strings.Replace(e.DescripcionAdicional, "Identificador:", "", -1))
 		}
@@ -636,7 +636,7 @@ func (ws *Wscoem) RectificarCOEM(params *RectificarCOEMParams) (string, error) {
 	result := ""
 	for _, e := range response.RectificarCOEMResult.ListaErrores.DetalleError {
 		if *e.Codigo != 0 {
-			errs = append(errs, fmt.Errorf("%d - %s - %s", *e.Codigo, e.Descripcion, e.DescripcionAdicional))
+			errs = append(errs, fmt.Errorf("%d - %s", *e.Codigo, e.Descripcion))
 		} else {
 			result = strings.TrimSpace(strings.Replace(e.DescripcionAdicional, "Identificador:", "", -1))
 		}
@@ -685,7 +685,7 @@ func (ws *Wscoem) CerrarCOEM(params *IdentificadorCOEMParams) (string, error) {
 	result := ""
 	for _, e := range response.CerrarCOEMResult.ListaErrores.DetalleError {
 		if *e.Codigo != 0 {
-			errs = append(errs, fmt.Errorf("%d - %s - %s", *e.Codigo, e.Descripcion, e.DescripcionAdicional))
+			errs = append(errs, fmt.Errorf("%d - %s", *e.Codigo, e.Descripcion))
 		} else {
 			result = strings.TrimSpace(strings.Replace(e.DescripcionAdicional, "Identificador:", "", -1))
 		}
@@ -734,7 +734,7 @@ func (ws *Wscoem) AnularCOEM(params *IdentificadorCOEMParams) (string, error) {
 	result := ""
 	for _, e := range response.AnularCOEMResult.ListaErrores.DetalleError {
 		if *e.Codigo != 0 {
-			errs = append(errs, fmt.Errorf("%d - %s - %s", *e.Codigo, e.Descripcion, e.DescripcionAdicional))
+			errs = append(errs, fmt.Errorf("%d - %s", *e.Codigo, e.Descripcion))
 		} else {
 			result = strings.TrimSpace(strings.Replace(e.DescripcionAdicional, "Identificador:", "", -1))
 		}
@@ -783,7 +783,7 @@ func (ws *Wscoem) SolicitarAnulacionCOEM(params *IdentificadorCOEMParams) (strin
 	result := ""
 	for _, e := range response.SolicitarAnulacionCOEMResult.ListaErrores.DetalleError {
 		if *e.Codigo != 0 {
-			errs = append(errs, fmt.Errorf("%d - %s - %s", *e.Codigo, e.Descripcion, e.DescripcionAdicional))
+			errs = append(errs, fmt.Errorf("%d - %s", *e.Codigo, e.Descripcion))
 		} else {
 			result = strings.TrimSpace(strings.Replace(e.DescripcionAdicional, "Identificador:", "", -1))
 		}
@@ -871,7 +871,7 @@ func (ws *Wscoem) SolicitarNoABordo(params *SolicitarNoABordoParams) (string, er
 	result := ""
 	for _, e := range response.SolicitarNoABordoResult.ListaErrores.DetalleError {
 		if *e.Codigo != 0 {
-			errs = append(errs, fmt.Errorf("%d - %s - %s", *e.Codigo, e.Descripcion, e.DescripcionAdicional))
+			errs = append(errs, fmt.Errorf("%d - %s", *e.Codigo, e.Descripcion))
 		} else {
 			result = strings.TrimSpace(strings.Replace(e.DescripcionAdicional, "Identificador:", "", -1))
 		}
@@ -935,7 +935,7 @@ func (ws *Wscoem) SolicitarCierreCargaContoBulto(params *SolicitarCierreCargaCon
 	result := ""
 	for _, e := range response.SolicitarCierreCargaContoBultoResult.ListaErrores.DetalleError {
 		if *e.Codigo != 0 {
-			errs = append(errs, fmt.Errorf("%d - %s - %s", *e.Codigo, e.Descripcion, e.DescripcionAdicional))
+			errs = append(errs, fmt.Errorf("%d - %s", *e.Codigo, e.Descripcion))
 		} else {
 			result = strings.TrimSpace(strings.Replace(e.DescripcionAdicional, "Identificador:", "", -1))
 		}
@@ -1021,7 +1021,7 @@ func (ws *Wscoem) SolicitarCierreCargaGranel(params *SolicitarCierreCargaGranelP
 	result := ""
 	for _, e := range response.SolicitarCierreCargaGranelResult.ListaErrores.DetalleError {
 		if *e.Codigo != 0 {
-			errs = append(errs, fmt.Errorf("%d - %s - %s", *e.Codigo, e.Descripcion, e.DescripcionAdicional))
+			errs = append(errs, fmt.Errorf("%d - %s", *e.Codigo, e.Descripcion))
 		} else {
 			result = strings.TrimSpace(strings.Replace(e.DescripcionAdicional, "Identificador:", "", -1))
 		}

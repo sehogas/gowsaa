@@ -1,11 +1,28 @@
-coem:
-	go run ./cmd/gocoem/.
+########################################################
+override TARGET=api-arca
+VERSION=1.0
+OS=linux
+ARCH=amd64
+FLAGS="-s -w"
+CGO=0
+########################################################
 
-coemcons:
-	go run ./cmd/gocoemcons/.
+api:
+	go run ./cmd/api/.
 
 wsfe:
 	go run ./cmd/gowsfe/.
 
-coem-swagger:
-	swag init --parseDependency --dir=./cmd/gocoem/ --output=./cmd/gocoem/docs/
+api-swagger:
+	swag init --parseDependency --dir=./cmd/api/ --output=./cmd/api/docs/
+
+build:
+	docker build -t $(TARGET):$(VERSION) .
+	docker tag $(TARGET):$(VERSION) $(TARGET):latest
+
+up:
+	docker compose up -d --build
+
+down:
+	docker compose down
+

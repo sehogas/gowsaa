@@ -11,8 +11,8 @@ type CaratulaParams struct {
 	NombreMedioTransporte string    `json:"NombreMedioTransporte" validate:"required,lte=200"`
 	CodigoAduana          string    `json:"CodigoAduana" validate:"required,len=3"`
 	CodigoLugarOperativo  string    `json:"CodigoLugarOperativo" validate:"required,len=5"`
-	FechaArribo           time.Time `json:"FechaArribo" validate:"required,datetime=2006-01-02T15:04:05.000Z"`
-	FechaZarpada          time.Time `json:"FechaZarpada" validate:"required,datetime=2006-01-02T15:04:05.000Z"`
+	FechaArribo           time.Time `json:"FechaArribo" validate:"required"`
+	FechaZarpada          time.Time `json:"FechaZarpada" validate:"required"`
 	Via                   string    `json:"Via" validate:"required,len=1"`
 	NumeroViaje           string    `json:"NumeroViaje,omitempty" validate:"lte=16"`
 	*PuertoDestinoParams

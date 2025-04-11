@@ -78,6 +78,59 @@ definitions:
     - NombreMedioTransporte
     - Via
     type: object
+  afip.ConsultaEstadoCOEM:
+    properties:
+      CODE:
+        type: string
+      CuitAlta:
+        type: string
+      Estado:
+        type: string
+      FechaEstado:
+        type: string
+      IdentificadorCOEM:
+        type: string
+      Motivo:
+        type: string
+    type: object
+  afip.ConsultaNoAbordo:
+    properties:
+      Contenedor:
+        type: string
+      Cuit:
+        type: string
+      DescripcionNoAbordo:
+        type: string
+      Destinacion:
+        type: string
+      FechaNoAbordo:
+        type: string
+      IdentificadorCACE:
+        type: string
+      IdentificadorCOEM:
+        type: string
+      MotivoNoAbordo:
+        type: string
+      Tipo:
+        type: string
+      TipoNoAbordo:
+        type: string
+    type: object
+  afip.ConsultaSolicitud:
+    properties:
+      Estado:
+        type: string
+      FechaEstado:
+        type: string
+      IdentificadorCACE:
+        type: string
+      IdentificadorCOEM:
+        type: string
+      NumeroSolicitud:
+        type: string
+      TipoSolicitud:
+        type: string
+    type: object
   afip.ContenedorCarga:
     properties:
       CuitATA:
@@ -324,13 +377,12 @@ info:
   contact:
     email: sehogas@gmail.com
     name: Sebastian Hogas
-  description: Esta API Json RESTFul actua como proxy SOAP a los servicios de Comunicación
-    de Embarque de ARCA.
+  description: Esta API Json Rest actua como proxy SOAP a los servicios web de ARCA.
   termsOfService: http://swagger.io/terms/
-  title: ARCA - Comunicación de Embarque API
+  title: API Rest Json proxy a los servicios web SOAP ARCA
   version: "1.0"
 paths:
-  /anular-caratula:
+  /coem/anular-caratula:
     delete:
       consumes:
       - application/json
@@ -359,8 +411,8 @@ paths:
             $ref: '#/definitions/dto.ErrorResponse'
       summary: Anular Carátula
       tags:
-      - AnularCaratula
-  /anular-coem:
+      - Comunicación de Embarque
+  /coem/anular-coem:
     delete:
       consumes:
       - application/json
@@ -389,8 +441,8 @@ paths:
             $ref: '#/definitions/dto.ErrorResponse'
       summary: Anular COEM
       tags:
-      - AnularCOEM
-  /cerrar-coem:
+      - Comunicación de Embarque
+  /coem/cerrar-coem:
     post:
       consumes:
       - application/json
@@ -419,8 +471,8 @@ paths:
             $ref: '#/definitions/dto.ErrorResponse'
       summary: Cerrar COEM
       tags:
-      - CerrarCOEM
-  /dummy:
+      - Comunicación de Embarque
+  /coem/dummy:
     get:
       description: Visualizar el estado del servicio web, del servicio de autenticación
         y de la base de datos de ARCA
@@ -437,8 +489,8 @@ paths:
             $ref: '#/definitions/dto.ErrorResponse'
       summary: Muestra el estado del servicio
       tags:
-      - Dummy
-  /rectificar-caratula:
+      - Comunicación de Embarque
+  /coem/rectificar-caratula:
     put:
       consumes:
       - application/json
@@ -467,8 +519,8 @@ paths:
             $ref: '#/definitions/dto.ErrorResponse'
       summary: Rectificar Carátula
       tags:
-      - RectificarCaratula
-  /rectificar-coem:
+      - Comunicación de Embarque
+  /coem/rectificar-coem:
     put:
       consumes:
       - application/json
@@ -497,8 +549,8 @@ paths:
             $ref: '#/definitions/dto.ErrorResponse'
       summary: Rectificar COEM
       tags:
-      - RectificarCOEM
-  /registrar-caratula:
+      - Comunicación de Embarque
+  /coem/registrar-caratula:
     post:
       consumes:
       - application/json
@@ -527,8 +579,8 @@ paths:
             $ref: '#/definitions/dto.ErrorResponse'
       summary: Registrar Carátula
       tags:
-      - RegistrarCaratula
-  /registrar-coem:
+      - Comunicación de Embarque
+  /coem/registrar-coem:
     post:
       consumes:
       - application/json
@@ -557,8 +609,8 @@ paths:
             $ref: '#/definitions/dto.ErrorResponse'
       summary: Registrar COEM
       tags:
-      - RegistrarCOEM
-  /solicitar-anulacion-coem:
+      - Comunicación de Embarque
+  /coem/solicitar-anulacion-coem:
     post:
       consumes:
       - application/json
@@ -587,8 +639,8 @@ paths:
             $ref: '#/definitions/dto.ErrorResponse'
       summary: Solicitar Anulación COEM
       tags:
-      - SolicitarAnulacionCOEM
-  /solicitar-cambio-buque:
+      - Comunicación de Embarque
+  /coem/solicitar-cambio-buque:
     put:
       consumes:
       - application/json
@@ -617,8 +669,8 @@ paths:
             $ref: '#/definitions/dto.ErrorResponse'
       summary: Solicitar cambio de Buque
       tags:
-      - SolicitarCambioBuque
-  /solicitar-cambio-fechas:
+      - Comunicación de Embarque
+  /coem/solicitar-cambio-fechas:
     put:
       consumes:
       - application/json
@@ -647,8 +699,8 @@ paths:
             $ref: '#/definitions/dto.ErrorResponse'
       summary: Solicitar cambio de Fechas
       tags:
-      - SolicitarCambioFechas
-  /solicitar-cambio-lot:
+      - Comunicación de Embarque
+  /coem/solicitar-cambio-lot:
     put:
       consumes:
       - application/json
@@ -677,8 +729,8 @@ paths:
             $ref: '#/definitions/dto.ErrorResponse'
       summary: Solicitar cambio de LOT
       tags:
-      - SolicitarCambioLOT
-  /solicitar-cierre-carga-conto-bulto:
+      - Comunicación de Embarque
+  /coem/solicitar-cierre-carga-conto-bulto:
     post:
       consumes:
       - application/json
@@ -707,8 +759,8 @@ paths:
             $ref: '#/definitions/dto.ErrorResponse'
       summary: Solicitar Cierre de Carga Contenedores y/o Bultos
       tags:
-      - SolicitarCierreCargaContoBulto
-  /solicitar-cierre-carga-granel:
+      - Comunicación de Embarque
+  /coem/solicitar-cierre-carga-granel:
     post:
       consumes:
       - application/json
@@ -737,8 +789,8 @@ paths:
             $ref: '#/definitions/dto.ErrorResponse'
       summary: Solicitar Cierre de Carga Granel
       tags:
-      - SolicitarCierreCargaGranel
-  /solicitar-no-abordo:
+      - Comunicación de Embarque
+  /coem/solicitar-no-abordo:
     post:
       consumes:
       - application/json
@@ -767,5 +819,129 @@ paths:
             $ref: '#/definitions/dto.ErrorResponse'
       summary: Solicitar No Abordo
       tags:
-      - SolicitarNoABordo
+      - Comunicación de Embarque
+  /coemcons/dummy:
+    get:
+      description: Visualizar el estado del servicio web, del servicio de autenticación
+        y de la base de datos de ARCA
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.DummyResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      summary: Muestra el estado del servicio
+      tags:
+      - Consultas de Comunicación de Embarque
+  /coemcons/obtener-consulta-estados-coem:
+    get:
+      consumes:
+      - application/json
+      description: Obtener Consulta Estados COEM
+      parameters:
+      - description: Identificador de la caratula
+        in: query
+        name: q
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/afip.ConsultaEstadoCOEM'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      summary: Obtener Consulta Estados COEM
+      tags:
+      - Consultas de Comunicación de Embarque
+  /coemcons/obtener-consulta-no-abordo:
+    get:
+      consumes:
+      - application/json
+      description: Obtener Consulta No Abordo
+      parameters:
+      - description: Identificador de la caratula
+        in: query
+        name: q
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/afip.ConsultaNoAbordo'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      summary: Obtener Consulta No Abordo
+      tags:
+      - Consultas de Comunicación de Embarque
+  /coemcons/obtener-consulta-solicitudes:
+    get:
+      consumes:
+      - application/json
+      description: Obtener Consulta de Solicitudes
+      parameters:
+      - description: Identificador de la caratula
+        in: query
+        name: q
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/afip.ConsultaSolicitud'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      summary: Obtener Consulta de Solicitudes
+      tags:
+      - Consultas de Comunicación de Embarque
+  /info:
+    get:
+      description: Muesta información de la API
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.DummyResponse'
+      summary: Muesta información de la API
+      tags:
+      - API
 swagger: "2.0"

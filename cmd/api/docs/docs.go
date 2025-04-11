@@ -19,7 +19,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/anular-caratula": {
+        "/coem/anular-caratula": {
             "delete": {
                 "description": "Anular Carátula sin COEMs",
                 "consumes": [
@@ -29,7 +29,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "AnularCaratula"
+                    "Comunicación de Embarque"
                 ],
                 "summary": "Anular Carátula",
                 "parameters": [
@@ -65,7 +65,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/anular-coem": {
+        "/coem/anular-coem": {
             "delete": {
                 "description": "Anular COEM",
                 "consumes": [
@@ -75,7 +75,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "AnularCOEM"
+                    "Comunicación de Embarque"
                 ],
                 "summary": "Anular COEM",
                 "parameters": [
@@ -111,7 +111,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/cerrar-coem": {
+        "/coem/cerrar-coem": {
             "post": {
                 "description": "Cerrar COEM",
                 "consumes": [
@@ -121,7 +121,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "CerrarCOEM"
+                    "Comunicación de Embarque"
                 ],
                 "summary": "Cerrar COEM",
                 "parameters": [
@@ -157,14 +157,14 @@ const docTemplate = `{
                 }
             }
         },
-        "/dummy": {
+        "/coem/dummy": {
             "get": {
                 "description": "Visualizar el estado del servicio web, del servicio de autenticación y de la base de datos de ARCA",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "Dummy"
+                    "Comunicación de Embarque"
                 ],
                 "summary": "Muestra el estado del servicio",
                 "responses": {
@@ -183,7 +183,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/rectificar-caratula": {
+        "/coem/rectificar-caratula": {
             "put": {
                 "description": "Rectificar una Carátula sin COEMs",
                 "consumes": [
@@ -193,7 +193,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "RectificarCaratula"
+                    "Comunicación de Embarque"
                 ],
                 "summary": "Rectificar Carátula",
                 "parameters": [
@@ -229,7 +229,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/rectificar-coem": {
+        "/coem/rectificar-coem": {
             "put": {
                 "description": "Rectificar COEM",
                 "consumes": [
@@ -239,7 +239,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "RectificarCOEM"
+                    "Comunicación de Embarque"
                 ],
                 "summary": "Rectificar COEM",
                 "parameters": [
@@ -275,7 +275,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/registrar-caratula": {
+        "/coem/registrar-caratula": {
             "post": {
                 "description": "Registra una nueva Carátula",
                 "consumes": [
@@ -285,7 +285,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "RegistrarCaratula"
+                    "Comunicación de Embarque"
                 ],
                 "summary": "Registrar Carátula",
                 "parameters": [
@@ -321,7 +321,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/registrar-coem": {
+        "/coem/registrar-coem": {
             "post": {
                 "description": "Registrar COEM en Carátula",
                 "consumes": [
@@ -331,7 +331,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "RegistrarCOEM"
+                    "Comunicación de Embarque"
                 ],
                 "summary": "Registrar COEM",
                 "parameters": [
@@ -367,7 +367,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/solicitar-anulacion-coem": {
+        "/coem/solicitar-anulacion-coem": {
             "post": {
                 "description": "Solicitar anulación COEM",
                 "consumes": [
@@ -377,7 +377,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "SolicitarAnulacionCOEM"
+                    "Comunicación de Embarque"
                 ],
                 "summary": "Solicitar Anulación COEM",
                 "parameters": [
@@ -413,7 +413,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/solicitar-cambio-buque": {
+        "/coem/solicitar-cambio-buque": {
             "put": {
                 "description": "Solicitar cambio de Buque para Carátulas con COEMs",
                 "consumes": [
@@ -423,7 +423,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "SolicitarCambioBuque"
+                    "Comunicación de Embarque"
                 ],
                 "summary": "Solicitar cambio de Buque",
                 "parameters": [
@@ -459,7 +459,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/solicitar-cambio-fechas": {
+        "/coem/solicitar-cambio-fechas": {
             "put": {
                 "description": "Solicitar cambio de Fechas para Carátulas con COEMs",
                 "consumes": [
@@ -469,7 +469,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "SolicitarCambioFechas"
+                    "Comunicación de Embarque"
                 ],
                 "summary": "Solicitar cambio de Fechas",
                 "parameters": [
@@ -505,7 +505,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/solicitar-cambio-lot": {
+        "/coem/solicitar-cambio-lot": {
             "put": {
                 "description": "Solicitar cambio de Lugar Operativo para Carátulas con COEMs",
                 "consumes": [
@@ -515,7 +515,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "SolicitarCambioLOT"
+                    "Comunicación de Embarque"
                 ],
                 "summary": "Solicitar cambio de LOT",
                 "parameters": [
@@ -551,7 +551,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/solicitar-cierre-carga-conto-bulto": {
+        "/coem/solicitar-cierre-carga-conto-bulto": {
             "post": {
                 "description": "Solicitar Cierre de Carga Contenedores y/o Bultos",
                 "consumes": [
@@ -561,7 +561,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "SolicitarCierreCargaContoBulto"
+                    "Comunicación de Embarque"
                 ],
                 "summary": "Solicitar Cierre de Carga Contenedores y/o Bultos",
                 "parameters": [
@@ -597,7 +597,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/solicitar-cierre-carga-granel": {
+        "/coem/solicitar-cierre-carga-granel": {
             "post": {
                 "description": "Solicitar Cierre de Carga Granel",
                 "consumes": [
@@ -607,7 +607,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "SolicitarCierreCargaGranel"
+                    "Comunicación de Embarque"
                 ],
                 "summary": "Solicitar Cierre de Carga Granel",
                 "parameters": [
@@ -643,7 +643,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/solicitar-no-abordo": {
+        "/coem/solicitar-no-abordo": {
             "post": {
                 "description": "Solicitar No Abordo",
                 "consumes": [
@@ -653,7 +653,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "SolicitarNoABordo"
+                    "Comunicación de Embarque"
                 ],
                 "summary": "Solicitar No Abordo",
                 "parameters": [
@@ -684,6 +684,193 @@ const docTemplate = `{
                         "description": "Internal Server Error",
                         "schema": {
                             "$ref": "#/definitions/dto.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/coemcons/dummy": {
+            "get": {
+                "description": "Visualizar el estado del servicio web, del servicio de autenticación y de la base de datos de ARCA",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Consultas de Comunicación de Embarque"
+                ],
+                "summary": "Muestra el estado del servicio",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.DummyResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/coemcons/obtener-consulta-estados-coem": {
+            "get": {
+                "description": "Obtener Consulta Estados COEM",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Consultas de Comunicación de Embarque"
+                ],
+                "summary": "Obtener Consulta Estados COEM",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Identificador de la caratula",
+                        "name": "q",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/afip.ConsultaEstadoCOEM"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/coemcons/obtener-consulta-no-abordo": {
+            "get": {
+                "description": "Obtener Consulta No Abordo",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Consultas de Comunicación de Embarque"
+                ],
+                "summary": "Obtener Consulta No Abordo",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Identificador de la caratula",
+                        "name": "q",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/afip.ConsultaNoAbordo"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/coemcons/obtener-consulta-solicitudes": {
+            "get": {
+                "description": "Obtener Consulta de Solicitudes",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Consultas de Comunicación de Embarque"
+                ],
+                "summary": "Obtener Consulta de Solicitudes",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Identificador de la caratula",
+                        "name": "q",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/afip.ConsultaSolicitud"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/info": {
+            "get": {
+                "description": "Muesta información de la API",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "API"
+                ],
+                "summary": "Muesta información de la API",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.DummyResponse"
                         }
                     }
                 }
@@ -799,6 +986,87 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "Via": {
+                    "type": "string"
+                }
+            }
+        },
+        "afip.ConsultaEstadoCOEM": {
+            "type": "object",
+            "properties": {
+                "CODE": {
+                    "type": "string"
+                },
+                "CuitAlta": {
+                    "type": "string"
+                },
+                "Estado": {
+                    "type": "string"
+                },
+                "FechaEstado": {
+                    "type": "string"
+                },
+                "IdentificadorCOEM": {
+                    "type": "string"
+                },
+                "Motivo": {
+                    "type": "string"
+                }
+            }
+        },
+        "afip.ConsultaNoAbordo": {
+            "type": "object",
+            "properties": {
+                "Contenedor": {
+                    "type": "string"
+                },
+                "Cuit": {
+                    "type": "string"
+                },
+                "DescripcionNoAbordo": {
+                    "type": "string"
+                },
+                "Destinacion": {
+                    "type": "string"
+                },
+                "FechaNoAbordo": {
+                    "type": "string"
+                },
+                "IdentificadorCACE": {
+                    "type": "string"
+                },
+                "IdentificadorCOEM": {
+                    "type": "string"
+                },
+                "MotivoNoAbordo": {
+                    "type": "string"
+                },
+                "Tipo": {
+                    "type": "string"
+                },
+                "TipoNoAbordo": {
+                    "type": "string"
+                }
+            }
+        },
+        "afip.ConsultaSolicitud": {
+            "type": "object",
+            "properties": {
+                "Estado": {
+                    "type": "string"
+                },
+                "FechaEstado": {
+                    "type": "string"
+                },
+                "IdentificadorCACE": {
+                    "type": "string"
+                },
+                "IdentificadorCOEM": {
+                    "type": "string"
+                },
+                "NumeroSolicitud": {
+                    "type": "string"
+                },
+                "TipoSolicitud": {
                     "type": "string"
                 }
             }
@@ -1178,8 +1446,8 @@ var SwaggerInfo = &swag.Spec{
 	Host:             "",
 	BasePath:         "",
 	Schemes:          []string{},
-	Title:            "ARCA - Comunicación de Embarque API",
-	Description:      "Esta API Json RESTFul actua como proxy SOAP a los servicios de Comunicación de Embarque de ARCA.",
+	Title:            "API Rest Json proxy a los servicios web SOAP ARCA",
+	Description:      "Esta API Json Rest actua como proxy SOAP a los servicios web de ARCA.",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 	LeftDelim:        "{{",

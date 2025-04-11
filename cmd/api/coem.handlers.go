@@ -15,12 +15,12 @@ import (
 //
 //	@Summary		Muestra el estado del servicio
 //	@Description	Visualizar el estado del servicio web, del servicio de autenticación y de la base de datos de ARCA
-//	@Tags			Dummy
+//	@Tags			Comunicación de Embarque
 //	@Produce		json
 //	@Success		200	{object}	dto.DummyResponse
 //	@Failure		500	{object}	dto.ErrorResponse
-//	@Router			/dummy [get]
-func DummyHandler(w http.ResponseWriter, r *http.Request) {
+//	@Router			/coem/dummy [get]
+func DummyCoemHandler(w http.ResponseWriter, r *http.Request) {
 	appServer, authServer, dbServer, err := Wscoem.Dummy()
 	if err != nil {
 		util.HttpResponseJSON(w, http.StatusInternalServerError, &dto.ErrorResponse{Error: err.Error()}, err)
@@ -37,14 +37,14 @@ func DummyHandler(w http.ResponseWriter, r *http.Request) {
 //
 //	@Summary		Registrar Carátula
 //	@Description	Registra una nueva Carátula
-//	@Tags			RegistrarCaratula
+//	@Tags			Comunicación de Embarque
 //	@Accept			json
 //	@Produce		json
 //	@Param			request	body		afip.CaratulaParams	true	"RegistrarCaratulaRequest"
 //	@Success		200		{object}	dto.MessageResponse
 //	@Failure		400		{object}	dto.ErrorResponse
 //	@Failure		500		{object}	dto.ErrorResponse
-//	@Router			/registrar-caratula [post]
+//	@Router			/coem/registrar-caratula [post]
 func RegistrarCaratulaHandler(w http.ResponseWriter, r *http.Request) {
 	var post afip.CaratulaParams
 	err := json.NewDecoder(r.Body).Decode(&post)
@@ -71,14 +71,14 @@ func RegistrarCaratulaHandler(w http.ResponseWriter, r *http.Request) {
 //
 //	@Summary		Rectificar Carátula
 //	@Description	Rectificar una Carátula sin COEMs
-//	@Tags			RectificarCaratula
+//	@Tags			Comunicación de Embarque
 //	@Accept			json
 //	@Produce		json
 //	@Param			request	body		afip.RectificarCaratulaParams	true	"RectificarCaratulaRequest"
 //	@Success		200		{object}	dto.MessageResponse
 //	@Failure		400		{object}	dto.ErrorResponse
 //	@Failure		500		{object}	dto.ErrorResponse
-//	@Router			/rectificar-caratula [put]
+//	@Router			/coem/rectificar-caratula [put]
 func RectificarCaratulaHandler(w http.ResponseWriter, r *http.Request) {
 	var post afip.RectificarCaratulaParams
 	err := json.NewDecoder(r.Body).Decode(&post)
@@ -105,14 +105,14 @@ func RectificarCaratulaHandler(w http.ResponseWriter, r *http.Request) {
 //
 //	@Summary		Anular Carátula
 //	@Description	Anular Carátula sin COEMs
-//	@Tags			AnularCaratula
+//	@Tags			Comunicación de Embarque
 //	@Accept			json
 //	@Produce		json
 //	@Param			request	body		afip.IdentificadorCaraturaParams	true	"AnularCaratulaRequest"
 //	@Success		200		{object}	dto.MessageResponse
 //	@Failure		400		{object}	dto.ErrorResponse
 //	@Failure		500		{object}	dto.ErrorResponse
-//	@Router			/anular-caratula [delete]
+//	@Router			/coem/anular-caratula [delete]
 func AnularCaratulaHandler(w http.ResponseWriter, r *http.Request) {
 	var post afip.IdentificadorCaraturaParams
 	err := json.NewDecoder(r.Body).Decode(&post)
@@ -141,14 +141,14 @@ func AnularCaratulaHandler(w http.ResponseWriter, r *http.Request) {
 //
 //	@Summary		Solicitar cambio de Buque
 //	@Description	Solicitar cambio de Buque para Carátulas con COEMs
-//	@Tags			SolicitarCambioBuque
+//	@Tags			Comunicación de Embarque
 //	@Accept			json
 //	@Produce		json
 //	@Param			request	body		afip.CambioBuqueParams	true	"SolicitarCambioBuqueRequest"
 //	@Success		200		{object}	dto.MessageResponse
 //	@Failure		400		{object}	dto.ErrorResponse
 //	@Failure		500		{object}	dto.ErrorResponse
-//	@Router			/solicitar-cambio-buque [put]
+//	@Router			/coem/solicitar-cambio-buque [put]
 func SolicitarCambioBuqueHandler(w http.ResponseWriter, r *http.Request) {
 	var post afip.CambioBuqueParams
 	err := json.NewDecoder(r.Body).Decode(&post)
@@ -175,14 +175,14 @@ func SolicitarCambioBuqueHandler(w http.ResponseWriter, r *http.Request) {
 //
 //	@Summary		Solicitar cambio de Fechas
 //	@Description	Solicitar cambio de Fechas para Carátulas con COEMs
-//	@Tags			SolicitarCambioFechas
+//	@Tags			Comunicación de Embarque
 //	@Accept			json
 //	@Produce		json
 //	@Param			request	body		afip.CambioFechasParams	true	"CambioFechasParamsRequest"
 //	@Success		200		{object}	dto.MessageResponse
 //	@Failure		400		{object}	dto.ErrorResponse
 //	@Failure		500		{object}	dto.ErrorResponse
-//	@Router			/solicitar-cambio-fechas [put]
+//	@Router			/coem/solicitar-cambio-fechas [put]
 func SolicitarCambioFechasHandler(w http.ResponseWriter, r *http.Request) {
 	var post afip.CambioFechasParams
 	err := json.NewDecoder(r.Body).Decode(&post)
@@ -209,14 +209,14 @@ func SolicitarCambioFechasHandler(w http.ResponseWriter, r *http.Request) {
 //
 //	@Summary		Solicitar cambio de LOT
 //	@Description	Solicitar cambio de Lugar Operativo para Carátulas con COEMs
-//	@Tags			SolicitarCambioLOT
+//	@Tags			Comunicación de Embarque
 //	@Accept			json
 //	@Produce		json
 //	@Param			request	body		afip.CambioLOTParams	true	"CambioLOTParamsRequest"
 //	@Success		200		{object}	dto.MessageResponse
 //	@Failure		400		{object}	dto.ErrorResponse
 //	@Failure		500		{object}	dto.ErrorResponse
-//	@Router			/solicitar-cambio-lot [put]
+//	@Router			/coem/solicitar-cambio-lot [put]
 func SolicitarCambioLOTHandler(w http.ResponseWriter, r *http.Request) {
 	var post afip.CambioLOTParams
 	err := json.NewDecoder(r.Body).Decode(&post)
@@ -243,14 +243,14 @@ func SolicitarCambioLOTHandler(w http.ResponseWriter, r *http.Request) {
 //
 //	@Summary		Registrar COEM
 //	@Description	Registrar COEM en Carátula
-//	@Tags			RegistrarCOEM
+//	@Tags			Comunicación de Embarque
 //	@Accept			json
 //	@Produce		json
 //	@Param			request	body		afip.RegistrarCOEMParams	true	"RegistrarCOEMRequest"
 //	@Success		200		{object}	dto.MessageResponse
 //	@Failure		400		{object}	dto.ErrorResponse
 //	@Failure		500		{object}	dto.ErrorResponse
-//	@Router			/registrar-coem [post]
+//	@Router			/coem/registrar-coem [post]
 func RegistrarCOEMHandler(w http.ResponseWriter, r *http.Request) {
 	var post afip.RegistrarCOEMParams
 	err := json.NewDecoder(r.Body).Decode(&post)
@@ -277,14 +277,14 @@ func RegistrarCOEMHandler(w http.ResponseWriter, r *http.Request) {
 //
 //	@Summary		Rectificar COEM
 //	@Description	Rectificar COEM
-//	@Tags			RectificarCOEM
+//	@Tags			Comunicación de Embarque
 //	@Accept			json
 //	@Produce		json
 //	@Param			request	body		afip.RectificarCOEMParams	true	"RectificarCOEMRequest"
 //	@Success		200		{object}	dto.MessageResponse
 //	@Failure		400		{object}	dto.ErrorResponse
 //	@Failure		500		{object}	dto.ErrorResponse
-//	@Router			/rectificar-coem [put]
+//	@Router			/coem/rectificar-coem [put]
 func RectificarCOEMHandler(w http.ResponseWriter, r *http.Request) {
 	var post afip.RectificarCOEMParams
 	err := json.NewDecoder(r.Body).Decode(&post)
@@ -311,14 +311,14 @@ func RectificarCOEMHandler(w http.ResponseWriter, r *http.Request) {
 //
 //	@Summary		Cerrar COEM
 //	@Description	Cerrar COEM
-//	@Tags			CerrarCOEM
+//	@Tags			Comunicación de Embarque
 //	@Accept			json
 //	@Produce		json
 //	@Param			request	body		afip.IdentificadorCOEMParams	true	"CerrarCOEMRequest"
 //	@Success		200		{object}	dto.MessageResponse
 //	@Failure		400		{object}	dto.ErrorResponse
 //	@Failure		500		{object}	dto.ErrorResponse
-//	@Router			/cerrar-coem [post]
+//	@Router			/coem/cerrar-coem [post]
 func CerrarCOEMHandler(w http.ResponseWriter, r *http.Request) {
 	var post afip.IdentificadorCOEMParams
 	err := json.NewDecoder(r.Body).Decode(&post)
@@ -345,14 +345,14 @@ func CerrarCOEMHandler(w http.ResponseWriter, r *http.Request) {
 //
 //	@Summary		Anular COEM
 //	@Description	Anular COEM
-//	@Tags			AnularCOEM
+//	@Tags			Comunicación de Embarque
 //	@Accept			json
 //	@Produce		json
 //	@Param			request	body		afip.IdentificadorCOEMParams	true	"AnularCOEMRequest"
 //	@Success		200		{object}	dto.MessageResponse
 //	@Failure		400		{object}	dto.ErrorResponse
 //	@Failure		500		{object}	dto.ErrorResponse
-//	@Router			/anular-coem [delete]
+//	@Router			/coem/anular-coem [delete]
 func AnularCOEMHandler(w http.ResponseWriter, r *http.Request) {
 	var post afip.IdentificadorCOEMParams
 	err := json.NewDecoder(r.Body).Decode(&post)
@@ -379,14 +379,14 @@ func AnularCOEMHandler(w http.ResponseWriter, r *http.Request) {
 //
 //	@Summary		Solicitar Anulación COEM
 //	@Description	Solicitar anulación COEM
-//	@Tags			SolicitarAnulacionCOEM
+//	@Tags			Comunicación de Embarque
 //	@Accept			json
 //	@Produce		json
 //	@Param			request	body		afip.IdentificadorCOEMParams	true	"SolicitarAnulacionCOEMRequest"
 //	@Success		200		{object}	dto.MessageResponse
 //	@Failure		400		{object}	dto.ErrorResponse
 //	@Failure		500		{object}	dto.ErrorResponse
-//	@Router			/solicitar-anulacion-coem [post]
+//	@Router			/coem/solicitar-anulacion-coem [post]
 func SolicitarAnulacionCOEMHandler(w http.ResponseWriter, r *http.Request) {
 	var post afip.IdentificadorCOEMParams
 	err := json.NewDecoder(r.Body).Decode(&post)
@@ -413,14 +413,14 @@ func SolicitarAnulacionCOEMHandler(w http.ResponseWriter, r *http.Request) {
 //
 //	@Summary		Solicitar No Abordo
 //	@Description	Solicitar No Abordo
-//	@Tags			SolicitarNoABordo
+//	@Tags			Comunicación de Embarque
 //	@Accept			json
 //	@Produce		json
 //	@Param			request	body		afip.IdentificadorCOEMParams	true	"SolicitarNoABordoRequest"
 //	@Success		200		{object}	dto.MessageResponse
 //	@Failure		400		{object}	dto.ErrorResponse
 //	@Failure		500		{object}	dto.ErrorResponse
-//	@Router			/solicitar-no-abordo [post]
+//	@Router			/coem/solicitar-no-abordo [post]
 func SolicitarNoABordoHandler(w http.ResponseWriter, r *http.Request) {
 	var post afip.SolicitarNoABordoParams
 	err := json.NewDecoder(r.Body).Decode(&post)
@@ -447,14 +447,14 @@ func SolicitarNoABordoHandler(w http.ResponseWriter, r *http.Request) {
 //
 //	@Summary		Solicitar Cierre de Carga Contenedores y/o Bultos
 //	@Description	Solicitar Cierre de Carga Contenedores y/o Bultos
-//	@Tags			SolicitarCierreCargaContoBulto
+//	@Tags			Comunicación de Embarque
 //	@Accept			json
 //	@Produce		json
 //	@Param			request	body		afip.SolicitarCierreCargaContoBultoParams	true	"SolicitarCierreCargaContoBultoRequest"
 //	@Success		200		{object}	dto.MessageResponse
 //	@Failure		400		{object}	dto.ErrorResponse
 //	@Failure		500		{object}	dto.ErrorResponse
-//	@Router			/solicitar-cierre-carga-conto-bulto [post]
+//	@Router			/coem/solicitar-cierre-carga-conto-bulto [post]
 func SolicitarCierreCargaContoBultoHandler(w http.ResponseWriter, r *http.Request) {
 	var post afip.SolicitarCierreCargaContoBultoParams
 	err := json.NewDecoder(r.Body).Decode(&post)
@@ -481,14 +481,14 @@ func SolicitarCierreCargaContoBultoHandler(w http.ResponseWriter, r *http.Reques
 //
 //	@Summary		Solicitar Cierre de Carga Granel
 //	@Description	Solicitar Cierre de Carga Granel
-//	@Tags			SolicitarCierreCargaGranel
+//	@Tags			Comunicación de Embarque
 //	@Accept			json
 //	@Produce		json
 //	@Param			request	body		afip.SolicitarCierreCargaGranelParams	true	"SolicitarCierreCargaGranel"
 //	@Success		200		{object}	dto.MessageResponse
 //	@Failure		400		{object}	dto.ErrorResponse
 //	@Failure		500		{object}	dto.ErrorResponse
-//	@Router			/solicitar-cierre-carga-granel [post]
+//	@Router			/coem/solicitar-cierre-carga-granel [post]
 func SolicitarCierreCargaGranelHandler(w http.ResponseWriter, r *http.Request) {
 	var post afip.SolicitarCierreCargaGranelParams
 	err := json.NewDecoder(r.Body).Decode(&post)

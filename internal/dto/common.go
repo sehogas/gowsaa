@@ -21,3 +21,7 @@ type SendEmailRequest struct {
 	Subject string `json:"subject"`
 	Body    string `json:"body"`
 }
+
+type InfoResponse struct {
+	Version string `json:"version"`
+}

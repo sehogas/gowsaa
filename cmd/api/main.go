@@ -13,7 +13,7 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/rs/cors"
 	"github.com/sehogas/gowsaa/afip"
-	"github.com/sehogas/gowsaa/cmd/gocoem/docs"
+	"github.com/sehogas/gowsaa/cmd/api/docs"
 	"github.com/sehogas/gowsaa/internal/middleware"
 	"github.com/sehogas/gowsaa/internal/util"
 	httpSwagger "github.com/swaggo/http-swagger/v2"
@@ -22,14 +22,15 @@ import (
 var (
 	Version string = "development"
 
-	Wscoem *afip.Wscoem
+	Wscoem     *afip.Wscoem
+	Wscoemcons *afip.Wscoemcons
 
 	validate *validator.Validate
 )
 
-//	@title			ARCA - Comunicación de Embarque API
+//	@title			API Rest Json proxy a los servicios web SOAP ARCA
 //	@version		1.0
-//	@description	Esta API Json RESTFul actua como proxy SOAP a los servicios de Comunicación de Embarque de ARCA.
+//	@description	Esta API Json Rest actua como proxy SOAP a los servicios web de ARCA.
 //	@termsOfService	http://swagger.io/terms/
 
 // @contact.name	Sebastian Hogas
@@ -52,11 +53,11 @@ func main() {
 	}
 
 	if os.Getenv("CERTIFICATE_FILE") == "" {
-		log.Fatalln("variable de entorno CERTIFICATE_FILE faltante")
+		log.Fatalln("falta variable de entorno CERTIFICATE_FILE")
 	}
 
 	if len(os.Getenv("WSCOEM_TIPO_AGENTE")) != 4 {
-		log.Fatalln("variable de entorno WSCOEM_TIPO_AGENTE faltante o inválida")
+		log.Fatalln("falta variable de entorno WSCOEM_TIPO_AGENTE")
 	}
 
 	if len(os.Getenv("WSCOEM_ROL")) != 4 {
@@ -77,43 +78,54 @@ func main() {
 		log.Fatalln(err)
 	}
 
+	Wscoemcons, err = afip.NewWscoemcons(environment, cuit, os.Getenv("WSCOEM_TIPO_AGENTE"), os.Getenv("WSCOEM_ROL"))
+	if err != nil {
+		log.Fatalln(err)
+	}
+
 	/* API Rest */
 	validate = validator.New(validator.WithRequiredStructEnabled())
 
 	router := http.NewServeMux()
 
-	if environment == afip.TESTING {
-		docs.SwaggerInfo.Host = fmt.Sprintf("localhost:%d", port)
-	} else {
-		docs.SwaggerInfo.Host = "coem.dpp.gob.ar"
-	}
+	docs.SwaggerInfo.Host = os.Getenv("HOST")
 	docs.SwaggerInfo.BasePath = "/api/v1"
 	docs.SwaggerInfo.Schemes = []string{"http", "https"}
 
 	router.HandleFunc("/swagger/", httpSwagger.Handler(
-		httpSwagger.URL("/swagger/doc.json"), //The url pointing to API definition
+		httpSwagger.URL("/swagger/doc.json"),
 		httpSwagger.DeepLinking(true),
 		httpSwagger.DocExpansion("none"),
 		httpSwagger.DomID("swagger-ui"),
 	))
 
-	v1 := http.NewServeMux()
-	v1.HandleFunc("/dummy", DummyHandler)
-	v1.HandleFunc("POST /registrar-caratula", RegistrarCaratulaHandler)
-	v1.HandleFunc("PUT /rectificar-caratula", RectificarCaratulaHandler)
-	v1.HandleFunc("DELETE /anular-caratula", AnularCaratulaHandler)
-	v1.HandleFunc("PUT /solicitar-cambio-buque", SolicitarCambioBuqueHandler)
-	v1.HandleFunc("PUT /solicitar-cambio-fechas", SolicitarCambioFechasHandler)
-	v1.HandleFunc("PUT /solicitar-cambio-lot", SolicitarCambioLOTHandler)
-	v1.HandleFunc("POST /registrar-coem", RegistrarCOEMHandler)
-	v1.HandleFunc("PUT /rectificar-coem", RectificarCOEMHandler)
-	v1.HandleFunc("POST /cerrar-coem", CerrarCOEMHandler)
-	v1.HandleFunc("DELETE /anular-coem", AnularCOEMHandler)
-	v1.HandleFunc("POST /solicitar-anulacion-coem", SolicitarAnulacionCOEMHandler)
-	v1.HandleFunc("POST /solicitar-no-abordo", SolicitarNoABordoHandler)
-	v1.HandleFunc("POST /solicitar-cierre-carga-conto-bulto", SolicitarCierreCargaContoBultoHandler)
-	v1.HandleFunc("POST /solicitar-cierre-carga-granel", SolicitarCierreCargaGranelHandler)
+	coem := http.NewServeMux()
+	coem.HandleFunc("/dummy", DummyCoemHandler)
+	coem.HandleFunc("POST /registrar-caratula", RegistrarCaratulaHandler)
+	coem.HandleFunc("PUT /rectificar-caratula", RectificarCaratulaHandler)
+	coem.HandleFunc("DELETE /anular-caratula", AnularCaratulaHandler)
+	coem.HandleFunc("PUT /solicitar-cambio-buque", SolicitarCambioBuqueHandler)
+	coem.HandleFunc("PUT /solicitar-cambio-fechas", SolicitarCambioFechasHandler)
+	coem.HandleFunc("PUT /solicitar-cambio-lot", SolicitarCambioLOTHandler)
+	coem.HandleFunc("POST /registrar-coem", RegistrarCOEMHandler)
+	coem.HandleFunc("PUT /rectificar-coem", RectificarCOEMHandler)
+	coem.HandleFunc("POST /cerrar-coem", CerrarCOEMHandler)
+	coem.HandleFunc("DELETE /anular-coem", AnularCOEMHandler)
+	coem.HandleFunc("POST /solicitar-anulacion-coem", SolicitarAnulacionCOEMHandler)
+	coem.HandleFunc("POST /solicitar-no-abordo", SolicitarNoABordoHandler)
+	coem.HandleFunc("POST /solicitar-cierre-carga-conto-bulto", SolicitarCierreCargaContoBultoHandler)
+	coem.HandleFunc("POST /solicitar-cierre-carga-granel", SolicitarCierreCargaGranelHandler)
 
+	coemcons := http.NewServeMux()
+	coemcons.HandleFunc("/dummy", DummyCoemconsHandler)
+	coemcons.HandleFunc("/obtener-consulta-estados-coem", ObtenerConsultaEstadosCOEMHandler)
+	coemcons.HandleFunc("/obtener-consulta-no-abordo", ObtenerConsultaNoAbordoHandler)
+	coemcons.HandleFunc("/obtener-consulta-solicitudes", ObtenerConsultaSolicitudesHandler)
+
+	v1 := http.NewServeMux()
+	v1.HandleFunc("/info", InfoHandler)
+	v1.Handle("/coem/", http.StripPrefix("/coem", coem))
+	v1.Handle("/coemcons/", http.StripPrefix("/coemcons", coemcons))
 	router.Handle("/api/v1/", http.StripPrefix("/api/v1", v1))
 
 	middlewareCors := cors.New(cors.Options{
