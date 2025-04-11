@@ -1,0 +1,771 @@
+definitions:
+  afip.CambioBuqueParams:
+    properties:
+      IdentificadorBuque:
+        maxLength: 20
+        type: string
+      IdentificadorCaratula:
+        type: string
+      NombreMedioTransporte:
+        maxLength: 200
+        type: string
+    required:
+    - IdentificadorCaratula
+    type: object
+  afip.CambioFechasParams:
+    properties:
+      CodigoMotivo:
+        maxLength: 2
+        type: string
+      DescripcionMotivo:
+        maxLength: 200
+        type: string
+      FechaArribo:
+        type: string
+      FechaZarpada:
+        type: string
+      IdentificadorCaratula:
+        type: string
+    required:
+    - CodigoMotivo
+    - FechaArribo
+    - FechaZarpada
+    - IdentificadorCaratula
+    type: object
+  afip.CambioLOTParams:
+    properties:
+      CodigoLugarOperativo:
+        maxLength: 5
+        type: string
+      IdentificadorCaratula:
+        type: string
+    required:
+    - CodigoLugarOperativo
+    - IdentificadorCaratula
+    type: object
+  afip.CaratulaParams:
+    properties:
+      CodigoAduana:
+        type: string
+      CodigoLugarOperativo:
+        type: string
+      FechaArribo:
+        type: string
+      FechaZarpada:
+        type: string
+      IdentificadorBuque:
+        maxLength: 20
+        type: string
+      Itinerario:
+        items:
+          $ref: '#/definitions/afip.PuertoDestinoParams'
+        type: array
+      NombreMedioTransporte:
+        maxLength: 200
+        type: string
+      NumeroViaje:
+        maxLength: 16
+        type: string
+      PuertoDestino:
+        type: string
+      Via:
+        type: string
+    required:
+    - CodigoAduana
+    - CodigoLugarOperativo
+    - FechaArribo
+    - FechaZarpada
+    - NombreMedioTransporte
+    - Via
+    type: object
+  afip.ContenedorCarga:
+    properties:
+      CuitATA:
+        type: string
+      Declaraciones:
+        items:
+          type: string
+        type: array
+      IdentificadorContenedor:
+        type: string
+      Peso:
+        type: number
+      Precintos:
+        items:
+          type: string
+        type: array
+      Tipo:
+        type: string
+    required:
+    - IdentificadorContenedor
+    type: object
+  afip.ContenedorVacio:
+    properties:
+      CodigoPais:
+        type: string
+      CuitATA:
+        type: string
+      IdentificadorContenedor:
+        type: string
+      Tipo:
+        type: string
+    required:
+    - IdentificadorContenedor
+    type: object
+  afip.DeclaracionCOEMGranel:
+    properties:
+      DeclaracionesGranel:
+        items:
+          $ref: '#/definitions/afip.DeclaracionGranel'
+        type: array
+      IdentificadorCOEM:
+        type: string
+    type: object
+  afip.DeclaracionCont:
+    properties:
+      FechaEmbarque:
+        type: string
+      IdentificadorDeclaracion:
+        type: string
+    type: object
+  afip.DeclaracionGranel:
+    properties:
+      FechaEmbarque:
+        type: string
+      IdentificadorCierreCumplido:
+        type: string
+      IdentificadorDeclaracion:
+        type: string
+      Items:
+        items:
+          $ref: '#/definitions/afip.ItemGranel'
+        type: array
+    type: object
+  afip.Embalaje:
+    properties:
+      CantidadBultos:
+        type: integer
+      CodigoEmbalaje:
+        type: string
+      Peso:
+        type: number
+    type: object
+  afip.IdentificadorCOEMParams:
+    properties:
+      IdentificadorCOEM:
+        type: string
+      IdentificadorCaratula:
+        type: string
+    required:
+    - IdentificadorCOEM
+    - IdentificadorCaratula
+    type: object
+  afip.IdentificadorCaraturaParams:
+    properties:
+      IdentificadorCaratula:
+        type: string
+    required:
+    - IdentificadorCaratula
+    type: object
+  afip.ItemGranel:
+    properties:
+      CantidadReal:
+        type: number
+      NumeroItem:
+        type: integer
+    type: object
+  afip.MercaderiaSuelta:
+    properties:
+      CuitATA:
+        type: string
+      Embalajes:
+        items:
+          $ref: '#/definitions/afip.Embalaje'
+        type: array
+      IdentificadorDeclaracion:
+        type: string
+    type: object
+  afip.PuertoDestinoParams:
+    properties:
+      PuertoDestino:
+        type: string
+    type: object
+  afip.RectificarCOEMParams:
+    properties:
+      ContenedoresConCarga:
+        items:
+          $ref: '#/definitions/afip.ContenedorCarga'
+        type: array
+      ContenedoresVacios:
+        items:
+          $ref: '#/definitions/afip.ContenedorVacio'
+        type: array
+      IdentificadorCOEM:
+        type: string
+      IdentificadorCaratula:
+        type: string
+      MercaderiasSueltas:
+        items:
+          $ref: '#/definitions/afip.MercaderiaSuelta'
+        type: array
+    required:
+    - IdentificadorCOEM
+    - IdentificadorCaratula
+    type: object
+  afip.RectificarCaratulaParams:
+    properties:
+      CodigoAduana:
+        type: string
+      CodigoLugarOperativo:
+        type: string
+      FechaArribo:
+        type: string
+      FechaZarpada:
+        type: string
+      IdentificadorBuque:
+        maxLength: 20
+        type: string
+      IdentificadorCaratula:
+        type: string
+      Itinerario:
+        items:
+          $ref: '#/definitions/afip.PuertoDestinoParams'
+        type: array
+      NombreMedioTransporte:
+        maxLength: 200
+        type: string
+      NumeroViaje:
+        maxLength: 16
+        type: string
+      PuertoDestino:
+        type: string
+      Via:
+        type: string
+    required:
+    - CodigoAduana
+    - CodigoLugarOperativo
+    - FechaArribo
+    - FechaZarpada
+    - IdentificadorCaratula
+    - NombreMedioTransporte
+    - Via
+    type: object
+  afip.RegistrarCOEMParams:
+    properties:
+      ContenedoresConCarga:
+        items:
+          $ref: '#/definitions/afip.ContenedorCarga'
+        type: array
+      ContenedoresVacios:
+        items:
+          $ref: '#/definitions/afip.ContenedorVacio'
+        type: array
+      IdentificadorCaratula:
+        type: string
+      MercaderiasSueltas:
+        items:
+          $ref: '#/definitions/afip.MercaderiaSuelta'
+        type: array
+    required:
+    - IdentificadorCaratula
+    type: object
+  afip.SolicitarCierreCargaContoBultoParams:
+    properties:
+      Declaraciones:
+        items:
+          $ref: '#/definitions/afip.DeclaracionCont'
+        type: array
+      FechaZarpada:
+        type: string
+      IdentificadorCaratula:
+        type: string
+      NumeroViaje:
+        type: string
+    required:
+    - FechaZarpada
+    - IdentificadorCaratula
+    type: object
+  afip.SolicitarCierreCargaGranelParams:
+    properties:
+      DeclaracionesCOEMGranel:
+        items:
+          $ref: '#/definitions/afip.DeclaracionCOEMGranel'
+        type: array
+      FechaZarpada:
+        type: string
+      IdentificadorCaratula:
+        type: string
+      NumeroViaje:
+        type: string
+    required:
+    - FechaZarpada
+    - IdentificadorCaratula
+    type: object
+  dto.DummyResponse:
+    properties:
+      AppServer:
+        type: string
+      AuthServer:
+        type: string
+      DbServer:
+        type: string
+    type: object
+  dto.ErrorResponse:
+    properties:
+      error:
+        type: string
+    type: object
+  dto.MessageResponse:
+    properties:
+      message:
+        type: string
+    type: object
+info:
+  contact:
+    email: sehogas@gmail.com
+    name: Sebastian Hogas
+  description: Esta API Json RESTFul actua como proxy SOAP a los servicios de Comunicación
+    de Embarque de ARCA.
+  termsOfService: http://swagger.io/terms/
+  title: ARCA - Comunicación de Embarque API
+  version: "1.0"
+paths:
+  /anular-caratula:
+    delete:
+      consumes:
+      - application/json
+      description: Anular Carátula sin COEMs
+      parameters:
+      - description: AnularCaratulaRequest
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/afip.IdentificadorCaraturaParams'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.MessageResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      summary: Anular Carátula
+      tags:
+      - AnularCaratula
+  /anular-coem:
+    delete:
+      consumes:
+      - application/json
+      description: Anular COEM
+      parameters:
+      - description: AnularCOEMRequest
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/afip.IdentificadorCOEMParams'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.MessageResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      summary: Anular COEM
+      tags:
+      - AnularCOEM
+  /cerrar-coem:
+    post:
+      consumes:
+      - application/json
+      description: Cerrar COEM
+      parameters:
+      - description: CerrarCOEMRequest
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/afip.IdentificadorCOEMParams'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.MessageResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      summary: Cerrar COEM
+      tags:
+      - CerrarCOEM
+  /dummy:
+    get:
+      description: Visualizar el estado del servicio web, del servicio de autenticación
+        y de la base de datos de ARCA
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.DummyResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      summary: Muestra el estado del servicio
+      tags:
+      - Dummy
+  /rectificar-caratula:
+    put:
+      consumes:
+      - application/json
+      description: Rectificar una Carátula sin COEMs
+      parameters:
+      - description: RectificarCaratulaRequest
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/afip.RectificarCaratulaParams'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.MessageResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      summary: Rectificar Carátula
+      tags:
+      - RectificarCaratula
+  /rectificar-coem:
+    put:
+      consumes:
+      - application/json
+      description: Rectificar COEM
+      parameters:
+      - description: RectificarCOEMRequest
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/afip.RectificarCOEMParams'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.MessageResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      summary: Rectificar COEM
+      tags:
+      - RectificarCOEM
+  /registrar-caratula:
+    post:
+      consumes:
+      - application/json
+      description: Registra una nueva Carátula
+      parameters:
+      - description: RegistrarCaratulaRequest
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/afip.CaratulaParams'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.MessageResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      summary: Registrar Carátula
+      tags:
+      - RegistrarCaratula
+  /registrar-coem:
+    post:
+      consumes:
+      - application/json
+      description: Registrar COEM en Carátula
+      parameters:
+      - description: RegistrarCOEMRequest
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/afip.RegistrarCOEMParams'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.MessageResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      summary: Registrar COEM
+      tags:
+      - RegistrarCOEM
+  /solicitar-anulacion-coem:
+    post:
+      consumes:
+      - application/json
+      description: Solicitar anulación COEM
+      parameters:
+      - description: SolicitarAnulacionCOEMRequest
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/afip.IdentificadorCOEMParams'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.MessageResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      summary: Solicitar Anulación COEM
+      tags:
+      - SolicitarAnulacionCOEM
+  /solicitar-cambio-buque:
+    put:
+      consumes:
+      - application/json
+      description: Solicitar cambio de Buque para Carátulas con COEMs
+      parameters:
+      - description: SolicitarCambioBuqueRequest
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/afip.CambioBuqueParams'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.MessageResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      summary: Solicitar cambio de Buque
+      tags:
+      - SolicitarCambioBuque
+  /solicitar-cambio-fechas:
+    put:
+      consumes:
+      - application/json
+      description: Solicitar cambio de Fechas para Carátulas con COEMs
+      parameters:
+      - description: CambioFechasParamsRequest
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/afip.CambioFechasParams'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.MessageResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      summary: Solicitar cambio de Fechas
+      tags:
+      - SolicitarCambioFechas
+  /solicitar-cambio-lot:
+    put:
+      consumes:
+      - application/json
+      description: Solicitar cambio de Lugar Operativo para Carátulas con COEMs
+      parameters:
+      - description: CambioLOTParamsRequest
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/afip.CambioLOTParams'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.MessageResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      summary: Solicitar cambio de LOT
+      tags:
+      - SolicitarCambioLOT
+  /solicitar-cierre-carga-conto-bulto:
+    post:
+      consumes:
+      - application/json
+      description: Solicitar Cierre de Carga Contenedores y/o Bultos
+      parameters:
+      - description: SolicitarCierreCargaContoBultoRequest
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/afip.SolicitarCierreCargaContoBultoParams'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.MessageResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      summary: Solicitar Cierre de Carga Contenedores y/o Bultos
+      tags:
+      - SolicitarCierreCargaContoBulto
+  /solicitar-cierre-carga-granel:
+    post:
+      consumes:
+      - application/json
+      description: Solicitar Cierre de Carga Granel
+      parameters:
+      - description: SolicitarCierreCargaGranel
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/afip.SolicitarCierreCargaGranelParams'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.MessageResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      summary: Solicitar Cierre de Carga Granel
+      tags:
+      - SolicitarCierreCargaGranel
+  /solicitar-no-abordo:
+    post:
+      consumes:
+      - application/json
+      description: Solicitar No Abordo
+      parameters:
+      - description: SolicitarNoABordoRequest
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/afip.IdentificadorCOEMParams'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.MessageResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      summary: Solicitar No Abordo
+      tags:
+      - SolicitarNoABordo
+swagger: "2.0"

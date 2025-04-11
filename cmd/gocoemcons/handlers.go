@@ -32,7 +32,7 @@ func DummyHandler(w http.ResponseWriter, r *http.Request) {
 func ObtenerConsultaEstadosCOEMHandler(w http.ResponseWriter, r *http.Request) {
 	identificadorCaratula := r.URL.Query().Get("identificador")
 	if len(identificadorCaratula) != 16 {
-		err := errors.New("parámetro Identificador faltante o inválido")
+		err := errors.New("error leyendo parámetros de la solicitud")
 		util.HttpResponseJSON(w, http.StatusBadRequest, &dto.GenericResponse{
 			Status:  false,
 			Message: err.Error(),
@@ -58,7 +58,7 @@ func ObtenerConsultaEstadosCOEMHandler(w http.ResponseWriter, r *http.Request) {
 func ObtenerConsultaNoAbordoHandler(w http.ResponseWriter, r *http.Request) {
 	identificadorCaratula := r.URL.Query().Get("identificador")
 	if len(identificadorCaratula) != 16 {
-		err := errors.New("parámetro Identificador faltante o inválido")
+		err := errors.New("error leyendo parámetros de la solicitud")
 		util.HttpResponseJSON(w, http.StatusBadRequest, &dto.GenericResponse{
 			Status:  false,
 			Message: err.Error(),
@@ -84,7 +84,7 @@ func ObtenerConsultaNoAbordoHandler(w http.ResponseWriter, r *http.Request) {
 func ObtenerConsultaSolicitudesHandler(w http.ResponseWriter, r *http.Request) {
 	identificadorCaratula := r.URL.Query().Get("identificador")
 	if len(identificadorCaratula) != 16 {
-		err := errors.New("parámetro Identificador faltante o inválido")
+		err := errors.New("error leyendo parámetros de la solicitud")
 		util.HttpResponseJSON(w, http.StatusBadRequest, &dto.GenericResponse{
 			Status:  false,
 			Message: err.Error(),

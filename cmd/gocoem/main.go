@@ -13,8 +13,10 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/rs/cors"
 	"github.com/sehogas/gowsaa/afip"
+	"github.com/sehogas/gowsaa/cmd/gocoem/docs"
 	"github.com/sehogas/gowsaa/internal/middleware"
 	"github.com/sehogas/gowsaa/internal/util"
+	httpSwagger "github.com/swaggo/http-swagger/v2"
 )
 
 var (
@@ -25,6 +27,13 @@ var (
 	validate *validator.Validate
 )
 
+//	@title			ARCA - Comunicación de Embarque API
+//	@version		1.0
+//	@description	Esta API Json RESTFul actua como proxy SOAP a los servicios de Comunicación de Embarque de ARCA.
+//	@termsOfService	http://swagger.io/terms/
+
+// @contact.name	Sebastian Hogas
+// @contact.email	sehogas@gmail.com
 func main() {
 	godotenv.Load()
 
@@ -72,10 +81,40 @@ func main() {
 	validate = validator.New(validator.WithRequiredStructEnabled())
 
 	router := http.NewServeMux()
-	router.HandleFunc("/dummy", DummyHandler)
-	router.HandleFunc("POST /registrar-caratula", RegistrarCaratulaHandler)
-	router.HandleFunc("PUT /rectificar-caratula", RectificarCaratulaHandler)
-	router.HandleFunc("DELETE /anular-caratula", AnularCaratulaHandler)
+
+	if environment == afip.TESTING {
+		docs.SwaggerInfo.Host = fmt.Sprintf("localhost:%d", port)
+	} else {
+		docs.SwaggerInfo.Host = "coem.dpp.gob.ar"
+	}
+	docs.SwaggerInfo.BasePath = "/api/v1"
+	docs.SwaggerInfo.Schemes = []string{"http", "https"}
+
+	router.HandleFunc("/swagger/", httpSwagger.Handler(
+		httpSwagger.URL("/swagger/doc.json"), //The url pointing to API definition
+		httpSwagger.DeepLinking(true),
+		httpSwagger.DocExpansion("none"),
+		httpSwagger.DomID("swagger-ui"),
+	))
+
+	v1 := http.NewServeMux()
+	v1.HandleFunc("/dummy", DummyHandler)
+	v1.HandleFunc("POST /registrar-caratula", RegistrarCaratulaHandler)
+	v1.HandleFunc("PUT /rectificar-caratula", RectificarCaratulaHandler)
+	v1.HandleFunc("DELETE /anular-caratula", AnularCaratulaHandler)
+	v1.HandleFunc("PUT /solicitar-cambio-buque", SolicitarCambioBuqueHandler)
+	v1.HandleFunc("PUT /solicitar-cambio-fechas", SolicitarCambioFechasHandler)
+	v1.HandleFunc("PUT /solicitar-cambio-lot", SolicitarCambioLOTHandler)
+	v1.HandleFunc("POST /registrar-coem", RegistrarCOEMHandler)
+	v1.HandleFunc("PUT /rectificar-coem", RectificarCOEMHandler)
+	v1.HandleFunc("POST /cerrar-coem", CerrarCOEMHandler)
+	v1.HandleFunc("DELETE /anular-coem", AnularCOEMHandler)
+	v1.HandleFunc("POST /solicitar-anulacion-coem", SolicitarAnulacionCOEMHandler)
+	v1.HandleFunc("POST /solicitar-no-abordo", SolicitarNoABordoHandler)
+	v1.HandleFunc("POST /solicitar-cierre-carga-conto-bulto", SolicitarCierreCargaContoBultoHandler)
+	v1.HandleFunc("POST /solicitar-cierre-carga-granel", SolicitarCierreCargaGranelHandler)
+
+	router.Handle("/api/v1/", http.StripPrefix("/api/v1", v1))
 
 	middlewareCors := cors.New(cors.Options{
 		AllowedOrigins:   []string{"*"},

@@ -6,3 +6,6 @@ coemcons:
 
 wsfe:
 	go run ./cmd/gowsfe/.
+
+coem-swagger:
+	swag init --parseDependency --dir=./cmd/gocoem/ --output=./cmd/gocoem/docs/

@@ -8,6 +8,14 @@ type GenericResponse struct {
 	TotalRows  int64       `json:"total_rows,omitempty"`
 }
 
+type ErrorResponse struct {
+	Error string `json:"error"`
+}
+
+type MessageResponse struct {
+	Message string `json:"message"`
+}
+
 type SendEmailRequest struct {
 	To      string `json:"to"`
 	Subject string `json:"subject"`

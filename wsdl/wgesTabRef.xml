@@ -1,0 +1,853 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="ar.gov.afip.dia.serviciosweb.wgesTabRef" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" targetNamespace="ar.gov.afip.dia.serviciosweb.wgesTabRef">
+<wsdl:types>
+<s:schema elementFormDefault="qualified" targetNamespace="ar.gov.afip.dia.serviciosweb.wgesTabRef">
+<s:element name="ListaDescripcion">
+<s:complexType>
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="Autentica" type="tns:Autenticacion"/>
+<s:element minOccurs="0" maxOccurs="1" name="IdReferencia" type="s:string"/>
+</s:sequence>
+</s:complexType>
+</s:element>
+<s:complexType name="Autenticacion">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="Cuit" type="s:string"/>
+<s:element minOccurs="0" maxOccurs="1" name="TipoAgente" type="s:string"/>
+<s:element minOccurs="0" maxOccurs="1" name="Rol" type="s:string"/>
+<s:element minOccurs="1" maxOccurs="1" name="Token" nillable="true" type="s:string"/>
+<s:element minOccurs="1" maxOccurs="1" name="Sign" nillable="true" type="s:string"/>
+</s:sequence>
+</s:complexType>
+<s:element name="ListaDescripcionResponse">
+<s:complexType>
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="ListaDescripcionResult" type="tns:Descripciones"/>
+</s:sequence>
+</s:complexType>
+</s:element>
+<s:complexType name="Descripciones">
+<s:complexContent mixed="false">
+<s:extension base="tns:Contenedor">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="IdReferencia" type="s:string"/>
+<s:element minOccurs="0" maxOccurs="1" name="Descripciones" type="tns:ArrayOfDescripcion"/>
+</s:sequence>
+</s:extension>
+</s:complexContent>
+</s:complexType>
+<s:complexType name="Contenedor">
+<s:sequence>
+<s:element minOccurs="1" maxOccurs="1" name="CodError" type="s:int"/>
+<s:element minOccurs="0" maxOccurs="1" name="InfoAdicional" type="s:string"/>
+</s:sequence>
+</s:complexType>
+<s:complexType name="ArrayOfDescripcion">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="unbounded" name="Descripcion" nillable="true" type="tns:Descripcion"/>
+</s:sequence>
+</s:complexType>
+<s:complexType name="Descripcion">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="Codigo" type="s:string"/>
+<s:element minOccurs="0" maxOccurs="1" name="Descripcion" type="s:string"/>
+</s:sequence>
+</s:complexType>
+<s:element name="ListaVigencias">
+<s:complexType>
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="Autentica" type="tns:Autenticacion"/>
+<s:element minOccurs="0" maxOccurs="1" name="IdReferencia" type="s:string"/>
+</s:sequence>
+</s:complexType>
+</s:element>
+<s:element name="ListaVigenciasResponse">
+<s:complexType>
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="ListaVigenciasResult" type="tns:Vigencias"/>
+</s:sequence>
+</s:complexType>
+</s:element>
+<s:complexType name="Vigencias">
+<s:complexContent mixed="false">
+<s:extension base="tns:Contenedor">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="IdReferencia" type="s:string"/>
+<s:element minOccurs="0" maxOccurs="1" name="Vigencias" type="tns:ArrayOfVigencia"/>
+</s:sequence>
+</s:extension>
+</s:complexContent>
+</s:complexType>
+<s:complexType name="ArrayOfVigencia">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="unbounded" name="Vigencia" nillable="true" type="tns:Vigencia"/>
+</s:sequence>
+</s:complexType>
+<s:complexType name="Vigencia">
+<s:complexContent mixed="false">
+<s:extension base="tns:Descripcion">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="VigenciaDesde" type="s:string"/>
+<s:element minOccurs="0" maxOccurs="1" name="VigenciaHasta" type="s:string"/>
+</s:sequence>
+</s:extension>
+</s:complexContent>
+</s:complexType>
+<s:element name="DocumentosVigentes">
+<s:complexType>
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="Autentica" type="tns:Autenticacion"/>
+</s:sequence>
+</s:complexType>
+</s:element>
+<s:element name="DocumentosVigentesResponse">
+<s:complexType>
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="DocumentosVigentesResult" type="tns:VigenciasIndicador"/>
+</s:sequence>
+</s:complexType>
+</s:element>
+<s:complexType name="VigenciasIndicador">
+<s:complexContent mixed="false">
+<s:extension base="tns:Contenedor">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="VigenciasIndicador" type="tns:ArrayOfVigenciaIndicador"/>
+</s:sequence>
+</s:extension>
+</s:complexContent>
+</s:complexType>
+<s:complexType name="ArrayOfVigenciaIndicador">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="unbounded" name="VigenciaIndicador" nillable="true" type="tns:VigenciaIndicador"/>
+</s:sequence>
+</s:complexType>
+<s:complexType name="VigenciaIndicador">
+<s:complexContent mixed="false">
+<s:extension base="tns:Vigencia">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="Indicador" type="s:string"/>
+</s:sequence>
+</s:extension>
+</s:complexContent>
+</s:complexType>
+<s:element name="ListaPaisesAduanas">
+<s:complexType>
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="Autentica" type="tns:Autenticacion"/>
+<s:element minOccurs="0" maxOccurs="1" name="IdReferencia" type="s:string"/>
+</s:sequence>
+</s:complexType>
+</s:element>
+<s:element name="ListaPaisesAduanasResponse">
+<s:complexType>
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="ListaPaisesAduanasResult" type="tns:PaisesAduanas"/>
+</s:sequence>
+</s:complexType>
+</s:element>
+<s:complexType name="PaisesAduanas">
+<s:complexContent mixed="false">
+<s:extension base="tns:Contenedor">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="IdReferencia" type="s:string"/>
+<s:element minOccurs="0" maxOccurs="1" name="PaisesAduanas" type="tns:ArrayOfPaisAduana"/>
+</s:sequence>
+</s:extension>
+</s:complexContent>
+</s:complexType>
+<s:complexType name="ArrayOfPaisAduana">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="unbounded" name="PaisAduana" nillable="true" type="tns:PaisAduana"/>
+</s:sequence>
+</s:complexType>
+<s:complexType name="PaisAduana">
+<s:complexContent mixed="false">
+<s:extension base="tns:Vigencia">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="Pais" type="s:string"/>
+<s:element minOccurs="0" maxOccurs="1" name="Aduana" type="s:string"/>
+</s:sequence>
+</s:extension>
+</s:complexContent>
+</s:complexType>
+<s:element name="ListaEmpresas">
+<s:complexType>
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="Autentica" type="tns:Autenticacion"/>
+<s:element minOccurs="0" maxOccurs="1" name="IdReferencia" type="s:string"/>
+</s:sequence>
+</s:complexType>
+</s:element>
+<s:element name="ListaEmpresasResponse">
+<s:complexType>
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="ListaEmpresasResult" type="tns:Empresas"/>
+</s:sequence>
+</s:complexType>
+</s:element>
+<s:complexType name="Empresas">
+<s:complexContent mixed="false">
+<s:extension base="tns:Contenedor">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="IdReferencia" type="s:string"/>
+<s:element minOccurs="0" maxOccurs="1" name="Empresas" type="tns:ArrayOfEmpresa"/>
+</s:sequence>
+</s:extension>
+</s:complexContent>
+</s:complexType>
+<s:complexType name="ArrayOfEmpresa">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="unbounded" name="Empresa" nillable="true" type="tns:Empresa"/>
+</s:sequence>
+</s:complexType>
+<s:complexType name="Empresa">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="Cuit" type="s:string"/>
+<s:element minOccurs="0" maxOccurs="1" name="RazonSocial" type="s:string"/>
+</s:sequence>
+</s:complexType>
+<s:element name="ListaArancel">
+<s:complexType>
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="Autentica" type="tns:Autenticacion"/>
+<s:element minOccurs="0" maxOccurs="1" name="IdReferencia" type="s:string"/>
+</s:sequence>
+</s:complexType>
+</s:element>
+<s:element name="ListaArancelResponse">
+<s:complexType>
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="ListaArancelResult" type="tns:Opciones"/>
+</s:sequence>
+</s:complexType>
+</s:element>
+<s:complexType name="Opciones">
+<s:complexContent mixed="false">
+<s:extension base="tns:Contenedor">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="IdReferencia" type="s:string"/>
+<s:element minOccurs="0" maxOccurs="1" name="Opciones" type="tns:ArrayOfOpcion"/>
+</s:sequence>
+</s:extension>
+</s:complexContent>
+</s:complexType>
+<s:complexType name="ArrayOfOpcion">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="unbounded" name="Opcion" nillable="true" type="tns:Opcion"/>
+</s:sequence>
+</s:complexType>
+<s:complexType name="Opcion">
+<s:complexContent mixed="false">
+<s:extension base="tns:Vigencia">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="Opcion" type="s:string"/>
+</s:sequence>
+</s:extension>
+</s:complexContent>
+</s:complexType>
+<s:element name="ListaLugaresOperativos">
+<s:complexType>
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="Autentica" type="tns:Autenticacion"/>
+<s:element minOccurs="0" maxOccurs="1" name="IdReferencia" type="s:string"/>
+</s:sequence>
+</s:complexType>
+</s:element>
+<s:element name="ListaLugaresOperativosResponse">
+<s:complexType>
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="ListaLugaresOperativosResult" type="tns:LugaresOperativos"/>
+</s:sequence>
+</s:complexType>
+</s:element>
+<s:complexType name="LugaresOperativos">
+<s:complexContent mixed="false">
+<s:extension base="tns:Contenedor">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="IdReferencia" type="s:string"/>
+<s:element minOccurs="0" maxOccurs="1" name="LugaresOperativos" type="tns:ArrayOfLugarOperativo"/>
+</s:sequence>
+</s:extension>
+</s:complexContent>
+</s:complexType>
+<s:complexType name="ArrayOfLugarOperativo">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="unbounded" name="LugarOperativo" nillable="true" type="tns:LugarOperativo"/>
+</s:sequence>
+</s:complexType>
+<s:complexType name="LugarOperativo">
+<s:complexContent mixed="false">
+<s:extension base="tns:Vigencia">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="Aduana" type="s:string"/>
+<s:element minOccurs="0" maxOccurs="1" name="LugarOperativo" type="s:string"/>
+</s:sequence>
+</s:extension>
+</s:complexContent>
+</s:complexType>
+<s:element name="ListaTablasReferencia">
+<s:complexType>
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="Autentica" type="tns:Autenticacion"/>
+</s:sequence>
+</s:complexType>
+</s:element>
+<s:element name="ListaTablasReferenciaResponse">
+<s:complexType>
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="ListaTablasReferenciaResult" type="tns:TablasReferencia"/>
+</s:sequence>
+</s:complexType>
+</s:element>
+<s:complexType name="TablasReferencia">
+<s:complexContent mixed="false">
+<s:extension base="tns:Contenedor">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="TablasReferencia" type="tns:ArrayOfTablaReferencia"/>
+</s:sequence>
+</s:extension>
+</s:complexContent>
+</s:complexType>
+<s:complexType name="ArrayOfTablaReferencia">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="unbounded" name="TablaReferencia" nillable="true" type="tns:TablaReferencia"/>
+</s:sequence>
+</s:complexType>
+<s:complexType name="TablaReferencia">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="IdTabRef" type="s:string"/>
+<s:element minOccurs="0" maxOccurs="1" name="TabRefDesc" type="s:string"/>
+<s:element minOccurs="0" maxOccurs="1" name="WebMethod" type="s:string"/>
+</s:sequence>
+</s:complexType>
+<s:element name="ListaTablasReferenciaServicio">
+<s:complexType>
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="Autentica" type="tns:Autenticacion"/>
+<s:element minOccurs="0" maxOccurs="1" name="IdServicio" type="s:string"/>
+</s:sequence>
+</s:complexType>
+</s:element>
+<s:element name="ListaTablasReferenciaServicioResponse">
+<s:complexType>
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="ListaTablasReferenciaServicioResult" type="tns:TablasReferencia"/>
+</s:sequence>
+</s:complexType>
+</s:element>
+<s:element name="ListaDescripcionDecodificacion">
+<s:complexType>
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="Autentica" type="tns:Autenticacion"/>
+<s:element minOccurs="0" maxOccurs="1" name="IdReferencia" type="s:string"/>
+</s:sequence>
+</s:complexType>
+</s:element>
+<s:element name="ListaDescripcionDecodificacionResponse">
+<s:complexType>
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="ListaDescripcionDecodificacionResult" type="tns:DescripcionesCodificaciones"/>
+</s:sequence>
+</s:complexType>
+</s:element>
+<s:complexType name="DescripcionesCodificaciones">
+<s:complexContent mixed="false">
+<s:extension base="tns:Contenedor">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="IdReferencia" type="s:string"/>
+<s:element minOccurs="0" maxOccurs="1" name="DescripcionesCodificaciones" type="tns:ArrayOfDescripcionCodificacion"/>
+</s:sequence>
+</s:extension>
+</s:complexContent>
+</s:complexType>
+<s:complexType name="ArrayOfDescripcionCodificacion">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="unbounded" name="DescripcionCodificacion" nillable="true" type="tns:DescripcionCodificacion"/>
+</s:sequence>
+</s:complexType>
+<s:complexType name="DescripcionCodificacion">
+<s:complexContent mixed="false">
+<s:extension base="tns:Descripcion">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="CodigoIso" type="s:string"/>
+</s:sequence>
+</s:extension>
+</s:complexContent>
+</s:complexType>
+<s:element name="ListaDatoComplementario">
+<s:complexType>
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="Autentica" type="tns:Autenticacion"/>
+<s:element minOccurs="0" maxOccurs="1" name="IdReferencia" type="s:string"/>
+</s:sequence>
+</s:complexType>
+</s:element>
+<s:element name="ListaDatoComplementarioResponse">
+<s:complexType>
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="ListaDatoComplementarioResult" type="tns:DatosComplementarios"/>
+</s:sequence>
+</s:complexType>
+</s:element>
+<s:complexType name="DatosComplementarios">
+<s:complexContent mixed="false">
+<s:extension base="tns:Contenedor">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="IdReferencia" type="s:string"/>
+<s:element minOccurs="0" maxOccurs="1" name="DatosComplementarios" type="tns:ArrayOfDatoComplementario"/>
+</s:sequence>
+</s:extension>
+</s:complexContent>
+</s:complexType>
+<s:complexType name="ArrayOfDatoComplementario">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="unbounded" name="DatoComplementario" nillable="true" type="tns:DatoComplementario"/>
+</s:sequence>
+</s:complexType>
+<s:complexType name="DatoComplementario">
+<s:complexContent mixed="false">
+<s:extension base="tns:VigenciaIndicador">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="Formato" type="s:string"/>
+</s:sequence>
+</s:extension>
+</s:complexContent>
+</s:complexType>
+<s:element name="ConsultarFechaUltAct">
+<s:complexType>
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="Autentica" type="tns:Autenticacion"/>
+<s:element minOccurs="0" maxOccurs="1" name="IdReferencia" type="s:string"/>
+</s:sequence>
+</s:complexType>
+</s:element>
+<s:element name="ConsultarFechaUltActResponse">
+<s:complexType>
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="ConsultarFechaUltActResult" type="tns:FechaUltAct"/>
+</s:sequence>
+</s:complexType>
+</s:element>
+<s:complexType name="FechaUltAct">
+<s:complexContent mixed="false">
+<s:extension base="tns:Contenedor">
+<s:sequence>
+<s:element minOccurs="1" maxOccurs="1" name="Fecha" type="s:dateTime"/>
+<s:element minOccurs="0" maxOccurs="1" name="IdReferencia" type="s:string"/>
+</s:sequence>
+</s:extension>
+</s:complexContent>
+</s:complexType>
+<s:element name="Dummy">
+<s:complexType/>
+</s:element>
+<s:element name="DummyResponse">
+<s:complexType>
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="DummyResult" type="tns:WsDummyResponse"/>
+</s:sequence>
+</s:complexType>
+</s:element>
+<s:complexType name="WsDummyResponse">
+<s:sequence>
+<s:element minOccurs="0" maxOccurs="1" name="appserver" type="s:string"/>
+<s:element minOccurs="0" maxOccurs="1" name="dbserver" type="s:string"/>
+<s:element minOccurs="0" maxOccurs="1" name="authserver" type="s:string"/>
+</s:sequence>
+</s:complexType>
+</s:schema>
+</wsdl:types>
+<wsdl:message name="ListaDescripcionSoapIn">
+<wsdl:part name="parameters" element="tns:ListaDescripcion"/>
+</wsdl:message>
+<wsdl:message name="ListaDescripcionSoapOut">
+<wsdl:part name="parameters" element="tns:ListaDescripcionResponse"/>
+</wsdl:message>
+<wsdl:message name="ListaVigenciasSoapIn">
+<wsdl:part name="parameters" element="tns:ListaVigencias"/>
+</wsdl:message>
+<wsdl:message name="ListaVigenciasSoapOut">
+<wsdl:part name="parameters" element="tns:ListaVigenciasResponse"/>
+</wsdl:message>
+<wsdl:message name="DocumentosVigentesSoapIn">
+<wsdl:part name="parameters" element="tns:DocumentosVigentes"/>
+</wsdl:message>
+<wsdl:message name="DocumentosVigentesSoapOut">
+<wsdl:part name="parameters" element="tns:DocumentosVigentesResponse"/>
+</wsdl:message>
+<wsdl:message name="ListaPaisesAduanasSoapIn">
+<wsdl:part name="parameters" element="tns:ListaPaisesAduanas"/>
+</wsdl:message>
+<wsdl:message name="ListaPaisesAduanasSoapOut">
+<wsdl:part name="parameters" element="tns:ListaPaisesAduanasResponse"/>
+</wsdl:message>
+<wsdl:message name="ListaEmpresasSoapIn">
+<wsdl:part name="parameters" element="tns:ListaEmpresas"/>
+</wsdl:message>
+<wsdl:message name="ListaEmpresasSoapOut">
+<wsdl:part name="parameters" element="tns:ListaEmpresasResponse"/>
+</wsdl:message>
+<wsdl:message name="ListaArancelSoapIn">
+<wsdl:part name="parameters" element="tns:ListaArancel"/>
+</wsdl:message>
+<wsdl:message name="ListaArancelSoapOut">
+<wsdl:part name="parameters" element="tns:ListaArancelResponse"/>
+</wsdl:message>
+<wsdl:message name="ListaLugaresOperativosSoapIn">
+<wsdl:part name="parameters" element="tns:ListaLugaresOperativos"/>
+</wsdl:message>
+<wsdl:message name="ListaLugaresOperativosSoapOut">
+<wsdl:part name="parameters" element="tns:ListaLugaresOperativosResponse"/>
+</wsdl:message>
+<wsdl:message name="ListaTablasReferenciaSoapIn">
+<wsdl:part name="parameters" element="tns:ListaTablasReferencia"/>
+</wsdl:message>
+<wsdl:message name="ListaTablasReferenciaSoapOut">
+<wsdl:part name="parameters" element="tns:ListaTablasReferenciaResponse"/>
+</wsdl:message>
+<wsdl:message name="ListaTablasReferenciaServicioSoapIn">
+<wsdl:part name="parameters" element="tns:ListaTablasReferenciaServicio"/>
+</wsdl:message>
+<wsdl:message name="ListaTablasReferenciaServicioSoapOut">
+<wsdl:part name="parameters" element="tns:ListaTablasReferenciaServicioResponse"/>
+</wsdl:message>
+<wsdl:message name="ListaDescripcionDecodificacionSoapIn">
+<wsdl:part name="parameters" element="tns:ListaDescripcionDecodificacion"/>
+</wsdl:message>
+<wsdl:message name="ListaDescripcionDecodificacionSoapOut">
+<wsdl:part name="parameters" element="tns:ListaDescripcionDecodificacionResponse"/>
+</wsdl:message>
+<wsdl:message name="ListaDatoComplementarioSoapIn">
+<wsdl:part name="parameters" element="tns:ListaDatoComplementario"/>
+</wsdl:message>
+<wsdl:message name="ListaDatoComplementarioSoapOut">
+<wsdl:part name="parameters" element="tns:ListaDatoComplementarioResponse"/>
+</wsdl:message>
+<wsdl:message name="ConsultarFechaUltActSoapIn">
+<wsdl:part name="parameters" element="tns:ConsultarFechaUltAct"/>
+</wsdl:message>
+<wsdl:message name="ConsultarFechaUltActSoapOut">
+<wsdl:part name="parameters" element="tns:ConsultarFechaUltActResponse"/>
+</wsdl:message>
+<wsdl:message name="DummySoapIn">
+<wsdl:part name="parameters" element="tns:Dummy"/>
+</wsdl:message>
+<wsdl:message name="DummySoapOut">
+<wsdl:part name="parameters" element="tns:DummyResponse"/>
+</wsdl:message>
+<wsdl:portType name="wgesTabRefSoap">
+<wsdl:operation name="ListaDescripcion">
+<wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Emite tabla del tipo codigo/descripcion.</wsdl:documentation>
+<wsdl:input message="tns:ListaDescripcionSoapIn"/>
+<wsdl:output message="tns:ListaDescripcionSoapOut"/>
+</wsdl:operation>
+<wsdl:operation name="ListaVigencias">
+<wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Emite tabla del tipo codigo/descripcion/vigencia.</wsdl:documentation>
+<wsdl:input message="tns:ListaVigenciasSoapIn"/>
+<wsdl:output message="tns:ListaVigenciasSoapOut"/>
+</wsdl:operation>
+<wsdl:operation name="DocumentosVigentes">
+<wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Emite tabla del tipo codigo/descripcion/vigencia.</wsdl:documentation>
+<wsdl:input message="tns:DocumentosVigentesSoapIn"/>
+<wsdl:output message="tns:DocumentosVigentesSoapOut"/>
+</wsdl:operation>
+<wsdl:operation name="ListaPaisesAduanas">
+<wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Emite tabla del tipo codigo/descripcion/vigencia/pais o aduana.</wsdl:documentation>
+<wsdl:input message="tns:ListaPaisesAduanasSoapIn"/>
+<wsdl:output message="tns:ListaPaisesAduanasSoapOut"/>
+</wsdl:operation>
+<wsdl:operation name="ListaEmpresas">
+<wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Emite tabla del tipo cuit/razon social.</wsdl:documentation>
+<wsdl:input message="tns:ListaEmpresasSoapIn"/>
+<wsdl:output message="tns:ListaEmpresasSoapOut"/>
+</wsdl:operation>
+<wsdl:operation name="ListaArancel">
+<wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Emite tabla del tipo codigo/descripcion/Opcion/vigencia.</wsdl:documentation>
+<wsdl:input message="tns:ListaArancelSoapIn"/>
+<wsdl:output message="tns:ListaArancelSoapOut"/>
+</wsdl:operation>
+<wsdl:operation name="ListaLugaresOperativos">
+<wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Emite tabla del tipo codigo/descripcion/vigencia/aduana/lugar operativo.</wsdl:documentation>
+<wsdl:input message="tns:ListaLugaresOperativosSoapIn"/>
+<wsdl:output message="tns:ListaLugaresOperativosSoapOut"/>
+</wsdl:operation>
+<wsdl:operation name="ListaTablasReferencia">
+<wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Emite tabla del tipo: Tabla de Referencia, Descripcion Tabla Referencia, WebMethod que se debe utilizar para obtener los datos de dicha tabla.</wsdl:documentation>
+<wsdl:input message="tns:ListaTablasReferenciaSoapIn"/>
+<wsdl:output message="tns:ListaTablasReferenciaSoapOut"/>
+</wsdl:operation>
+<wsdl:operation name="ListaTablasReferenciaServicio">
+<wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Para un Id de Servicio, emite tabla del tipo: Tabla de Referencia, Descripcion Tabla Referencia, WebMethod que se debe utilizar para obtener los datos de dicha tabla.</wsdl:documentation>
+<wsdl:input message="tns:ListaTablasReferenciaServicioSoapIn"/>
+<wsdl:output message="tns:ListaTablasReferenciaServicioSoapOut"/>
+</wsdl:operation>
+<wsdl:operation name="ListaDescripcionDecodificacion">
+<wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Emite tabla del tipo codigo/descripcion/codificacion.</wsdl:documentation>
+<wsdl:input message="tns:ListaDescripcionDecodificacionSoapIn"/>
+<wsdl:output message="tns:ListaDescripcionDecodificacionSoapOut"/>
+</wsdl:operation>
+<wsdl:operation name="ListaDatoComplementario">
+<wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Emite tabla del tipo codigo/descripcion/vigencia/indicador/formato.</wsdl:documentation>
+<wsdl:input message="tns:ListaDatoComplementarioSoapIn"/>
+<wsdl:output message="tns:ListaDatoComplementarioSoapOut"/>
+</wsdl:operation>
+<wsdl:operation name="ConsultarFechaUltAct">
+<wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Retorna la fecha de última actualización de la tabla consultada.</wsdl:documentation>
+<wsdl:input message="tns:ConsultarFechaUltActSoapIn"/>
+<wsdl:output message="tns:ConsultarFechaUltActSoapOut"/>
+</wsdl:operation>
+<wsdl:operation name="Dummy">
+<wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Metodo dummy para verificacion de funcionamiento</wsdl:documentation>
+<wsdl:input message="tns:DummySoapIn"/>
+<wsdl:output message="tns:DummySoapOut"/>
+</wsdl:operation>
+</wsdl:portType>
+<wsdl:binding name="wgesTabRefSoap" type="tns:wgesTabRefSoap">
+<soap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+<wsdl:operation name="ListaDescripcion">
+<soap:operation soapAction="ar.gov.afip.dia.serviciosweb.wgesTabRef/ListaDescripcion" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="ListaVigencias">
+<soap:operation soapAction="ar.gov.afip.dia.serviciosweb.wgesTabRef/ListaVigencias" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="DocumentosVigentes">
+<soap:operation soapAction="ar.gov.afip.dia.serviciosweb.wgesTabRef/DocumentosVigentes" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="ListaPaisesAduanas">
+<soap:operation soapAction="ar.gov.afip.dia.serviciosweb.wgesTabRef/ListaPaisesAduanas" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="ListaEmpresas">
+<soap:operation soapAction="ar.gov.afip.dia.serviciosweb.wgesTabRef/ListaEmpresas" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="ListaArancel">
+<soap:operation soapAction="ar.gov.afip.dia.serviciosweb.wgesTabRef/ListaArancel" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="ListaLugaresOperativos">
+<soap:operation soapAction="ar.gov.afip.dia.serviciosweb.wgesTabRef/ListaLugaresOperativos" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="ListaTablasReferencia">
+<soap:operation soapAction="ar.gov.afip.dia.serviciosweb.wgesTabRef/ListaTablasReferencia" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="ListaTablasReferenciaServicio">
+<soap:operation soapAction="ar.gov.afip.dia.serviciosweb.wgesTabRef/ListaTablasReferenciaServicio" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="ListaDescripcionDecodificacion">
+<soap:operation soapAction="ar.gov.afip.dia.serviciosweb.wgesTabRef/ListaDescripcionDecodificacion" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="ListaDatoComplementario">
+<soap:operation soapAction="ar.gov.afip.dia.serviciosweb.wgesTabRef/ListaDatoComplementario" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="ConsultarFechaUltAct">
+<soap:operation soapAction="ar.gov.afip.dia.serviciosweb.wgesTabRef/ConsultarFechaUltAct" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="Dummy">
+<soap:operation soapAction="ar.gov.afip.dia.serviciosweb.wgesTabRef/Dummy" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+</wsdl:binding>
+<wsdl:binding name="wgesTabRefSoap12" type="tns:wgesTabRefSoap">
+<soap12:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+<wsdl:operation name="ListaDescripcion">
+<soap12:operation soapAction="ar.gov.afip.dia.serviciosweb.wgesTabRef/ListaDescripcion" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="ListaVigencias">
+<soap12:operation soapAction="ar.gov.afip.dia.serviciosweb.wgesTabRef/ListaVigencias" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="DocumentosVigentes">
+<soap12:operation soapAction="ar.gov.afip.dia.serviciosweb.wgesTabRef/DocumentosVigentes" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="ListaPaisesAduanas">
+<soap12:operation soapAction="ar.gov.afip.dia.serviciosweb.wgesTabRef/ListaPaisesAduanas" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="ListaEmpresas">
+<soap12:operation soapAction="ar.gov.afip.dia.serviciosweb.wgesTabRef/ListaEmpresas" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="ListaArancel">
+<soap12:operation soapAction="ar.gov.afip.dia.serviciosweb.wgesTabRef/ListaArancel" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="ListaLugaresOperativos">
+<soap12:operation soapAction="ar.gov.afip.dia.serviciosweb.wgesTabRef/ListaLugaresOperativos" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="ListaTablasReferencia">
+<soap12:operation soapAction="ar.gov.afip.dia.serviciosweb.wgesTabRef/ListaTablasReferencia" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="ListaTablasReferenciaServicio">
+<soap12:operation soapAction="ar.gov.afip.dia.serviciosweb.wgesTabRef/ListaTablasReferenciaServicio" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="ListaDescripcionDecodificacion">
+<soap12:operation soapAction="ar.gov.afip.dia.serviciosweb.wgesTabRef/ListaDescripcionDecodificacion" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="ListaDatoComplementario">
+<soap12:operation soapAction="ar.gov.afip.dia.serviciosweb.wgesTabRef/ListaDatoComplementario" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="ConsultarFechaUltAct">
+<soap12:operation soapAction="ar.gov.afip.dia.serviciosweb.wgesTabRef/ConsultarFechaUltAct" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="Dummy">
+<soap12:operation soapAction="ar.gov.afip.dia.serviciosweb.wgesTabRef/Dummy" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+</wsdl:binding>
+<wsdl:service name="wgesTabRef">
+<wsdl:port name="wgesTabRefSoap" binding="tns:wgesTabRefSoap">
+<soap:address location="https://testdia.afip.gov.ar/dia/ws/wGesTabRef/wGesTabRef.asmx"/>
+</wsdl:port>
+<wsdl:port name="wgesTabRefSoap12" binding="tns:wgesTabRefSoap12">
+<soap12:address location="https://testdia.afip.gov.ar/dia/ws/wGesTabRef/wGesTabRef.asmx"/>
+</wsdl:port>
+</wsdl:service>
+</wsdl:definitions>

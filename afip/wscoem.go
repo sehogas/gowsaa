@@ -6,9 +6,10 @@ import (
 	"errors"
 	"fmt"
 	"strings"
-	"time"
 
+	"github.com/go-playground/validator/v10"
 	"github.com/hooklift/gowsdl/soap"
+	validador "github.com/sehogas/gowsaa/internal/util/validator"
 	"github.com/sehogas/gowsaa/ws/wscoem"
 )
 
@@ -19,6 +20,7 @@ type Wscoem struct {
 	cuit        int64
 	tipoAgente  string
 	rol         string
+	validate    *validator.Validate
 }
 
 func NewWscoem(environment Environment, cuit int64, tipoAgente, rol string) (*Wscoem, error) {
@@ -36,6 +38,7 @@ func NewWscoem(environment Environment, cuit int64, tipoAgente, rol string) (*Ws
 		cuit:        cuit,
 		tipoAgente:  tipoAgente,
 		rol:         rol,
+		validate:    validator.New(validator.WithRequiredStructEnabled()),
 	}, nil
 }
 
@@ -70,10 +73,15 @@ func (ws *Wscoem) Dummy() (appServer, authServer, DbServer string, err error) {
 }
 
 func (ws *Wscoem) RegistrarCaratula(params *CaratulaParams) (string, error) {
+	if err := ws.validate.Struct(params); err != nil {
+		return "", errors.New(strings.Join(validador.ToErrResponse(err).Errors, ", "))
+	}
+
 	ticket, err := GetTA(ws.environment, ws.serviceName, ws.cuit)
 	if err != nil {
 		return "", err
 	}
+
 	request := &wscoem.RegistrarCaratula{
 		ArgWSAutenticacionEmpresa: &wscoem.WSAutenticacionEmpresa{
 			WSAutenticacion: &wscoem.WSAutenticacion{
@@ -123,7 +131,11 @@ func (ws *Wscoem) RegistrarCaratula(params *CaratulaParams) (string, error) {
 	return identificador, errors.Join(errs...)
 }
 
-func (ws *Wscoem) AnularCaratula(identificadorCaratula string) (string, error) {
+func (ws *Wscoem) AnularCaratula(params *IdentificadorCaraturaParams) (string, error) {
+	if err := ws.validate.Struct(params); err != nil {
+		return "", errors.New(strings.Join(validador.ToErrResponse(err).Errors, ", "))
+	}
+
 	ticket, err := GetTA(ws.environment, ws.serviceName, ws.cuit)
 	if err != nil {
 		return "", err
@@ -141,7 +153,7 @@ func (ws *Wscoem) AnularCaratula(identificadorCaratula string) (string, error) {
 		},
 
 		ArgAnularCaratula: &wscoem.AnularCaratulaRequest{
-			IdentificadorCaratula: identificadorCaratula,
+			IdentificadorCaratula: params.IdentificadorCaratula,
 		},
 	}
 	PrintlnAsXML(request)
@@ -168,6 +180,10 @@ func (ws *Wscoem) AnularCaratula(identificadorCaratula string) (string, error) {
 }
 
 func (ws *Wscoem) RectificarCaratula(params *RectificarCaratulaParams) (string, error) {
+	if err := ws.validate.Struct(params); err != nil {
+		return "", errors.New(strings.Join(validador.ToErrResponse(err).Errors, ", "))
+	}
+
 	ticket, err := GetTA(ws.environment, ws.serviceName, ws.cuit)
 	if err != nil {
 		return "", err
@@ -223,7 +239,11 @@ func (ws *Wscoem) RectificarCaratula(params *RectificarCaratulaParams) (string, 
 	return result, errors.Join(errs...)
 }
 
-func (ws *Wscoem) SolicitarCambioBuque(identificadorCaratula string, params *CambioBuqueParams) (string, error) {
+func (ws *Wscoem) SolicitarCambioBuque(params *CambioBuqueParams) (string, error) {
+	if err := ws.validate.Struct(params); err != nil {
+		return "", errors.New(strings.Join(validador.ToErrResponse(err).Errors, ", "))
+	}
+
 	ticket, err := GetTA(ws.environment, ws.serviceName, ws.cuit)
 	if err != nil {
 		return "", err
@@ -240,7 +260,7 @@ func (ws *Wscoem) SolicitarCambioBuque(identificadorCaratula string, params *Cam
 			Rol:                  ws.rol,
 		},
 		ArgSolicitarCambioBuque: &wscoem.SolicitarCambioBuqueRequest{
-			IdentificadorCaratula: identificadorCaratula,
+			IdentificadorCaratula: params.IdentificadorCaratula,
 			IdentificadorBuque:    params.IdentificadorBuque,
 			NombreMedioTransporte: params.NombreMedioTransporte,
 		},
@@ -269,7 +289,11 @@ func (ws *Wscoem) SolicitarCambioBuque(identificadorCaratula string, params *Cam
 	return result, errors.Join(errs...)
 }
 
-func (ws *Wscoem) SolicitarCambioFechas(identificadorCaratula string, params *CambioFechasParams) (string, error) {
+func (ws *Wscoem) SolicitarCambioFechas(params *CambioFechasParams) (string, error) {
+	if err := ws.validate.Struct(params); err != nil {
+		return "", errors.New(strings.Join(validador.ToErrResponse(err).Errors, ", "))
+	}
+
 	ticket, err := GetTA(ws.environment, ws.serviceName, ws.cuit)
 	if err != nil {
 		return "", err
@@ -286,9 +310,9 @@ func (ws *Wscoem) SolicitarCambioFechas(identificadorCaratula string, params *Ca
 			Rol:                  ws.rol,
 		},
 		ArgSolicitarCambioFechas: &wscoem.SolicitarCambioFechasRequest{
-			IdentificadorCaratula: identificadorCaratula,
-			FechaArribo:           soap.CreateXsdDateTime(params.FechaEstimadaArribo, true),
-			FechaZarpada:          soap.CreateXsdDateTime(params.FechaEstimadaZarpada, true),
+			IdentificadorCaratula: params.IdentificadorCaratula,
+			FechaArribo:           soap.CreateXsdDateTime(params.FechaArribo, true),
+			FechaZarpada:          soap.CreateXsdDateTime(params.FechaZarpada, true),
 			CodigoMotivo:          params.CodigoMotivo,
 			DescripcionMotivo:     params.DescripcionMotivo,
 		},
@@ -325,7 +349,11 @@ func (ws *Wscoem) SolicitarCambioFechas(identificadorCaratula string, params *Ca
 	return result, errors.Join(errs...)
 }
 
-func (ws *Wscoem) SolicitarCambioLOT(identificadorCaratula string, params *CambioLOTParams) (string, error) {
+func (ws *Wscoem) SolicitarCambioLOT(params *CambioLOTParams) (string, error) {
+	if err := ws.validate.Struct(params); err != nil {
+		return "", errors.New(strings.Join(validador.ToErrResponse(err).Errors, ", "))
+	}
+
 	ticket, err := GetTA(ws.environment, ws.serviceName, ws.cuit)
 	if err != nil {
 		return "", err
@@ -342,7 +370,7 @@ func (ws *Wscoem) SolicitarCambioLOT(identificadorCaratula string, params *Cambi
 			Rol:                  ws.rol,
 		},
 		ArgSolicitarCambioLOT: &wscoem.SolicitarCambioLOTRequest{
-			IdentificadorCaratula: identificadorCaratula,
+			IdentificadorCaratula: params.IdentificadorCaratula,
 			CodigoLugarOperativo:  params.CodigoLugarOperativo,
 		},
 	}
@@ -370,7 +398,11 @@ func (ws *Wscoem) SolicitarCambioLOT(identificadorCaratula string, params *Cambi
 	return result, errors.Join(errs...)
 }
 
-func (ws *Wscoem) RegistrarCOEM(identificadorCaratula string, params *COEMParams) (string, error) {
+func (ws *Wscoem) RegistrarCOEM(params *RegistrarCOEMParams) (string, error) {
+	if err := ws.validate.Struct(params); err != nil {
+		return "", errors.New(strings.Join(validador.ToErrResponse(err).Errors, ", "))
+	}
+
 	ticket, err := GetTA(ws.environment, ws.serviceName, ws.cuit)
 	if err != nil {
 		return "", err
@@ -451,7 +483,7 @@ func (ws *Wscoem) RegistrarCOEM(identificadorCaratula string, params *COEMParams
 			Rol:                  ws.rol,
 		},
 		ArgRegistrarCOEM: &wscoem.RegistrarCOEMRequest{
-			IdentificadorCaratula: identificadorCaratula,
+			IdentificadorCaratula: params.IdentificadorCaratula,
 			Coem: &wscoem.Coem{
 				ContenedoresConCarga: &wscoem.ArrayOfContenedorCarga{
 					ContenedorCarga: contenedoresCarga,
@@ -489,7 +521,11 @@ func (ws *Wscoem) RegistrarCOEM(identificadorCaratula string, params *COEMParams
 	return result, errors.Join(errs...)
 }
 
-func (ws *Wscoem) RectificarCOEM(identificadorCaratula string, identificadorCOEM string, params *COEMParams) (string, error) {
+func (ws *Wscoem) RectificarCOEM(params *RectificarCOEMParams) (string, error) {
+	if err := ws.validate.Struct(params); err != nil {
+		return "", errors.New(strings.Join(validador.ToErrResponse(err).Errors, ", "))
+	}
+
 	ticket, err := GetTA(ws.environment, ws.serviceName, ws.cuit)
 	if err != nil {
 		return "", err
@@ -570,8 +606,8 @@ func (ws *Wscoem) RectificarCOEM(identificadorCaratula string, identificadorCOEM
 			Rol:                  ws.rol,
 		},
 		ArgRectificarCOEM: &wscoem.RectificarCOEMRequest{
-			IdentificadorCaratula: identificadorCaratula,
-			IdentificadorCOEM:     identificadorCOEM,
+			IdentificadorCaratula: params.IdentificadorCaratula,
+			IdentificadorCOEM:     params.IdentificadorCOEM,
 			Coem: &wscoem.Coem{
 				ContenedoresConCarga: &wscoem.ArrayOfContenedorCarga{
 					ContenedorCarga: contenedoresCarga,
@@ -609,7 +645,11 @@ func (ws *Wscoem) RectificarCOEM(identificadorCaratula string, identificadorCOEM
 	return result, errors.Join(errs...)
 }
 
-func (ws *Wscoem) CerrarCOEM(identificadorCaratula string, identificadorCOEM string) (string, error) {
+func (ws *Wscoem) CerrarCOEM(params *IdentificadorCOEMParams) (string, error) {
+	if err := ws.validate.Struct(params); err != nil {
+		return "", errors.New(strings.Join(validador.ToErrResponse(err).Errors, ", "))
+	}
+
 	ticket, err := GetTA(ws.environment, ws.serviceName, ws.cuit)
 	if err != nil {
 		return "", err
@@ -626,8 +666,8 @@ func (ws *Wscoem) CerrarCOEM(identificadorCaratula string, identificadorCOEM str
 			Rol:                  ws.rol,
 		},
 		ArgCerrarCOEM: &wscoem.CerrarCOEMRequest{
-			IdentificadorCaratula: identificadorCaratula,
-			IdentificadorCOEM:     identificadorCOEM,
+			IdentificadorCaratula: params.IdentificadorCaratula,
+			IdentificadorCOEM:     params.IdentificadorCOEM,
 		},
 	}
 	PrintlnAsXML(request)
@@ -654,7 +694,11 @@ func (ws *Wscoem) CerrarCOEM(identificadorCaratula string, identificadorCOEM str
 	return result, errors.Join(errs...)
 }
 
-func (ws *Wscoem) AnularCOEM(identificadorCaratula string, identificadorCOEM string) (string, error) {
+func (ws *Wscoem) AnularCOEM(params *IdentificadorCOEMParams) (string, error) {
+	if err := ws.validate.Struct(params); err != nil {
+		return "", errors.New(strings.Join(validador.ToErrResponse(err).Errors, ", "))
+	}
+
 	ticket, err := GetTA(ws.environment, ws.serviceName, ws.cuit)
 	if err != nil {
 		return "", err
@@ -671,8 +715,8 @@ func (ws *Wscoem) AnularCOEM(identificadorCaratula string, identificadorCOEM str
 			Rol:                  ws.rol,
 		},
 		ArgAnularCOEM: &wscoem.AnularCOEMRequest{
-			IdentificadorCaratula: identificadorCaratula,
-			IdentificadorCOEM:     identificadorCOEM,
+			IdentificadorCaratula: params.IdentificadorCaratula,
+			IdentificadorCOEM:     params.IdentificadorCOEM,
 		},
 	}
 	PrintlnAsXML(request)
@@ -699,7 +743,11 @@ func (ws *Wscoem) AnularCOEM(identificadorCaratula string, identificadorCOEM str
 	return result, errors.Join(errs...)
 }
 
-func (ws *Wscoem) SolicitarAnulacionCOEM(identificadorCaratula string, identificadorCOEM string) (string, error) {
+func (ws *Wscoem) SolicitarAnulacionCOEM(params *IdentificadorCOEMParams) (string, error) {
+	if err := ws.validate.Struct(params); err != nil {
+		return "", errors.New(strings.Join(validador.ToErrResponse(err).Errors, ", "))
+	}
+
 	ticket, err := GetTA(ws.environment, ws.serviceName, ws.cuit)
 	if err != nil {
 		return "", err
@@ -716,8 +764,8 @@ func (ws *Wscoem) SolicitarAnulacionCOEM(identificadorCaratula string, identific
 			Rol:                  ws.rol,
 		},
 		ArgSolicitarAnulacionCOEM: &wscoem.SolicitarAnulacionCOEMRequest{
-			IdentificadorCaratula: identificadorCaratula,
-			IdentificadorCOEM:     identificadorCOEM,
+			IdentificadorCaratula: params.IdentificadorCaratula,
+			IdentificadorCOEM:     params.IdentificadorCOEM,
 		},
 	}
 	PrintlnAsXML(request)
@@ -744,7 +792,11 @@ func (ws *Wscoem) SolicitarAnulacionCOEM(identificadorCaratula string, identific
 	return result, errors.Join(errs...)
 }
 
-func (ws *Wscoem) SolicitarNoABordo(identificadorCaratula string, identificadorCOEM string, codigoMotivo, descripcionMotivo string, params *NoABordoParams) (string, error) {
+func (ws *Wscoem) SolicitarNoABordo(params *SolicitarNoABordoParams) (string, error) {
+	if err := ws.validate.Struct(params); err != nil {
+		return "", errors.New(strings.Join(validador.ToErrResponse(err).Errors, ", "))
+	}
+
 	ticket, err := GetTA(ws.environment, ws.serviceName, ws.cuit)
 	if err != nil {
 		return "", err
@@ -789,10 +841,10 @@ func (ws *Wscoem) SolicitarNoABordo(identificadorCaratula string, identificadorC
 			Rol:                  ws.rol,
 		},
 		ArgSolicitarNoABordo: &wscoem.SolicitarNoABordoRequest{
-			IdentificadorCaratula: identificadorCaratula,
-			IdentificadorCOEM:     identificadorCOEM,
-			CodigoMotivo:          codigoMotivo,
-			DescripcionMotivo:     descripcionMotivo,
+			IdentificadorCaratula: params.IdentificadorCaratula,
+			IdentificadorCOEM:     params.IdentificadorCOEM,
+			CodigoMotivo:          params.CodigoMotivo,
+			DescripcionMotivo:     params.DescripcionMotivo,
 			IdentificadoresContenedoresVacios: &wscoem.ArrayOfContenedor{
 				Contenedor: contenedoresVacios,
 			},
@@ -828,7 +880,11 @@ func (ws *Wscoem) SolicitarNoABordo(identificadorCaratula string, identificadorC
 	return result, errors.Join(errs...)
 }
 
-func (ws *Wscoem) SolicitarCierreCargaContoBulto(identificadorCaratula string, fechaZarpada time.Time, numViaje string, params *CierreCargaContoBultoParams) (string, error) {
+func (ws *Wscoem) SolicitarCierreCargaContoBulto(params *SolicitarCierreCargaContoBultoParams) (string, error) {
+	if err := ws.validate.Struct(params); err != nil {
+		return "", errors.New(strings.Join(validador.ToErrResponse(err).Errors, ", "))
+	}
+
 	ticket, err := GetTA(ws.environment, ws.serviceName, ws.cuit)
 	if err != nil {
 		return "", err
@@ -856,9 +912,9 @@ func (ws *Wscoem) SolicitarCierreCargaContoBulto(identificadorCaratula string, f
 			Rol:                  ws.rol,
 		},
 		ArgSolicitarCierreCargaContoBulto: &wscoem.SolicitarCierreCargaContoBultoRequest{
-			IdentificadorCaratula: identificadorCaratula,
-			FechaZarpada:          soap.CreateXsdDateTime(fechaZarpada, true),
-			NumeroViaje:           numViaje,
+			IdentificadorCaratula: params.IdentificadorCaratula,
+			FechaZarpada:          soap.CreateXsdDateTime(params.FechaZarpada, true),
+			NumeroViaje:           params.NumeroViaje,
 			Declaraciones: &wscoem.ArrayOfDeclaracionCont{
 				DeclaracionCont: declaraciones,
 			},
@@ -888,7 +944,11 @@ func (ws *Wscoem) SolicitarCierreCargaContoBulto(identificadorCaratula string, f
 	return result, errors.Join(errs...)
 }
 
-func (ws *Wscoem) SolicitarCierreCargaGranel(identificadorCaratula string, fechaZarpada time.Time, numViaje string, params *CierreCargaGranelParams) (string, error) {
+func (ws *Wscoem) SolicitarCierreCargaGranel(params *SolicitarCierreCargaGranelParams) (string, error) {
+	if err := ws.validate.Struct(params); err != nil {
+		return "", errors.New(strings.Join(validador.ToErrResponse(err).Errors, ", "))
+	}
+
 	ticket, err := GetTA(ws.environment, ws.serviceName, ws.cuit)
 	if err != nil {
 		return "", err
@@ -938,9 +998,9 @@ func (ws *Wscoem) SolicitarCierreCargaGranel(identificadorCaratula string, fecha
 			Rol:                  ws.rol,
 		},
 		ArgSolicitarCierreCargaGranel: &wscoem.SolicitarCierreCargaGranelRequest{
-			IdentificadorCaratula: identificadorCaratula,
-			FechaZarpada:          soap.CreateXsdDateTime(fechaZarpada, true),
-			NumeroViaje:           numViaje,
+			IdentificadorCaratula: params.IdentificadorCaratula,
+			FechaZarpada:          soap.CreateXsdDateTime(params.FechaZarpada, true),
+			NumeroViaje:           params.NumeroViaje,
 			Coems: &wscoem.ArrayOfCoemGranel{
 				CoemGranel: declaracionesCoemGranel,
 			},

@@ -2,145 +2,196 @@ package afip
 
 import "time"
 
+type PuertoDestinoParams struct {
+	PuertoDestino string `json:"PuertoDestino,omitempty" validate:"len=5"`
+}
+
 type CaratulaParams struct {
-	IdentificadorBuque    string    `json:"IdentificadorBuque,omitempty"`
-	NombreMedioTransporte string    `json:"NombreMedioTransporte" validate:"required"`
-	CodigoAduana          string    `json:"CodigoAduana" validate:"required"`
-	CodigoLugarOperativo  string    `json:"CodigoLugarOperativo" validate:"required"`
-	FechaArribo           time.Time `json:"FechaArribo" validate:"required"`
-	FechaZarpada          time.Time `json:"FechaZarpada" validate:"required"`
-	Via                   string    `json:"Via,omitempty" validate:"required"`
-	NumeroViaje           string    `json:"NumeroViaje,omitempty"`
-	PuertoDestino         string    `json:"PuertoDestino,omitempty"`
-	Itinerario            []string  `json:"itinerario,omitempty"`
+	IdentificadorBuque    string    `json:"IdentificadorBuque,omitempty" validate:"lte=20,startswith=IMO"`
+	NombreMedioTransporte string    `json:"NombreMedioTransporte" validate:"required,lte=200"`
+	CodigoAduana          string    `json:"CodigoAduana" validate:"required,len=3"`
+	CodigoLugarOperativo  string    `json:"CodigoLugarOperativo" validate:"required,len=5"`
+	FechaArribo           time.Time `json:"FechaArribo" validate:"required,datetime=2006-01-02T15:04:05.000Z"`
+	FechaZarpada          time.Time `json:"FechaZarpada" validate:"required,datetime=2006-01-02T15:04:05.000Z"`
+	Via                   string    `json:"Via" validate:"required,len=1"`
+	NumeroViaje           string    `json:"NumeroViaje,omitempty" validate:"lte=16"`
+	*PuertoDestinoParams
+	Itinerario []PuertoDestinoParams `json:"Itinerario,omitempty"`
+}
+
+type IdentificadorCaraturaParams struct {
+	IdentificadorCaratula string `json:"IdentificadorCaratula" validate:"required,len=16"`
 }
 
 type RectificarCaratulaParams struct {
-	IdentificadorCaratula string `json:"IdentificadorCaratula,omitempty" validate:"required"`
+	*IdentificadorCaraturaParams
 	*CaratulaParams
 }
 
 type CambioBuqueParams struct {
-	IdentificadorBuque    string `json:"identificador_buque,omitempty"`
-	NombreMedioTransporte string `json:"nombre_medio_transporte,omitempty"`
+	*IdentificadorCaraturaParams
+	IdentificadorBuque    string `json:"IdentificadorBuque,omitempty" validate:"lte=20"`
+	NombreMedioTransporte string `json:"NombreMedioTransporte,omitempty" validate:"lte=200"`
 }
 
 type CambioFechasParams struct {
-	FechaEstimadaArribo  time.Time `json:"fecha_estimada_arribo"`
-	FechaEstimadaZarpada time.Time `json:"fecha_estimada_zarpada"`
-	CodigoMotivo         string    `json:"codigo_motivo"`
-	DescripcionMotivo    string    `json:"descripcion_motivo,omitempty"`
+	*IdentificadorCaraturaParams
+	FechaArribo       time.Time `json:"FechaArribo" validate:"required,datetime"`
+	FechaZarpada      time.Time `json:"FechaZarpada" validate:"required,datetime"`
+	CodigoMotivo      string    `json:"CodigoMotivo" validate:"required,lte=2"`
+	DescripcionMotivo string    `json:"DescripcionMotivo,omitempty" validate:"lte=200"`
 }
 
 type CambioLOTParams struct {
-	CodigoLugarOperativo string `json:"codigo_lugar_operativo"`
+	*IdentificadorCaraturaParams
+	CodigoLugarOperativo string `json:"CodigoLugarOperativo" validate:"required,lte=5"`
+}
+
+type IdentificadorContenedorParams struct {
+	IdentificadorContenedor string `json:"IdentificadorContenedor" validate:"required,len=11"`
 }
 
 type ContenedorCarga struct {
-	IdentificadorContenedor string   `json:"identificador_contenedor"`
-	CuitATA                 string   `json:"cuit_ata,omitempty"`
-	Tipo                    string   `json:"tipo"`
-	Peso                    float64  `json:"peso"`
-	Precintos               []string `json:"precintos"`
-	Declaraciones           []string `json:"declaraciones,omitempty"`
+	*IdentificadorContenedorParams
+	CuitATA       string   `json:"CuitATA,omitempty"`
+	Tipo          string   `json:"Tipo"`
+	Peso          float64  `json:"Peso"`
+	Precintos     []string `json:"Precintos"`
+	Declaraciones []string `json:"Declaraciones,omitempty"`
 }
 
 type ContenedorVacio struct {
-	IdentificadorContenedor string `json:"identificador_contenedor"`
-	Tipo                    string `json:"tipo"`
-	CuitATA                 string `json:"cuit_ata,omitempty"`
-	CodigoPais              string `json:"codigo_pais"`
+	*IdentificadorContenedorParams
+	Tipo       string `json:"Tipo"`
+	CuitATA    string `json:"CuitATA,omitempty"`
+	CodigoPais string `json:"CodigoPais"`
 }
 
 type Embalaje struct {
-	CodigoEmbalaje string  `json:"codigo_embalaje"`
-	Peso           float64 `json:"peso"`
-	CantidadBultos int32   `json:"cantidad_bultos"`
+	CodigoEmbalaje string  `json:"CodigoEmbalaje"`
+	Peso           float64 `json:"Peso"`
+	CantidadBultos int32   `json:"CantidadBultos"`
 }
 
 type MercaderiaSuelta struct {
-	IdentificadorDeclaracion string      `json:"identificador_declaracion"`
-	CuitATA                  string      `json:"cuit_ata,omitempty"`
-	Embalajes                *[]Embalaje `json:"embalajes"`
+	IdentificadorDeclaracion string      `json:"IdentificadorDeclaracion"`
+	CuitATA                  string      `json:"CuitATA,omitempty"`
+	Embalajes                *[]Embalaje `json:"Embalajes"`
 }
 
 type COEMParams struct {
-	ContenedoresCarga  *[]ContenedorCarga  `json:"contenedores_carga,omitempty"`
-	ContenedoresVacios *[]ContenedorVacio  `json:"contenedores_vacios,omitempty"`
-	MercaderiasSueltas *[]MercaderiaSuelta `json:"mercaderias_sueltas,omitempty"`
+	ContenedoresCarga  *[]ContenedorCarga  `json:"ContenedoresConCarga,omitempty"`
+	ContenedoresVacios *[]ContenedorVacio  `json:"ContenedoresVacios,omitempty"`
+	MercaderiasSueltas *[]MercaderiaSuelta `json:"MercaderiasSueltas,omitempty"`
+}
+
+type IdentificadorCOEMParams struct {
+	*IdentificadorCaraturaParams
+	IdentificadorCOEM string `json:"IdentificadorCOEM" validate:"required,len=16"`
+}
+
+type RegistrarCOEMParams struct {
+	*IdentificadorCaraturaParams
+	*COEMParams
+}
+
+type RectificarCOEMParams struct {
+	*IdentificadorCOEMParams
+	*COEMParams
 }
 
 type ContenedorNoABordo struct {
-	IdentificadorContenedor string `json:"identificador_contenedor"`
+	*IdentificadorContenedorParams
 }
 
 type DeclaracionNoABordo struct {
-	IdentificadorDeclaracion string `json:"identificador_declaracion"`
+	IdentificadorDeclaracion string `json:"IdentificadorDeclaracion"`
 }
 
 type NoABordoParams struct {
-	ContenedoresCarga  *[]ContenedorNoABordo  `json:"contenedores_carga,omitempty"`
-	ContenedoresVacios *[]ContenedorNoABordo  `json:"contenedores_vacios,omitempty"`
-	MercaderiasSueltas *[]DeclaracionNoABordo `json:"declaraciones,omitempty"`
+	ContenedoresCarga  *[]ContenedorNoABordo  `json:"ContenedoresCarga,omitempty"`
+	ContenedoresVacios *[]ContenedorNoABordo  `json:"ContenedoresVacios,omitempty"`
+	MercaderiasSueltas *[]DeclaracionNoABordo `json:"MercaderiasSueltas,omitempty"`
 }
 
 type DeclaracionCont struct {
-	IdentificadorDeclaracion string    `json:"identificador_declaracion"`
-	FechaEmbarque            time.Time `json:"fecha_embarque"`
+	IdentificadorDeclaracion string    `json:"IdentificadorDeclaracion"`
+	FechaEmbarque            time.Time `json:"FechaEmbarque"`
 }
 
 type CierreCargaContoBultoParams struct {
-	Declaraciones *[]DeclaracionCont `json:"declaraciones"`
+	Declaraciones *[]DeclaracionCont `json:"Declaraciones"`
 }
 
 type ItemGranel struct {
-	NumeroItem   int32   `json:"numero_item"`
-	CantidadReal float64 `json:"cantidad_real"`
+	NumeroItem   int32   `json:"NumeroItem"`
+	CantidadReal float64 `json:"CantidadReal"`
 }
 
 type DeclaracionGranel struct {
-	IdentificadorDeclaracion    string        `json:"identificador_declaracion"`
-	FechaEmbarque               time.Time     `json:"fecha_embarque"`
-	IdentificadorCierreCumplido string        `json:"identificador_cierre_cumplido"`
-	Items                       *[]ItemGranel `json:"items"`
+	IdentificadorDeclaracion    string        `json:"IdentificadorDeclaracion"`
+	FechaEmbarque               time.Time     `json:"FechaEmbarque"`
+	IdentificadorCierreCumplido string        `json:"IdentificadorCierreCumplido"`
+	Items                       *[]ItemGranel `json:"Items"`
 }
 
 type DeclaracionCOEMGranel struct {
-	IdentificadorCOEM   string               `json:"identificador_coem"`
-	DeclaracionesGranel *[]DeclaracionGranel `json:"declaraciones_granel"`
+	IdentificadorCOEM   string               `json:"IdentificadorCOEM"`
+	DeclaracionesGranel *[]DeclaracionGranel `json:"DeclaracionesGranel"`
 }
 
 type CierreCargaGranelParams struct {
-	DeclaracionesCOEMGranel *[]DeclaracionCOEMGranel `json:"declaraciones_coem_granel"`
+	DeclaracionesCOEMGranel *[]DeclaracionCOEMGranel `json:"DeclaracionesCOEMGranel"`
+}
+
+type SolicitarNoABordoParams struct {
+	*IdentificadorCOEMParams
+	CodigoMotivo      string `json:"CodigoMotivo" validate:"required,lte=2"`
+	DescripcionMotivo string `json:"DescripcionMotivo,omitempty" validate:"lte=200"`
+	*NoABordoParams
+}
+
+type SolicitarCierreCargaContoBultoParams struct {
+	*IdentificadorCaraturaParams
+	FechaZarpada time.Time `json:"FechaZarpada" validate:"required,datetime"`
+	NumeroViaje  string    `json:"NumeroViaje,omitempty" validate:"len=16"`
+	*CierreCargaContoBultoParams
+}
+
+type SolicitarCierreCargaGranelParams struct {
+	*IdentificadorCaraturaParams
+	FechaZarpada time.Time `json:"FechaZarpada" validate:"required,datetime"`
+	NumeroViaje  string    `json:"NumeroViaje,omitempty" validate:"len=16"`
+	*CierreCargaGranelParams
 }
 
 type ConsultaEstadoCOEM struct {
-	IdentificadorCOEM string    `json:"identificador_coem"`
-	CuitAlta          string    `json:"cuit_alta"`
-	Motivo            string    `json:"motivo"`
-	FechaEstado       time.Time `json:"fecha_estado"`
-	Estado            string    `json:"estado"`
-	CODE              string    `json:"code"`
+	IdentificadorCOEM string    `json:"IdentificadorCOEM"`
+	CuitAlta          string    `json:"CuitAlta"`
+	Motivo            string    `json:"Motivo"`
+	FechaEstado       time.Time `json:"FechaEstado"`
+	Estado            string    `json:"Estado"`
+	CODE              string    `json:"CODE"`
 }
 
 type ConsultaNoAbordo struct {
-	IdentificadorCACE   string    `json:"identificador_cace"`
-	IdentificadorCOEM   string    `json:"identificador_coem"`
-	Tipo                string    `json:"tipo"`
-	Contenedor          string    `json:"contenedor"`
-	Destinacion         string    `json:"destinacion"`
-	Cuit                string    `json:"cuit"`
-	MotivoNoAbordo      string    `json:"motivo_no_abordo"`
-	FechaNoAbordo       time.Time `json:"fecha_no_abordo"`
-	TipoNoAbordo        string    `json:"tipo_no_abordo"`
-	DescripcionNoAbordo string    `json:"descripcion_no_abordo"`
+	IdentificadorCACE   string    `json:"IdentificadorCACE"`
+	IdentificadorCOEM   string    `json:"IdentificadorCOEM"`
+	Tipo                string    `json:"Tipo"`
+	Contenedor          string    `json:"Contenedor"`
+	Destinacion         string    `json:"Destinacion"`
+	Cuit                string    `json:"Cuit"`
+	MotivoNoAbordo      string    `json:"MotivoNoAbordo"`
+	FechaNoAbordo       time.Time `json:"FechaNoAbordo"`
+	TipoNoAbordo        string    `json:"TipoNoAbordo"`
+	DescripcionNoAbordo string    `json:"DescripcionNoAbordo"`
 }
 
 type ConsultaSolicitud struct {
-	IdentificadorCACE string    `json:"Identificador_cace"`
-	NumeroSolicitud   string    `json:"numero_solicitud"`
-	IdentificadorCOEM string    `json:"identificador_coem"`
-	Estado            string    `json:"estado"`
-	FechaEstado       time.Time `json:"fecha_estado"`
-	TipoSolicitud     string    `json:"tipo_solicitud"`
+	IdentificadorCACE string    `json:"IdentificadorCACE"`
+	NumeroSolicitud   string    `json:"NumeroSolicitud"`
+	IdentificadorCOEM string    `json:"IdentificadorCOEM"`
+	Estado            string    `json:"Estado"`
+	FechaEstado       time.Time `json:"FechaEstado"`
+	TipoSolicitud     string    `json:"TipoSolicitud"`
 }
