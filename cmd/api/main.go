@@ -22,8 +22,9 @@ import (
 var (
 	Version string = "development"
 
-	Wscoem     *afip.Wscoem
-	Wscoemcons *afip.Wscoemcons
+	Wscoem      *afip.Wscoem
+	Wscoemcons  *afip.Wscoemcons
+	Wsgestabref *afip.Wsgestabref
 
 	validate *validator.Validate
 )
@@ -64,6 +65,14 @@ func main() {
 		log.Fatalln("variable de entorno WSCOEM_ROL faltante o inválida")
 	}
 
+	if len(os.Getenv("WGESTABREF_TIPO_AGENTE")) != 4 {
+		log.Fatalln("falta variable de entorno WGESTABREF_TIPO_AGENTE")
+	}
+
+	if len(os.Getenv("WGESTABREF_ROL")) != 4 {
+		log.Fatalln("variable de entorno WGESTABREF_ROL faltante o inválida")
+	}
+
 	port := 3000
 
 	if os.Getenv("PORT") != "" {
@@ -79,6 +88,11 @@ func main() {
 	}
 
 	Wscoemcons, err = afip.NewWscoemcons(environment, cuit, os.Getenv("WSCOEM_TIPO_AGENTE"), os.Getenv("WSCOEM_ROL"))
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	Wsgestabref, err = afip.Newgestabref(environment, cuit, os.Getenv("WGESTABREF_TIPO_AGENTE"), os.Getenv("WGESTABREF_ROL"))
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -122,10 +136,22 @@ func main() {
 	coemcons.HandleFunc("/obtener-consulta-no-abordo", ObtenerConsultaNoAbordoHandler)
 	coemcons.HandleFunc("/obtener-consulta-solicitudes", ObtenerConsultaSolicitudesHandler)
 
+	gestabref := http.NewServeMux()
+	gestabref.HandleFunc("/dummy", DummyGesTabRefHandler)
+	gestabref.HandleFunc("/consultar-fecha-ult-act", ConsultarFechaUltActHandler)
+	gestabref.HandleFunc("/lista-arancel", ListaArancelHandler)
+	gestabref.HandleFunc("/lista-descripcion", ListaDescripcionHandler)
+	gestabref.HandleFunc("/lista-descripcion-decodificacion", ListaDescripcionDecodificacionHandler)
+	gestabref.HandleFunc("/lista-empresas", ListaEmpresasHandler)
+	gestabref.HandleFunc("/lista-lugares-operativos", ListaLugaresOperativosHandler)
+	gestabref.HandleFunc("/lista-paises-aduanas", ListaPaisesAduanasHandler)
+	gestabref.HandleFunc("/lista-tablas-referencia", ListaTablasReferenciaHandler)
+
 	v1 := http.NewServeMux()
 	v1.HandleFunc("/info", InfoHandler)
 	v1.Handle("/coem/", http.StripPrefix("/coem", coem))
 	v1.Handle("/coemcons/", http.StripPrefix("/coemcons", coemcons))
+	v1.Handle("/gestabref/", http.StripPrefix("/gestabref", gestabref))
 	router.Handle("/api/v1/", http.StripPrefix("/api/v1", v1))
 
 	middlewareCors := cors.New(cors.Options{

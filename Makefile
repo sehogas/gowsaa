@@ -7,13 +7,13 @@ FLAGS="-s -w"
 CGO=0
 ########################################################
 
-api:
+run:
 	go run ./cmd/api/.
 
 wsfe:
 	go run ./cmd/gowsfe/.
 
-api-swagger:
+swagger:
 	swag init --parseDependency --dir=./cmd/api/ --output=./cmd/api/docs/
 
 build:

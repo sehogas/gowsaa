@@ -78,59 +78,6 @@ definitions:
     - NombreMedioTransporte
     - Via
     type: object
-  afip.ConsultaEstadoCOEM:
-    properties:
-      CODE:
-        type: string
-      CuitAlta:
-        type: string
-      Estado:
-        type: string
-      FechaEstado:
-        type: string
-      IdentificadorCOEM:
-        type: string
-      Motivo:
-        type: string
-    type: object
-  afip.ConsultaNoAbordo:
-    properties:
-      Contenedor:
-        type: string
-      Cuit:
-        type: string
-      DescripcionNoAbordo:
-        type: string
-      Destinacion:
-        type: string
-      FechaNoAbordo:
-        type: string
-      IdentificadorCACE:
-        type: string
-      IdentificadorCOEM:
-        type: string
-      MotivoNoAbordo:
-        type: string
-      Tipo:
-        type: string
-      TipoNoAbordo:
-        type: string
-    type: object
-  afip.ConsultaSolicitud:
-    properties:
-      Estado:
-        type: string
-      FechaEstado:
-        type: string
-      IdentificadorCACE:
-        type: string
-      IdentificadorCOEM:
-        type: string
-      NumeroSolicitud:
-        type: string
-      TipoSolicitud:
-        type: string
-    type: object
   afip.ContenedorCarga:
     properties:
       CuitATA:
@@ -368,9 +315,144 @@ definitions:
       error:
         type: string
     type: object
+  dto.FecUltActResponse:
+    properties:
+      FechaUltAct:
+        type: string
+    type: object
   dto.MessageResponse:
     properties:
       message:
+        type: string
+    type: object
+  soap.XSDDateTime:
+    type: object
+  wgestabref.Descripcion:
+    properties:
+      Codigo:
+        type: string
+      Descripcion:
+        type: string
+    type: object
+  wgestabref.DescripcionCodificacion:
+    properties:
+      Codigo:
+        type: string
+      CodigoIso:
+        type: string
+      Descripcion:
+        type: string
+    type: object
+  wgestabref.Empresa:
+    properties:
+      Cuit:
+        type: string
+      RazonSocial:
+        type: string
+    type: object
+  wgestabref.LugarOperativo:
+    properties:
+      Aduana:
+        type: string
+      Codigo:
+        type: string
+      Descripcion:
+        type: string
+      LugarOperativo:
+        type: string
+      VigenciaDesde:
+        type: string
+      VigenciaHasta:
+        type: string
+    type: object
+  wgestabref.Opcion:
+    properties:
+      Codigo:
+        type: string
+      Descripcion:
+        type: string
+      Opcion:
+        type: string
+      VigenciaDesde:
+        type: string
+      VigenciaHasta:
+        type: string
+    type: object
+  wgestabref.PaisAduana:
+    properties:
+      Aduana:
+        type: string
+      Codigo:
+        type: string
+      Descripcion:
+        type: string
+      Pais:
+        type: string
+      VigenciaDesde:
+        type: string
+      VigenciaHasta:
+        type: string
+    type: object
+  wgestabref.TablaReferencia:
+    properties:
+      IdTabRef:
+        type: string
+      TabRefDesc:
+        type: string
+      WebMethod:
+        type: string
+    type: object
+  wscoemcons.ConsultaEstadoCOEM:
+    properties:
+      CODE:
+        type: string
+      CuitAlta:
+        type: string
+      Estado:
+        type: string
+      FechaEstado:
+        $ref: '#/definitions/soap.XSDDateTime'
+      IdentificadorCOEM:
+        type: string
+      Motivo:
+        type: string
+    type: object
+  wscoemcons.ConsultaNoAbordo:
+    properties:
+      Contenedor:
+        type: string
+      Cuit:
+        type: string
+      DescripcionMotivo:
+        type: string
+      Destinacion:
+        type: string
+      FechaNoAbordo:
+        $ref: '#/definitions/soap.XSDDateTime'
+      IdentificadorCACE:
+        type: string
+      IdentificadorCOEM:
+        type: string
+      MotivoNoAbordo:
+        type: string
+      Tipo:
+        type: string
+      TipoNoAbordo:
+        type: string
+    type: object
+  wscoemcons.ConsultaSolicitudes:
+    properties:
+      Estado:
+        type: string
+      FechaEstado:
+        $ref: '#/definitions/soap.XSDDateTime'
+      IdentificadorCACE:
+        type: string
+      IdentificadorCOEM:
+        type: string
+      NumeroSolicitud:
+        type: string
+      TipoSolicitud:
         type: string
     type: object
 info:
@@ -856,7 +938,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/afip.ConsultaEstadoCOEM'
+              $ref: '#/definitions/wscoemcons.ConsultaEstadoCOEM'
             type: array
         "400":
           description: Bad Request
@@ -887,7 +969,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/afip.ConsultaNoAbordo'
+              $ref: '#/definitions/wscoemcons.ConsultaNoAbordo'
             type: array
         "400":
           description: Bad Request
@@ -918,7 +1000,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/afip.ConsultaSolicitud'
+              $ref: '#/definitions/wscoemcons.ConsultaSolicitudes'
             type: array
         "400":
           description: Bad Request
@@ -931,6 +1013,264 @@ paths:
       summary: Obtener Consulta de Solicitudes
       tags:
       - Consultas de Comunicación de Embarque
+  /gestabref/consultar-fecha-ult-act:
+    get:
+      consumes:
+      - application/json
+      description: Obtiene la última actualización de la tabla consultada
+      parameters:
+      - description: Nombre de la tabla
+        in: query
+        name: argNombreTabla
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.FecUltActResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      summary: Obtener la Fecha de última actualización de la tabla
+      tags:
+      - Consulta de Tablas de Referencia
+  /gestabref/dummy:
+    get:
+      description: Visualizar el estado del servicio web, del servicio de autenticación
+        y de la base de datos de ARCA
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.DummyResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      summary: Muestra el estado del servicio
+      tags:
+      - Consulta de Tablas de Referencia
+  /gestabref/lista-arancel:
+    get:
+      consumes:
+      - application/json
+      description: Lista Arancel
+      parameters:
+      - description: Nombre de la tabla
+        in: query
+        name: argNombreTabla
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/wgestabref.Opcion'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      summary: Lista Arancel
+      tags:
+      - Consulta de Tablas de Referencia
+  /gestabref/lista-descripcion:
+    get:
+      consumes:
+      - application/json
+      description: Lista Descripción
+      parameters:
+      - description: Nombre de la tabla
+        in: query
+        name: argNombreTabla
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/wgestabref.Descripcion'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      summary: Lista Descripción
+      tags:
+      - Consulta de Tablas de Referencia
+  /gestabref/lista-descripcion-decodificacion:
+    get:
+      consumes:
+      - application/json
+      description: Lista Descripción Decodificación
+      parameters:
+      - description: Nombre de la tabla
+        in: query
+        name: argNombreTabla
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/wgestabref.DescripcionCodificacion'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      summary: Lista Descripción Decodificación
+      tags:
+      - Consulta de Tablas de Referencia
+  /gestabref/lista-empresas:
+    get:
+      consumes:
+      - application/json
+      description: Lista de Empresas
+      parameters:
+      - description: Nombre de la tabla
+        in: query
+        name: argNombreTabla
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/wgestabref.Empresa'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      summary: Lista de Empresas
+      tags:
+      - Consulta de Tablas de Referencia
+  /gestabref/lista-lugares-operativos:
+    get:
+      consumes:
+      - application/json
+      description: Lista de Lugares Operativos
+      parameters:
+      - description: Nombre de la tabla
+        in: query
+        name: argNombreTabla
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/wgestabref.LugarOperativo'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      summary: Lista de Lugares Operativos
+      tags:
+      - Consulta de Tablas de Referencia
+  /gestabref/lista-paises-aduanas:
+    get:
+      consumes:
+      - application/json
+      description: Lista de Paises y Aduanas
+      parameters:
+      - description: Nombre de la tabla
+        in: query
+        name: argNombreTabla
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/wgestabref.PaisAduana'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      summary: Lista de Paises y Aduanas
+      tags:
+      - Consulta de Tablas de Referencia
+  /gestabref/lista-tablas-referencia:
+    get:
+      consumes:
+      - application/json
+      description: Lista de Tablas de Referencia
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/wgestabref.TablaReferencia'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+      summary: Lista de Tablas de Referencia
+      tags:
+      - Consulta de Tablas de Referencia
   /info:
     get:
       description: Muesta información de la API

@@ -23,6 +23,9 @@ const URLWSCOEMProduction string = "https://webservicesadu.afip.gob.ar/DIAV2/wge
 const URLWSCOEMConsTesting string = "https://wsaduhomoext.afip.gob.ar/DIAV2/wconscomunicacionembarque/wconscomunicacionembarque.asmx?WSDL"
 const URLWSCOEMConsProduction string = "https://webservicesadu.afip.gob.ar/DIAV2/wconscomunicacionembarque/wconscomunicacionembarque.asmx?WSDL"
 
+const URLWGESTABREFTesting string = "https://testdia.afip.gob.ar/Dia/ws/wgesTabRef/wgesTabRef.asmx?WSDL"
+const URLWGESTABREFProduction string = "https://servicios1.afip.gov.ar/Dia/ws/wgesTabRef/wgesTabRef.asmx?WSDL"
+
 type Environment int
 
 const (

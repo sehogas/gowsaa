@@ -743,7 +743,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/afip.ConsultaEstadoCOEM"
+                                "$ref": "#/definitions/wscoemcons.ConsultaEstadoCOEM"
                             }
                         }
                     },
@@ -790,7 +790,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/afip.ConsultaNoAbordo"
+                                "$ref": "#/definitions/wscoemcons.ConsultaNoAbordo"
                             }
                         }
                     },
@@ -837,7 +837,397 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/afip.ConsultaSolicitud"
+                                "$ref": "#/definitions/wscoemcons.ConsultaSolicitudes"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/gestabref/consultar-fecha-ult-act": {
+            "get": {
+                "description": "Obtiene la última actualización de la tabla consultada",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Consulta de Tablas de Referencia"
+                ],
+                "summary": "Obtener la Fecha de última actualización de la tabla",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Nombre de la tabla",
+                        "name": "argNombreTabla",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.FecUltActResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/gestabref/dummy": {
+            "get": {
+                "description": "Visualizar el estado del servicio web, del servicio de autenticación y de la base de datos de ARCA",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Consulta de Tablas de Referencia"
+                ],
+                "summary": "Muestra el estado del servicio",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.DummyResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/gestabref/lista-arancel": {
+            "get": {
+                "description": "Lista Arancel",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Consulta de Tablas de Referencia"
+                ],
+                "summary": "Lista Arancel",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Nombre de la tabla",
+                        "name": "argNombreTabla",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/wgestabref.Opcion"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/gestabref/lista-descripcion": {
+            "get": {
+                "description": "Lista Descripción",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Consulta de Tablas de Referencia"
+                ],
+                "summary": "Lista Descripción",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Nombre de la tabla",
+                        "name": "argNombreTabla",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/wgestabref.Descripcion"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/gestabref/lista-descripcion-decodificacion": {
+            "get": {
+                "description": "Lista Descripción Decodificación",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Consulta de Tablas de Referencia"
+                ],
+                "summary": "Lista Descripción Decodificación",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Nombre de la tabla",
+                        "name": "argNombreTabla",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/wgestabref.DescripcionCodificacion"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/gestabref/lista-empresas": {
+            "get": {
+                "description": "Lista de Empresas",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Consulta de Tablas de Referencia"
+                ],
+                "summary": "Lista de Empresas",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Nombre de la tabla",
+                        "name": "argNombreTabla",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/wgestabref.Empresa"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/gestabref/lista-lugares-operativos": {
+            "get": {
+                "description": "Lista de Lugares Operativos",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Consulta de Tablas de Referencia"
+                ],
+                "summary": "Lista de Lugares Operativos",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Nombre de la tabla",
+                        "name": "argNombreTabla",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/wgestabref.LugarOperativo"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/gestabref/lista-paises-aduanas": {
+            "get": {
+                "description": "Lista de Paises y Aduanas",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Consulta de Tablas de Referencia"
+                ],
+                "summary": "Lista de Paises y Aduanas",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Nombre de la tabla",
+                        "name": "argNombreTabla",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/wgestabref.PaisAduana"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/gestabref/lista-tablas-referencia": {
+            "get": {
+                "description": "Lista de Tablas de Referencia",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Consulta de Tablas de Referencia"
+                ],
+                "summary": "Lista de Tablas de Referencia",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/wgestabref.TablaReferencia"
                             }
                         }
                     },
@@ -986,87 +1376,6 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "Via": {
-                    "type": "string"
-                }
-            }
-        },
-        "afip.ConsultaEstadoCOEM": {
-            "type": "object",
-            "properties": {
-                "CODE": {
-                    "type": "string"
-                },
-                "CuitAlta": {
-                    "type": "string"
-                },
-                "Estado": {
-                    "type": "string"
-                },
-                "FechaEstado": {
-                    "type": "string"
-                },
-                "IdentificadorCOEM": {
-                    "type": "string"
-                },
-                "Motivo": {
-                    "type": "string"
-                }
-            }
-        },
-        "afip.ConsultaNoAbordo": {
-            "type": "object",
-            "properties": {
-                "Contenedor": {
-                    "type": "string"
-                },
-                "Cuit": {
-                    "type": "string"
-                },
-                "DescripcionNoAbordo": {
-                    "type": "string"
-                },
-                "Destinacion": {
-                    "type": "string"
-                },
-                "FechaNoAbordo": {
-                    "type": "string"
-                },
-                "IdentificadorCACE": {
-                    "type": "string"
-                },
-                "IdentificadorCOEM": {
-                    "type": "string"
-                },
-                "MotivoNoAbordo": {
-                    "type": "string"
-                },
-                "Tipo": {
-                    "type": "string"
-                },
-                "TipoNoAbordo": {
-                    "type": "string"
-                }
-            }
-        },
-        "afip.ConsultaSolicitud": {
-            "type": "object",
-            "properties": {
-                "Estado": {
-                    "type": "string"
-                },
-                "FechaEstado": {
-                    "type": "string"
-                },
-                "IdentificadorCACE": {
-                    "type": "string"
-                },
-                "IdentificadorCOEM": {
-                    "type": "string"
-                },
-                "NumeroSolicitud": {
-                    "type": "string"
-                },
-                "TipoSolicitud": {
                     "type": "string"
                 }
             }
@@ -1429,10 +1738,218 @@ const docTemplate = `{
                 }
             }
         },
+        "dto.FecUltActResponse": {
+            "type": "object",
+            "properties": {
+                "FechaUltAct": {
+                    "type": "string"
+                }
+            }
+        },
         "dto.MessageResponse": {
             "type": "object",
             "properties": {
                 "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "soap.XSDDateTime": {
+            "type": "object"
+        },
+        "wgestabref.Descripcion": {
+            "type": "object",
+            "properties": {
+                "Codigo": {
+                    "type": "string"
+                },
+                "Descripcion": {
+                    "type": "string"
+                }
+            }
+        },
+        "wgestabref.DescripcionCodificacion": {
+            "type": "object",
+            "properties": {
+                "Codigo": {
+                    "type": "string"
+                },
+                "CodigoIso": {
+                    "type": "string"
+                },
+                "Descripcion": {
+                    "type": "string"
+                }
+            }
+        },
+        "wgestabref.Empresa": {
+            "type": "object",
+            "properties": {
+                "Cuit": {
+                    "type": "string"
+                },
+                "RazonSocial": {
+                    "type": "string"
+                }
+            }
+        },
+        "wgestabref.LugarOperativo": {
+            "type": "object",
+            "properties": {
+                "Aduana": {
+                    "type": "string"
+                },
+                "Codigo": {
+                    "type": "string"
+                },
+                "Descripcion": {
+                    "type": "string"
+                },
+                "LugarOperativo": {
+                    "type": "string"
+                },
+                "VigenciaDesde": {
+                    "type": "string"
+                },
+                "VigenciaHasta": {
+                    "type": "string"
+                }
+            }
+        },
+        "wgestabref.Opcion": {
+            "type": "object",
+            "properties": {
+                "Codigo": {
+                    "type": "string"
+                },
+                "Descripcion": {
+                    "type": "string"
+                },
+                "Opcion": {
+                    "type": "string"
+                },
+                "VigenciaDesde": {
+                    "type": "string"
+                },
+                "VigenciaHasta": {
+                    "type": "string"
+                }
+            }
+        },
+        "wgestabref.PaisAduana": {
+            "type": "object",
+            "properties": {
+                "Aduana": {
+                    "type": "string"
+                },
+                "Codigo": {
+                    "type": "string"
+                },
+                "Descripcion": {
+                    "type": "string"
+                },
+                "Pais": {
+                    "type": "string"
+                },
+                "VigenciaDesde": {
+                    "type": "string"
+                },
+                "VigenciaHasta": {
+                    "type": "string"
+                }
+            }
+        },
+        "wgestabref.TablaReferencia": {
+            "type": "object",
+            "properties": {
+                "IdTabRef": {
+                    "type": "string"
+                },
+                "TabRefDesc": {
+                    "type": "string"
+                },
+                "WebMethod": {
+                    "type": "string"
+                }
+            }
+        },
+        "wscoemcons.ConsultaEstadoCOEM": {
+            "type": "object",
+            "properties": {
+                "CODE": {
+                    "type": "string"
+                },
+                "CuitAlta": {
+                    "type": "string"
+                },
+                "Estado": {
+                    "type": "string"
+                },
+                "FechaEstado": {
+                    "$ref": "#/definitions/soap.XSDDateTime"
+                },
+                "IdentificadorCOEM": {
+                    "type": "string"
+                },
+                "Motivo": {
+                    "type": "string"
+                }
+            }
+        },
+        "wscoemcons.ConsultaNoAbordo": {
+            "type": "object",
+            "properties": {
+                "Contenedor": {
+                    "type": "string"
+                },
+                "Cuit": {
+                    "type": "string"
+                },
+                "DescripcionMotivo": {
+                    "type": "string"
+                },
+                "Destinacion": {
+                    "type": "string"
+                },
+                "FechaNoAbordo": {
+                    "$ref": "#/definitions/soap.XSDDateTime"
+                },
+                "IdentificadorCACE": {
+                    "type": "string"
+                },
+                "IdentificadorCOEM": {
+                    "type": "string"
+                },
+                "MotivoNoAbordo": {
+                    "type": "string"
+                },
+                "Tipo": {
+                    "type": "string"
+                },
+                "TipoNoAbordo": {
+                    "type": "string"
+                }
+            }
+        },
+        "wscoemcons.ConsultaSolicitudes": {
+            "type": "object",
+            "properties": {
+                "Estado": {
+                    "type": "string"
+                },
+                "FechaEstado": {
+                    "$ref": "#/definitions/soap.XSDDateTime"
+                },
+                "IdentificadorCACE": {
+                    "type": "string"
+                },
+                "IdentificadorCOEM": {
+                    "type": "string"
+                },
+                "NumeroSolicitud": {
+                    "type": "string"
+                },
+                "TipoSolicitud": {
                     "type": "string"
                 }
             }

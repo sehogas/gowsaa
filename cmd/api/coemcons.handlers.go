@@ -38,7 +38,7 @@ func DummyCoemconsHandler(w http.ResponseWriter, r *http.Request) {
 //	@Accept			json
 //	@Produce		json
 //	@Param			q	query		string	true	"Identificador de la caratula"
-//	@Success		200	{array}		afip.ConsultaEstadoCOEM
+//	@Success		200	{array}		wscoemcons.ConsultaEstadoCOEM
 //	@Failure		400	{object}	dto.ErrorResponse
 //	@Failure		500	{object}	dto.ErrorResponse
 //	@Router			/coemcons/obtener-consulta-estados-coem [get]
@@ -67,7 +67,7 @@ func ObtenerConsultaEstadosCOEMHandler(w http.ResponseWriter, r *http.Request) {
 //	@Accept			json
 //	@Produce		json
 //	@Param			q	query		string	true	"Identificador de la caratula"
-//	@Success		200	{array}		afip.ConsultaNoAbordo
+//	@Success		200	{array}		wscoemcons.ConsultaNoAbordo
 //	@Failure		400	{object}	dto.ErrorResponse
 //	@Failure		500	{object}	dto.ErrorResponse
 //	@Router			/coemcons/obtener-consulta-no-abordo [get]
@@ -96,7 +96,7 @@ func ObtenerConsultaNoAbordoHandler(w http.ResponseWriter, r *http.Request) {
 //	@Accept			json
 //	@Produce		json
 //	@Param			q	query		string	true	"Identificador de la caratula"
-//	@Success		200	{array}		afip.ConsultaSolicitud
+//	@Success		200	{array}		wscoemcons.ConsultaSolicitudes
 //	@Failure		400	{object}	dto.ErrorResponse
 //	@Failure		500	{object}	dto.ErrorResponse
 //	@Router			/coemcons/obtener-consulta-solicitudes [get]
